@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -9,8 +10,12 @@
   <!-- Typography: Sora (Display), Plus Jakarta Sans (Body), JetBrains Mono (Tech/HUD) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sora:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    rel="stylesheet">
 
   <!-- Tailwind CSS CDN with configuration -->
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -56,7 +61,9 @@
 
   <style>
     @layer base {
-      html, body {
+
+      html,
+      body {
         margin: 0;
         padding: 0;
         font-family: 'Plus Jakarta Sans', sans-serif;
@@ -70,13 +77,16 @@
       width: 6px;
       height: 6px;
     }
+
     ::-webkit-scrollbar-track {
       background: rgba(241, 245, 249, 0.6);
     }
+
     ::-webkit-scrollbar-thumb {
       background: rgba(99, 102, 241, 0.25);
       border-radius: 9999px;
     }
+
     ::-webkit-scrollbar-thumb:hover {
       background: rgba(99, 102, 241, 0.45);
     }
@@ -86,10 +96,12 @@
       box-shadow: 0 4px 20px -2px rgba(99, 102, 241, 0.08), 0 2px 6px -1px rgba(70, 72, 212, 0.04);
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
+
     .glow-card:hover {
       box-shadow: 0 10px 28px -4px rgba(99, 102, 241, 0.16), 0 4px 12px -2px rgba(56, 189, 248, 0.12);
       transform: translateY(-2px);
     }
+
     .glow-card.selected {
       border-color: #6366f1 !important;
       box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #6366f1, 0 12px 32px -4px rgba(99, 102, 241, 0.25) !important;
@@ -97,13 +109,14 @@
     }
 
     .stella-shimmer {
-      background: linear-gradient(135deg, rgba(255,255,255,0.92) 0%, rgba(246,247,254,0.75) 100%);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(246, 247, 254, 0.75) 100%);
     }
 
     /* Tab Display Management */
     .tab-content {
       display: none;
     }
+
     .tab-content.active {
       display: flex;
       flex-direction: column;
@@ -125,7 +138,7 @@
       border: 1px solid rgba(99, 102, 241, 0.2);
     }
 
-    .astral-overlay {\n  z-index: 90;
+    .astral-overlay {
       display: none;
       position: fixed;
       inset: 0;
@@ -148,6 +161,7 @@
       position: relative;
       transition: all 0.25s ease;
     }
+
     .relic-card:hover {
       transform: translateY(-4px);
       border-color: #38bdf8;
@@ -167,108 +181,152 @@
   </style>
 </head>
 
-<body class="bg-[#f6f7fe] font-body text-[#1e1b4b] min-h-screen antialiased selection:bg-primary selection:text-white overflow-x-hidden">
+<body
+  class="bg-[#f6f7fe] font-body text-[#1e1b4b] min-h-screen antialiased selection:bg-primary selection:text-white overflow-x-hidden">
 
   <!-- Mobile Drawer Overlay -->
   <div id="drawerOverlay" class="astral-overlay" onclick="toggleMobileDrawer(false)"></div>
 
-  <!-- FIXED ASTRAL SIDEBAR (VOYAGERS ARCHIVE TERMINAL) -->
-  <aside id="mainSidebar" class="fixed left-0 top-0 h-full w-full lg:w-72 overflow-y-auto bg-white/95 backdrop-blur-xl z-100 flex flex-col border-r border-indigo-100/70 shadow-sm transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:z-50">
+  <!-- ASTRAL SIDEBAR (VOYAGERS ARCHIVE TERMINAL) -->
+  <aside id="mainSidebar"
+    class="fixed left-0 top-0 h-full w-72 overflow-y-auto bg-white/95 backdrop-blur-xl flex flex-col border-r border-indigo-100/70 shadow-lg transition-transform duration-300 -translate-x-full"
+    style="z-index: 200;">
     <!-- Header Brand Section -->
-    <div class="h-16 px-5 flex items-center justify-between border-b border-indigo-50/80 bg-gradient-to-r from-indigo-50/60 via-purple-50/30 to-sky-50/40">
+    <div
+      class="h-16 px-5 flex items-center justify-between border-b border-indigo-50/80 bg-gradient-to-r from-indigo-50/60 via-purple-50/30 to-sky-50/40">
       <div class="flex items-center gap-2.5">
-        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 via-primary to-sky-400 flex items-center justify-center text-white shadow-sm shadow-indigo-200">
+        <div
+          class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 via-primary to-sky-400 flex items-center justify-center text-white shadow-sm shadow-indigo-200">
           <span class="text-sm font-bold">✦</span>
         </div>
         <div>
-          <span class="font-headline text-[15px] font-bold tracking-tight text-indigo-950 block leading-tight">V O Y A G E R S</span>
+          <span class="font-headline text-[15px] font-bold tracking-tight text-indigo-950 block leading-tight">V O Y A G
+            E R S</span>
           <span class="font-hud text-[10px] text-indigo-500 font-semibold tracking-wider">ARCHIVE TERMINAL</span>
         </div>
       </div>
-      <span class="font-hud text-[9px] px-2 py-0.5 bg-indigo-50/90 text-indigo-600 border border-indigo-200/60 rounded-full font-bold shadow-2xs">ASTRAL // v4.2</span>
+      <!-- Close button -->
+      <button onclick="toggleMobileDrawer(false)"
+        class="w-8 h-8 flex items-center justify-center rounded-xl text-slate-400 hover:bg-indigo-50 hover:text-indigo-600 transition-all"
+        type="button" title="Close menu">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
     </div>
 
     <!-- Directives Status Badge -->
-    <div class="px-5 py-2.5 bg-gradient-to-r from-indigo-50/30 to-transparent border-b border-indigo-50 flex items-center justify-between">
+    <div
+      class="px-5 py-2.5 bg-gradient-to-r from-indigo-50/30 to-transparent border-b border-indigo-50 flex items-center justify-between">
       <div class="flex items-center gap-1.5">
         <span class="text-indigo-400 text-xs">✦</span>
         <span class="font-hud text-[10px] font-semibold text-slate-500 tracking-wider">CELESTIAL DIRECTIVES</span>
       </div>
-      <span class="font-hud text-[9px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60 font-bold flex items-center gap-1">
+      <span
+        class="font-hud text-[9px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60 font-bold flex items-center gap-1">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>RESONANT
       </span>
     </div>
 
     <!-- Navigation Menus -->
     <nav class="flex-1 px-3 py-3.5 space-y-1.5 overflow-y-auto">
-      <button class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50/70 hover:text-indigo-900 transition-all group" data-tab="home" onclick="showTab('home')">
+      <button
+        class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50/70 hover:text-indigo-900 transition-all group"
+        data-tab="home" onclick="showTab('home')">
         <div class="flex items-center gap-3">
-          <span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors">auto_awesome</span>
+          <span
+            class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors">auto_awesome</span>
           <span class="font-headline text-[13px] font-semibold">Quest Hub</span>
         </div>
-        <span class="font-hud text-[9px] px-2 py-0.5 bg-amber-50 text-amber-600 border border-amber-200/60 rounded-full font-bold">STELLAR</span>
+        <span
+          class="font-hud text-[9px] px-2 py-0.5 bg-amber-50 text-amber-600 border border-amber-200/60 rounded-full font-bold">STELLAR</span>
       </button>
 
-      <button class="nav-btn active w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl transition-all bg-gradient-to-r from-indigo-600 via-primary to-indigo-500 text-white font-headline shadow-md shadow-indigo-200" data-tab="display" onclick="showTab('display')">
+      <button
+        class="nav-btn active w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl transition-all bg-gradient-to-r from-indigo-600 via-primary to-indigo-500 text-white font-headline shadow-md shadow-indigo-200"
+        data-tab="display" onclick="showTab('display')">
         <div class="flex items-center gap-3">
           <span class="material-symbols-outlined text-[20px] text-white">grid_view</span>
           <span class="font-headline text-[13px] font-bold tracking-wide">Class Display</span>
         </div>
-        <span id="navVoyagersCount" class="font-hud text-[9px] px-2 py-0.5 bg-white/20 text-white border border-white/30 rounded-full backdrop-blur-xs font-semibold">VOYAGERS</span>
+        <span id="navVoyagersCount"
+          class="font-hud text-[9px] px-2 py-0.5 bg-white/20 text-white border border-white/30 rounded-full backdrop-blur-xs font-semibold">VOYAGERS</span>
       </button>
 
-      <button class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50/70 hover:text-indigo-900 transition-all group" data-tab="teacher" onclick="showTab('teacher')">
+      <button
+        class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50/70 hover:text-indigo-900 transition-all group"
+        data-tab="teacher" onclick="showTab('teacher')">
         <div class="flex items-center gap-3">
-          <span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors">tune</span>
+          <span
+            class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors">tune</span>
           <span class="font-headline text-[13px] font-semibold">Teacher Control</span>
         </div>
-        <span class="font-hud text-[9px] px-2 py-0.5 bg-indigo-50 text-indigo-600 border border-indigo-200/60 rounded-full font-bold">SYNAPSE</span>
+        <span
+          class="font-hud text-[9px] px-2 py-0.5 bg-indigo-50 text-indigo-600 border border-indigo-200/60 rounded-full font-bold">SYNAPSE</span>
       </button>
 
-      <button class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50/70 hover:text-indigo-900 transition-all group" data-tab="reports" onclick="showTab('reports')">
+      <button
+        class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50/70 hover:text-indigo-900 transition-all group"
+        data-tab="reports" onclick="showTab('reports')">
         <div class="flex items-center gap-3">
-          <span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors">analytics</span>
+          <span
+            class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors">analytics</span>
           <span class="font-headline text-[13px] font-semibold">Students Report</span>
         </div>
         <span class="font-hud text-[9px] px-2 py-0.5 bg-slate-100 text-slate-500 rounded-full font-semibold">LOGS</span>
       </button>
 
-      <button class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50/70 hover:text-indigo-900 transition-all group" data-tab="cards-library" onclick="showTab('cards-library')">
+      <button
+        class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50/70 hover:text-indigo-900 transition-all group"
+        data-tab="cards-library" onclick="showTab('cards-library')">
         <div class="flex items-center gap-3">
-          <span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors">style</span>
+          <span
+            class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors">style</span>
           <span class="font-headline text-[13px] font-semibold">Cards Library</span>
         </div>
-        <span class="font-hud text-[9px] px-2 py-0.5 bg-sky-50 text-sky-600 border border-sky-200/60 rounded-full font-bold">RELICS</span>
+        <span
+          class="font-hud text-[9px] px-2 py-0.5 bg-sky-50 text-sky-600 border border-sky-200/60 rounded-full font-bold">RELICS</span>
       </button>
 
-      <button class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50/70 hover:text-indigo-900 transition-all group" data-tab="games" onclick="showTab('games')">
+      <button
+        class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50/70 hover:text-indigo-900 transition-all group"
+        data-tab="games" onclick="showTab('games')">
         <div class="flex items-center gap-3">
-          <span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors">sports_esports</span>
+          <span
+            class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors">sports_esports</span>
           <span class="font-headline text-[13px] font-semibold">Games Hub</span>
         </div>
-        <span class="font-hud text-[9px] px-2 py-0.5 bg-rose-50 text-rose-600 border border-rose-200/60 rounded-full font-bold">NEBULA RAID</span>
+        <span
+          class="font-hud text-[9px] px-2 py-0.5 bg-rose-50 text-rose-600 border border-rose-200/60 rounded-full font-bold">NEBULA
+          RAID</span>
       </button>
 
-      <button class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50/70 hover:text-indigo-900 transition-all group" data-tab="settings" onclick="showTab('settings')">
+      <button
+        class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50/70 hover:text-indigo-900 transition-all group"
+        data-tab="settings" onclick="showTab('settings')">
         <div class="flex items-center gap-3">
-          <span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors">settings</span>
+          <span
+            class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors">settings</span>
           <span class="font-headline text-[13px] font-semibold">Classroom Settings</span>
         </div>
       </button>
 
-      <button class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50/70 hover:text-indigo-900 transition-all group" data-tab="guideline" onclick="showTab('guideline')">
+      <button
+        class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50/70 hover:text-indigo-900 transition-all group"
+        data-tab="guideline" onclick="showTab('guideline')">
         <div class="flex items-center gap-3">
-          <span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors">menu_book</span>
+          <span
+            class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors">menu_book</span>
           <span class="font-headline text-[13px] font-semibold">Guideline &amp; Manual</span>
         </div>
-        <span class="font-hud text-[9px] px-2 py-0.5 bg-purple-50 text-purple-600 border border-purple-200/60 rounded-full font-bold">GRIMOIRE</span>
+        <span
+          class="font-hud text-[9px] px-2 py-0.5 bg-purple-50 text-purple-600 border border-purple-200/60 rounded-full font-bold">GRIMOIRE</span>
       </button>
     </nav>
 
     <!-- Mentor Profile Badge -->
     <div class="p-3 border-t border-indigo-50 bg-gradient-to-b from-transparent to-indigo-50/40">
       <div class="flex items-center gap-2.5 p-2.5 bg-white/90 border border-indigo-100 rounded-2xl shadow-2xs">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-sky-400 flex items-center justify-center shrink-0 shadow-sm text-white font-bold">
+        <div
+          class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-sky-400 flex items-center justify-center shrink-0 shadow-sm text-white font-bold">
           <span class="material-symbols-outlined text-[18px]">verified_user</span>
         </div>
         <div class="flex flex-col min-w-0 flex-1">
@@ -280,23 +338,28 @@
     </div>
   </aside>
 
-  <!-- MAIN WRAPPER (OFFSET BY SIDEBAR ON DESKTOP) -->
-  <div class="lg:pl-72 flex flex-col min-h-screen">
-    
+  <!-- MAIN WRAPPER -->
+  <div class="flex flex-col min-h-screen">
+
     <!-- TOP FLOATING HEADER -->
-    <header class="fixed top-0 left-0 lg:left-72 right-0 h-16 bg-white/85 backdrop-blur-xl border-b border-indigo-100/70 z-40 px-4 lg:px-6 flex items-center justify-between gap-4">
+    <header
+      class="fixed top-0 left-0 right-0 h-16 bg-white/85 backdrop-blur-xl border-b border-indigo-100/70 z-40 px-4 lg:px-6 flex items-center justify-between gap-4">
       <div class="flex items-center gap-3.5">
-        <button onclick="toggleMobileDrawer(true)" class="lg:hidden w-9 h-9 text-slate-500 hover:bg-indigo-50 hover:text-indigo-600 border border-indigo-100/80 rounded-xl flex items-center justify-center transition-all" type="button">
+        <button onclick="toggleMobileDrawer(true)"
+          class="w-9 h-9 text-slate-500 hover:bg-indigo-50 hover:text-indigo-600 border border-indigo-100/80 rounded-xl flex items-center justify-center transition-all"
+          type="button">
           <span class="material-symbols-outlined text-[20px]">menu</span>
         </button>
 
         <div class="flex items-center gap-2.5 cursor-pointer" onclick="showTab('home')">
-          <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 via-primary to-sky-400 flex items-center justify-center text-white shadow-xs">
+          <div
+            class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 via-primary to-sky-400 flex items-center justify-center text-white shadow-xs">
             <span class="text-xs font-bold">✦</span>
           </div>
           <div class="hidden sm:flex flex-col">
             <div class="flex items-center gap-1.5">
-              <span class="font-headline text-[15px] font-bold tracking-tight text-indigo-950 leading-none">CLASS QUEST JOURNAL</span>
+              <span class="font-headline text-[15px] font-bold tracking-tight text-indigo-950 leading-none">CLASS QUEST
+                JOURNAL</span>
               <span class="text-indigo-500 text-xs">✦</span>
             </div>
             <span class="font-hud text-[9px] text-indigo-500 font-semibold mt-0.5">ASTRAL PEDAGOGY SYSTEM</span>
@@ -309,23 +372,27 @@
         <!-- Sanctum Multi-Class Dropdown -->
         <div class="flex items-center bg-indigo-50/70 border border-indigo-100 rounded-xl px-2.5 py-1.5 shadow-2xs">
           <span class="font-hud text-[10px] text-indigo-500 font-bold mr-1.5 hidden md:inline">SANCTUM:</span>
-          <select id="headerClassFilter" onchange="changeClassFilter(this.value)" class="bg-transparent font-headline text-[12px] font-semibold text-slate-700 focus:outline-none cursor-pointer pr-1 border-0 py-0"></select>
+          <select id="headerClassFilter" onchange="changeClassFilter(this.value)"
+            class="bg-transparent font-headline text-[12px] font-semibold text-slate-700 focus:outline-none cursor-pointer pr-1 border-0 py-0"></select>
         </div>
 
         <!-- Meeting / Cycle Input -->
         <div class="flex items-center bg-indigo-50/70 border border-indigo-100 rounded-xl px-2.5 py-1.5 shadow-2xs">
           <span class="font-hud text-[10px] text-indigo-500 font-bold mr-1 hidden sm:inline">CYCLE:</span>
-          <input id="headerMeetingInput" type="number" min="1" max="100" value="1" onchange="saveCurrentMeetingNumber()" class="w-12 bg-transparent font-headline text-[12px] text-indigo-600 font-bold text-center focus:outline-none border-0 p-0">
+          <input id="headerMeetingInput" type="number" min="1" max="100" value="1" onchange="saveCurrentMeetingNumber()"
+            class="w-12 bg-transparent font-headline text-[12px] text-indigo-600 font-bold text-center focus:outline-none border-0 p-0">
         </div>
 
         <div class="h-6 w-px bg-indigo-100 mx-1 hidden sm:block"></div>
 
         <!-- Quick Top Actions -->
         <div class="flex items-center gap-1.5">
-          <button onclick="toggleQuickReportOverlay()" title="Directives Quick Report" class="w-9 h-9 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100/80 rounded-xl flex items-center justify-center transition-all shadow-2xs">
+          <button onclick="toggleQuickReportOverlay()" title="Directives Quick Report"
+            class="w-9 h-9 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100/80 rounded-xl flex items-center justify-center transition-all shadow-2xs">
             <span class="material-symbols-outlined text-[18px]">bolt</span>
           </button>
-          <button onclick="showTab('reports')" title="Activity Logs" class="w-9 h-9 text-slate-500 hover:bg-indigo-50 hover:text-indigo-600 border border-indigo-100/80 rounded-xl flex items-center justify-center transition-all">
+          <button onclick="showTab('reports')" title="Activity Logs"
+            class="w-9 h-9 text-slate-500 hover:bg-indigo-50 hover:text-indigo-600 border border-indigo-100/80 rounded-xl flex items-center justify-center transition-all">
             <span class="material-symbols-outlined text-[18px]">notifications</span>
           </button>
         </div>
@@ -334,15 +401,19 @@
 
     <!-- MAIN STAGE -->
     <main class="relative pt-16 flex-1 flex flex-col">
-      
+
       <!-- SUBTAB / TELEMETRY DIAGNOSTIC BAR -->
-      <div class="bg-white/95 backdrop-blur-md border-b border-indigo-100/70 px-4 lg:px-6 py-2 flex flex-wrap items-center justify-between gap-3">
+      <div
+        class="bg-white/95 backdrop-blur-md border-b border-indigo-100/70 px-4 lg:px-6 py-2 flex flex-wrap items-center justify-between gap-3">
         <div class="flex items-center gap-1.5 p-1 bg-indigo-50/70 rounded-xl border border-indigo-100/80 shadow-2xs">
-          <button id="subtab-overview-btn" onclick="switchDisplaySubtab('grid')" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-indigo-600 via-primary to-indigo-500 text-white font-headline text-xs font-bold tracking-wide shadow-2xs flex items-center gap-1.5 transition-all">
+          <button id="subtab-overview-btn" onclick="switchDisplaySubtab('grid')"
+            class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-indigo-600 via-primary to-indigo-500 text-white font-headline text-xs font-bold tracking-wide shadow-2xs flex items-center gap-1.5 transition-all">
             <span class="text-xs">✦</span><span>CADET HUD OVERVIEW</span>
           </button>
-          <button id="subtab-ranking-btn" onclick="switchDisplaySubtab('ranking')" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-indigo-900 hover:bg-white font-headline text-xs font-semibold transition-all flex items-center gap-1.5">
-            <span class="material-symbols-outlined text-[16px] text-slate-400">leaderboard</span><span>SANCTUM RANKING</span>
+          <button id="subtab-ranking-btn" onclick="switchDisplaySubtab('ranking')"
+            class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-indigo-900 hover:bg-white font-headline text-xs font-semibold transition-all flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px] text-slate-400">leaderboard</span><span>SANCTUM
+              RANKING</span>
           </button>
         </div>
 
@@ -352,23 +423,33 @@
             <span>INTERFACE MODE // TACTICAL VIEW</span>
           </div>
           <span class="text-slate-300 hidden sm:inline">|</span>
-          <span id="telemetrySelectedStudent" class="font-hud text-[10px] text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-100 font-bold hidden sm:inline">TARGET: NONE</span>
+          <span id="telemetrySelectedStudent"
+            class="font-hud text-[10px] text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-100 font-bold hidden sm:inline">TARGET:
+            NONE</span>
         </div>
       </div>
 
       <!-- SECONDARY TELEMETRY STRIP -->
-      <div class="px-4 lg:px-6 py-2 bg-gradient-to-r from-indigo-50/80 via-purple-50/40 to-sky-50/60 border-b border-indigo-100/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+      <div
+        class="px-4 lg:px-6 py-2 bg-gradient-to-r from-indigo-50/80 via-purple-50/40 to-sky-50/60 border-b border-indigo-100/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
         <div class="flex items-center gap-3">
-          <div class="flex items-center gap-2 px-2.5 py-0.5 bg-white/90 rounded-full border border-indigo-100 shadow-2xs">
+          <div
+            class="flex items-center gap-2 px-2.5 py-0.5 bg-white/90 rounded-full border border-indigo-100 shadow-2xs">
             <span class="w-2 h-2 bg-indigo-500 rounded-full animate-pulse shadow-sm shadow-indigo-300"></span>
-            <span class="font-hud text-[10px] text-indigo-700 font-bold tracking-wider">ASTRAL HARMONY // RESONANT</span>
+            <span class="font-hud text-[10px] text-indigo-700 font-bold tracking-wider">ASTRAL HARMONY //
+              RESONANT</span>
           </div>
-          <span id="currentSanctumLabel" class="font-headline text-[11px] font-semibold text-slate-600 truncate">SANCTUM 8A // ASTRAL VANGUARD</span>
+          <span id="currentSanctumLabel" class="font-headline text-[11px] font-semibold text-slate-600 truncate">SANCTUM
+            8A // ASTRAL VANGUARD</span>
         </div>
         <div class="flex items-center gap-3">
-          <span id="vitalityPctLabel" class="font-hud text-[10px] text-indigo-500 tracking-wider font-semibold uppercase flex items-center gap-1">✦ STELLAR RESONANCE: 92%</span>
+          <span id="vitalityPctLabel"
+            class="font-hud text-[10px] text-indigo-500 tracking-wider font-semibold uppercase flex items-center gap-1">✦
+            STELLAR RESONANCE: 92%</span>
           <div class="h-2 w-28 bg-indigo-100/70 rounded-full overflow-hidden p-0.5 flex">
-            <div id="vitalityBarFill" class="h-full bg-gradient-to-r from-indigo-500 to-sky-400 rounded-full shadow-2xs transition-all duration-500" style="width: 92%;"></div>
+            <div id="vitalityBarFill"
+              class="h-full bg-gradient-to-r from-indigo-500 to-sky-400 rounded-full shadow-2xs transition-all duration-500"
+              style="width: 92%;"></div>
           </div>
         </div>
       </div>
@@ -381,25 +462,35 @@
         <!-- ========================================== -->
         <div id="tab-home" class="tab-content">
           <!-- Hero Banner -->
-          <div class="relative bg-gradient-to-br from-indigo-600 via-primary to-sky-500 text-white rounded-3xl p-6 lg:p-10 shadow-lg shadow-indigo-200 overflow-hidden mb-6">
-            <div class="absolute -right-16 -top-16 w-80 h-80 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="absolute -left-16 -bottom-16 w-80 h-80 bg-sky-300/20 rounded-full blur-3xl pointer-events-none"></div>
-            
+          <div
+            class="relative bg-gradient-to-br from-indigo-600 via-primary to-sky-500 text-white rounded-3xl p-6 lg:p-10 shadow-lg shadow-indigo-200 overflow-hidden mb-6">
+            <div class="absolute -right-16 -top-16 w-80 h-80 bg-white/10 rounded-full blur-3xl pointer-events-none">
+            </div>
+            <div class="absolute -left-16 -bottom-16 w-80 h-80 bg-sky-300/20 rounded-full blur-3xl pointer-events-none">
+            </div>
+
             <div class="relative z-10 max-w-3xl">
-              <span class="font-hud text-xs tracking-widest text-sky-200 bg-white/10 px-3 py-1 rounded-full border border-white/20 inline-block mb-3">✦ ENGLISH EXPEDITION &amp; QUEST PROTOCOL</span>
-              <h1 class="font-headline text-3xl lg:text-5xl font-extrabold tracking-tight mb-3">LEARN. EARN. SURVIVE.</h1>
+              <span
+                class="font-hud text-xs tracking-widest text-sky-200 bg-white/10 px-3 py-1 rounded-full border border-white/20 inline-block mb-3">✦
+                ENGLISH EXPEDITION &amp; QUEST PROTOCOL</span>
+              <h1 class="font-headline text-3xl lg:text-5xl font-extrabold tracking-tight mb-3">LEARN. EARN. SURVIVE.
+              </h1>
               <p class="font-body text-indigo-100 text-sm lg:text-base leading-relaxed mb-6">
-                Forge your academic destiny, turning English language mastery into a grand astral quest with epic relics, life points, and stardust rewards.
+                Forge your academic destiny, turning English language mastery into a grand astral quest with epic
+                relics, life points, and stardust rewards.
               </p>
-              
+
               <div class="flex flex-wrap gap-3">
-                <button onclick="showTab('display')" class="px-5 py-2.5 bg-white text-indigo-900 font-headline font-bold text-xs rounded-xl shadow-md hover:bg-indigo-50 transition-all flex items-center gap-2">
+                <button onclick="showTab('display')"
+                  class="px-5 py-2.5 bg-white text-indigo-900 font-headline font-bold text-xs rounded-xl shadow-md hover:bg-indigo-50 transition-all flex items-center gap-2">
                   <span class="material-symbols-outlined text-[18px]">grid_view</span> OPEN CLASS DISPLAY
                 </button>
-                <button onclick="toggleQuickReportOverlay()" class="px-5 py-2.5 bg-white/20 hover:bg-white/30 text-white border border-white/30 font-headline font-bold text-xs rounded-xl backdrop-blur-xs transition-all flex items-center gap-2">
+                <button onclick="toggleQuickReportOverlay()"
+                  class="px-5 py-2.5 bg-white/20 hover:bg-white/30 text-white border border-white/30 font-headline font-bold text-xs rounded-xl backdrop-blur-xs transition-all flex items-center gap-2">
                   <span class="material-symbols-outlined text-[18px]">bolt</span> DIRECTIVES REPORT
                 </button>
-                <button onclick="showTab('games')" class="px-5 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-900 font-headline font-bold text-xs rounded-xl shadow-sm transition-all flex items-center gap-2">
+                <button onclick="showTab('games')"
+                  class="px-5 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-900 font-headline font-bold text-xs rounded-xl shadow-sm transition-all flex items-center gap-2">
                   <span class="material-symbols-outlined text-[18px]">sports_esports</span> LAUNCH GAMES HUB
                 </button>
               </div>
@@ -408,43 +499,55 @@
 
           <!-- Shortcuts Grid -->
           <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
-            <div onclick="showTab('display')" class="glow-card p-5 bg-white/95 rounded-2xl border border-indigo-100 cursor-pointer flex flex-col gap-3 group">
-              <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-500 to-sky-400 text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+            <div onclick="showTab('display')"
+              class="glow-card p-5 bg-white/95 rounded-2xl border border-indigo-100 cursor-pointer flex flex-col gap-3 group">
+              <div
+                class="w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-500 to-sky-400 text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
                 <span class="material-symbols-outlined text-[24px]">grid_view</span>
               </div>
               <div>
                 <h3 class="font-headline font-bold text-base text-indigo-950">Class Display</h3>
-                <p class="font-body text-xs text-slate-500 mt-1">Live front-of-class interactive view showcasing student vitality, rank badges, and active leaderboards.</p>
+                <p class="font-body text-xs text-slate-500 mt-1">Live front-of-class interactive view showcasing student
+                  vitality, rank badges, and active leaderboards.</p>
               </div>
             </div>
 
-            <div onclick="showTab('teacher')" class="glow-card p-5 bg-white/95 rounded-2xl border border-indigo-100 cursor-pointer flex flex-col gap-3 group">
-              <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-400 text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+            <div onclick="showTab('teacher')"
+              class="glow-card p-5 bg-white/95 rounded-2xl border border-indigo-100 cursor-pointer flex flex-col gap-3 group">
+              <div
+                class="w-12 h-12 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-400 text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
                 <span class="material-symbols-outlined text-[24px]">tune</span>
               </div>
               <div>
                 <h3 class="font-headline font-bold text-base text-indigo-950">Teacher Control</h3>
-                <p class="font-body text-xs text-slate-500 mt-1">Manage class rosters, resolve tactical card plays, and batch-distribute Gold rewards to scholars.</p>
+                <p class="font-body text-xs text-slate-500 mt-1">Manage class rosters, resolve tactical card plays, and
+                  batch-distribute Gold rewards to scholars.</p>
               </div>
             </div>
 
-            <div onclick="showTab('reports')" class="glow-card p-5 bg-white/95 rounded-2xl border border-indigo-100 cursor-pointer flex flex-col gap-3 group">
-              <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-400 text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+            <div onclick="showTab('reports')"
+              class="glow-card p-5 bg-white/95 rounded-2xl border border-indigo-100 cursor-pointer flex flex-col gap-3 group">
+              <div
+                class="w-12 h-12 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-400 text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
                 <span class="material-symbols-outlined text-[24px]">analytics</span>
               </div>
               <div>
                 <h3 class="font-headline font-bold text-base text-indigo-950">Students Report</h3>
-                <p class="font-body text-xs text-slate-500 mt-1">Track individual English conduct histories, LP adjustments, and Gold ledgers session by session.</p>
+                <p class="font-body text-xs text-slate-500 mt-1">Track individual English conduct histories, LP
+                  adjustments, and Gold ledgers session by session.</p>
               </div>
             </div>
 
-            <div onclick="showTab('cards-library')" class="glow-card p-5 bg-white/95 rounded-2xl border border-indigo-100 cursor-pointer flex flex-col gap-3 group">
-              <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-purple-500 to-indigo-500 text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+            <div onclick="showTab('cards-library')"
+              class="glow-card p-5 bg-white/95 rounded-2xl border border-indigo-100 cursor-pointer flex flex-col gap-3 group">
+              <div
+                class="w-12 h-12 rounded-xl bg-gradient-to-tr from-purple-500 to-indigo-500 text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
                 <span class="material-symbols-outlined text-[24px]">style</span>
               </div>
               <div>
                 <h3 class="font-headline font-bold text-base text-indigo-950">Cards Library</h3>
-                <p class="font-body text-xs text-slate-500 mt-1">Explore all 7 tactical playable cards including Time Warp, LP Donor, Voodoo, and Gold Rush.</p>
+                <p class="font-body text-xs text-slate-500 mt-1">Explore all 7 tactical playable cards including Time
+                  Warp, LP Donor, Voodoo, and Gold Rush.</p>
               </div>
             </div>
           </div>
@@ -455,37 +558,53 @@
         <!-- ========================================== -->
         <div id="tab-display" class="tab-content active">
           <!-- Top HUD Statistics Banner -->
-          <div class="bg-white/90 backdrop-blur-md rounded-2xl p-5 lg:p-6 shadow-sm border border-indigo-100/80 flex flex-col gap-5 relative overflow-hidden">
-            <div class="absolute -right-12 -top-12 w-56 h-56 bg-gradient-to-br from-indigo-200/30 via-purple-200/20 to-pink-200/10 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="absolute -left-12 -bottom-12 w-56 h-56 bg-gradient-to-tr from-sky-200/30 to-indigo-200/10 rounded-full blur-3xl pointer-events-none"></div>
-            
+          <div
+            class="bg-white/90 backdrop-blur-md rounded-2xl p-5 lg:p-6 shadow-sm border border-indigo-100/80 flex flex-col gap-5 relative overflow-hidden">
+            <div
+              class="absolute -right-12 -top-12 w-56 h-56 bg-gradient-to-br from-indigo-200/30 via-purple-200/20 to-pink-200/10 rounded-full blur-3xl pointer-events-none">
+            </div>
+            <div
+              class="absolute -left-12 -bottom-12 w-56 h-56 bg-gradient-to-tr from-sky-200/30 to-indigo-200/10 rounded-full blur-3xl pointer-events-none">
+            </div>
+
             <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-5 relative z-10">
               <!-- Metric Readouts -->
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 flex-1">
                 <!-- Total Operatives Metric -->
-                <div class="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-br from-indigo-50/60 to-purple-50/30 border border-indigo-100/70 shadow-2xs">
-                  <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-500 to-indigo-600 flex items-center justify-center shrink-0 shadow-md shadow-indigo-200 text-white">
+                <div
+                  class="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-br from-indigo-50/60 to-purple-50/30 border border-indigo-100/70 shadow-2xs">
+                  <div
+                    class="w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-500 to-indigo-600 flex items-center justify-center shrink-0 shadow-md shadow-indigo-200 text-white">
                     <span class="material-symbols-outlined text-[24px]">group</span>
                   </div>
                   <div class="flex flex-col min-w-0">
-                    <span class="font-hud text-[10px] text-indigo-500 font-bold uppercase tracking-wider flex items-center gap-1">✦ STAR VOYAGERS</span>
+                    <span
+                      class="font-hud text-[10px] text-indigo-500 font-bold uppercase tracking-wider flex items-center gap-1">✦
+                      STAR VOYAGERS</span>
                     <div class="flex items-baseline gap-1.5">
-                      <span id="statTotalStudents" class="font-headline text-2xl font-bold text-indigo-950 tracking-tight">0</span>
+                      <span id="statTotalStudents"
+                        class="font-headline text-2xl font-bold text-indigo-950 tracking-tight">0</span>
                       <span class="font-headline text-xs font-semibold text-indigo-600">CADETS</span>
                     </div>
-                    <span id="statClassDeployment" class="font-body text-[11px] text-slate-500 truncate">Active in Deployment</span>
+                    <span id="statClassDeployment" class="font-body text-[11px] text-slate-500 truncate">Active in
+                      Deployment</span>
                   </div>
                 </div>
 
                 <!-- Class Gold Metric -->
-                <div class="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-br from-amber-50/80 to-yellow-50/40 border border-amber-200/60 shadow-2xs">
-                  <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-amber-400 to-amber-500 flex items-center justify-center shrink-0 shadow-md shadow-amber-200 text-white">
+                <div
+                  class="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-br from-amber-50/80 to-yellow-50/40 border border-amber-200/60 shadow-2xs">
+                  <div
+                    class="w-12 h-12 rounded-xl bg-gradient-to-tr from-amber-400 to-amber-500 flex items-center justify-center shrink-0 shadow-md shadow-amber-200 text-white">
                     <span class="material-symbols-outlined text-[24px]">toll</span>
                   </div>
                   <div class="flex flex-col min-w-0">
-                    <span class="font-hud text-[10px] text-amber-700 font-bold uppercase tracking-wider flex items-center gap-1">✦ STARDUST GOLD</span>
+                    <span
+                      class="font-hud text-[10px] text-amber-700 font-bold uppercase tracking-wider flex items-center gap-1">✦
+                      STARDUST GOLD</span>
                     <div class="flex items-baseline gap-1.5">
-                      <span id="statClassGold" class="font-headline text-2xl font-bold text-amber-900 tracking-tight">0</span>
+                      <span id="statClassGold"
+                        class="font-headline text-2xl font-bold text-amber-900 tracking-tight">0</span>
                       <span class="font-headline text-xs font-bold text-amber-600">GP</span>
                     </div>
                     <span class="font-body text-[11px] text-slate-500 truncate">Total Vault Reserve</span>
@@ -493,14 +612,19 @@
                 </div>
 
                 <!-- Avg Class LP Metric -->
-                <div class="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-br from-sky-50/80 to-indigo-50/40 border border-sky-200/60 shadow-2xs">
-                  <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-sky-400 to-indigo-500 flex items-center justify-center shrink-0 shadow-md shadow-sky-200 text-white">
+                <div
+                  class="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-br from-sky-50/80 to-indigo-50/40 border border-sky-200/60 shadow-2xs">
+                  <div
+                    class="w-12 h-12 rounded-xl bg-gradient-to-tr from-sky-400 to-indigo-500 flex items-center justify-center shrink-0 shadow-md shadow-sky-200 text-white">
                     <span class="material-symbols-outlined text-[24px]">favorite</span>
                   </div>
                   <div class="flex flex-col min-w-0">
-                    <span class="font-hud text-[10px] text-sky-700 font-bold uppercase tracking-wider flex items-center gap-1">✦ SANCTUM VITALITY</span>
+                    <span
+                      class="font-hud text-[10px] text-sky-700 font-bold uppercase tracking-wider flex items-center gap-1">✦
+                      SANCTUM VITALITY</span>
                     <div class="flex items-baseline gap-1.5">
-                      <span id="statAvgLP" class="font-headline text-2xl font-bold text-indigo-950 tracking-tight">0.0</span>
+                      <span id="statAvgLP"
+                        class="font-headline text-2xl font-bold text-indigo-950 tracking-tight">0.0</span>
                       <span class="font-headline text-xs font-bold text-sky-600">/ 50 LP</span>
                     </div>
                     <span class="font-body text-[11px] text-slate-500 truncate">Morale Stable // Zero Overload</span>
@@ -509,45 +633,56 @@
               </div>
 
               <!-- Quick Search Field -->
-              <div class="xl:w-72 flex items-center bg-indigo-50/50 hover:bg-indigo-50/80 px-3.5 py-2.5 rounded-xl border border-indigo-100 transition-all shadow-2xs">
+              <div
+                class="xl:w-72 flex items-center bg-indigo-50/50 hover:bg-indigo-50/80 px-3.5 py-2.5 rounded-xl border border-indigo-100 transition-all shadow-2xs">
                 <span class="material-symbols-outlined text-indigo-400 text-[20px] mr-2">search</span>
-                <input id="studentSearchInput" type="text" placeholder="SEARCH VOYAGER..." class="bg-transparent font-headline text-[12px] text-indigo-950 placeholder:text-slate-400 focus:outline-none w-full font-medium border-0 p-0">
-                <span class="font-hud text-[9px] text-indigo-400 uppercase px-1.5 py-0.5 bg-white rounded-md border border-indigo-100 font-bold shadow-2xs">ESC</span>
+                <input id="studentSearchInput" type="text" placeholder="SEARCH VOYAGER..."
+                  class="bg-transparent font-headline text-[12px] text-indigo-950 placeholder:text-slate-400 focus:outline-none w-full font-medium border-0 p-0">
+                <span
+                  class="font-hud text-[9px] text-indigo-400 uppercase px-1.5 py-0.5 bg-white rounded-md border border-indigo-100 font-bold shadow-2xs">ESC</span>
               </div>
             </div>
 
             <!-- Tactical Filter Tabs & Quick Report Launch -->
             <div class="flex flex-wrap items-center justify-between border-t border-indigo-50 pt-4 gap-3">
               <div class="flex flex-wrap items-center gap-2">
-                <button data-filter="all" class="filter-btn active px-3 py-1.5 rounded-xl bg-primary text-white font-headline text-xs font-bold shadow-sm shadow-indigo-200 transition-all flex items-center gap-1.5">
+                <button data-filter="all"
+                  class="filter-btn active px-3 py-1.5 rounded-xl bg-primary text-white font-headline text-xs font-bold shadow-sm shadow-indigo-200 transition-all flex items-center gap-1.5">
                   <span class="text-xs">✦</span>ALL CADETS
                 </button>
-                <button data-filter="high" class="filter-btn px-3 py-1.5 rounded-xl bg-white text-slate-600 font-headline text-xs font-medium border border-indigo-100 hover:bg-indigo-50 hover:text-indigo-700 transition-all">
+                <button data-filter="high"
+                  class="filter-btn px-3 py-1.5 rounded-xl bg-white text-slate-600 font-headline text-xs font-medium border border-indigo-100 hover:bg-indigo-50 hover:text-indigo-700 transition-all">
                   HIGH VITALITY
                 </button>
-                <button data-filter="mid" class="filter-btn px-3 py-1.5 rounded-xl bg-white text-slate-600 font-headline text-xs font-medium border border-indigo-100 hover:bg-indigo-50 hover:text-indigo-700 transition-all">
+                <button data-filter="mid"
+                  class="filter-btn px-3 py-1.5 rounded-xl bg-white text-slate-600 font-headline text-xs font-medium border border-indigo-100 hover:bg-indigo-50 hover:text-indigo-700 transition-all">
                   VULNERABLE
                 </button>
-                <button data-filter="critical" class="filter-btn px-3 py-1.5 rounded-xl bg-white text-slate-600 font-headline text-xs font-medium border border-indigo-100 hover:bg-indigo-50 hover:text-indigo-700 transition-all">
+                <button data-filter="critical"
+                  class="filter-btn px-3 py-1.5 rounded-xl bg-white text-slate-600 font-headline text-xs font-medium border border-indigo-100 hover:bg-indigo-50 hover:text-indigo-700 transition-all">
                   CRITICAL
                 </button>
               </div>
 
-              <button onclick="toggleQuickReportOverlay()" class="px-5 py-2.5 bg-gradient-to-r from-indigo-600 via-primary to-indigo-500 text-white font-headline text-xs font-bold tracking-wide rounded-xl flex items-center gap-2 hover:shadow-md hover:shadow-indigo-200 transition-all group shadow-sm">
-                <span class="material-symbols-outlined text-[18px] group-hover:rotate-12 transition-transform">bolt</span>
+              <button onclick="toggleQuickReportOverlay()"
+                class="px-5 py-2.5 bg-gradient-to-r from-indigo-600 via-primary to-indigo-500 text-white font-headline text-xs font-bold tracking-wide rounded-xl flex items-center gap-2 hover:shadow-md hover:shadow-indigo-200 transition-all group shadow-sm">
+                <span
+                  class="material-symbols-outlined text-[18px] group-hover:rotate-12 transition-transform">bolt</span>
                 <span>QUICK REPORT</span>
               </button>
             </div>
           </div>
 
           <!-- SUBVIEW 1: CLEAN CADET ROSTER GRID (No interactive buttons underneath) -->
-          <div id="displaySubtabGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6"></div>
+          <div id="displaySubtabGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+          </div>
 
           <!-- SUBVIEW 2: PLAYER'S RANKING PODIUM & LIST -->
           <div id="displaySubtabRanking" class="hidden flex-col gap-6">
             <!-- Podium 1-2-3 -->
             <div class="bg-white/95 rounded-2xl p-6 border border-indigo-100 shadow-sm flex flex-col items-center">
-              <span class="font-hud text-xs text-amber-600 font-bold uppercase tracking-wider mb-2">✦ SANCTUM PODIUM OF HONOR</span>
+              <span class="font-hud text-xs text-amber-600 font-bold uppercase tracking-wider mb-2">✦ SANCTUM PODIUM OF
+                HONOR</span>
               <h2 class="font-headline text-xl font-bold text-indigo-950 mb-6">Top Astral Achievers</h2>
               <div id="podiumWrapper" class="flex justify-center items-end gap-4 w-full max-w-lg min-h-[220px]"></div>
             </div>
@@ -562,9 +697,11 @@
           </div>
 
           <!-- Bottom Floating Voyager Directive Bar -->
-          <div class="bg-white/90 backdrop-blur-md rounded-2xl p-5 shadow-sm border border-indigo-100 flex flex-col sm:flex-row items-center justify-between gap-4 mt-2">
+          <div
+            class="bg-white/90 backdrop-blur-md rounded-2xl p-5 shadow-sm border border-indigo-100 flex flex-col sm:flex-row items-center justify-between gap-4 mt-2">
             <div class="flex items-center gap-3.5">
-              <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-sky-400 flex items-center justify-center text-white shadow-sm shadow-indigo-200">
+              <div
+                class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-sky-400 flex items-center justify-center text-white shadow-sm shadow-indigo-200">
                 <span class="material-symbols-outlined text-[22px]">layers</span>
               </div>
               <div class="flex flex-col">
@@ -572,15 +709,19 @@
                   <span class="font-headline text-[15px] font-bold text-indigo-950">VOYAGER DIRECTIVE</span>
                   <span class="text-xs text-indigo-500">✦</span>
                 </div>
-                <span class="font-body text-xs text-slate-500">Centralized directives for all registered cadets in this Sanctum</span>
+                <span class="font-body text-xs text-slate-500">Centralized directives for all registered cadets in this
+                  Sanctum</span>
               </div>
             </div>
             <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
-              <button onclick="resetLP()" class="px-4 py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-headline text-xs font-bold rounded-xl border border-indigo-200/60 transition-all flex items-center gap-1.5">
+              <button onclick="resetLP()"
+                class="px-4 py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-headline text-xs font-bold rounded-xl border border-indigo-200/60 transition-all flex items-center gap-1.5">
                 RESET LIFE POINT (50 LP)
               </button>
-              <button onclick="toggleQuickReportOverlay()" class="px-5 py-2.5 bg-gradient-to-r from-indigo-600 via-primary to-indigo-500 text-white font-headline text-xs font-bold tracking-wide rounded-xl flex items-center gap-2 hover:shadow-md hover:shadow-indigo-200 transition-all shadow-sm group">
-                <span class="material-symbols-outlined text-[18px] group-hover:rotate-12 transition-transform">bolt</span>
+              <button onclick="toggleQuickReportOverlay()"
+                class="px-5 py-2.5 bg-gradient-to-r from-indigo-600 via-primary to-indigo-500 text-white font-headline text-xs font-bold tracking-wide rounded-xl flex items-center gap-2 hover:shadow-md hover:shadow-indigo-200 transition-all shadow-sm group">
+                <span
+                  class="material-symbols-outlined text-[18px] group-hover:rotate-12 transition-transform">bolt</span>
                 <span>QUICK REPORT</span>
               </button>
             </div>
@@ -592,21 +733,29 @@
         <!-- ========================================== -->
         <div id="tab-teacher" class="tab-content">
           <!-- Batch Gold Awarding Bar -->
-          <div class="bg-white/95 rounded-2xl p-4 border border-amber-200 shadow-sm flex flex-wrap items-center justify-between gap-4 mb-6">
+          <div
+            class="bg-white/95 rounded-2xl p-4 border border-amber-200 shadow-sm flex flex-wrap items-center justify-between gap-4 mb-6">
             <div class="flex items-center gap-3">
               <span class="text-xl">🪙</span>
               <div>
                 <strong class="font-headline text-sm font-bold text-amber-800 block">Batch Gold Awarding</strong>
-                <span class="font-body text-xs text-slate-500">Quickly award participation stardust to selected scholars.</span>
+                <span class="font-body text-xs text-slate-500">Quickly award participation stardust to selected
+                  scholars.</span>
               </div>
             </div>
             <div class="flex items-center gap-3 flex-wrap">
-              <button onclick="toggleSelectAllRoster(true)" class="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-headline text-xs font-bold rounded-lg border border-indigo-200 transition-all">Select All</button>
-              <button onclick="toggleSelectAllRoster(false)" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-headline text-xs font-bold rounded-lg border border-slate-200 transition-all">Deselect All</button>
+              <button onclick="toggleSelectAllRoster(true)"
+                class="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-headline text-xs font-bold rounded-lg border border-indigo-200 transition-all">Select
+                All</button>
+              <button onclick="toggleSelectAllRoster(false)"
+                class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-headline text-xs font-bold rounded-lg border border-slate-200 transition-all">Deselect
+                All</button>
               <div class="flex items-center gap-2">
                 <label class="font-headline text-xs font-semibold text-slate-700">Amount (+G):</label>
-                <input id="batchGoldInput" type="number" value="5" min="1" max="100" class="w-16 px-2 py-1 text-center font-bold text-xs bg-indigo-50 border border-indigo-200 rounded-lg">
-                <button onclick="awardBatchGold()" class="px-4 py-1.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-headline text-xs font-bold rounded-lg shadow-sm transition-all">
+                <input id="batchGoldInput" type="number" value="5" min="1" max="100"
+                  class="w-16 px-2 py-1 text-center font-bold text-xs bg-indigo-50 border border-indigo-200 rounded-lg">
+                <button onclick="awardBatchGold()"
+                  class="px-4 py-1.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-headline text-xs font-bold rounded-lg shadow-sm transition-all">
                   Distribute Gold
                 </button>
               </div>
@@ -627,10 +776,13 @@
             </div>
 
             <!-- Right: Selected Student Detail Panel -->
-            <div class="lg:col-span-4 bg-white/95 rounded-2xl p-5 border border-indigo-100 shadow-sm flex flex-col gap-5">
+            <div
+              class="lg:col-span-4 bg-white/95 rounded-2xl p-5 border border-indigo-100 shadow-sm flex flex-col gap-5">
               <div class="text-center pb-3 border-b border-indigo-50">
-                <span class="font-hud text-[10px] text-indigo-500 uppercase font-bold tracking-wider">SELECTED OPERATIVE</span>
-                <h4 id="panelStudentName" class="font-headline text-lg font-bold text-indigo-950 mt-1">Select a Student</h4>
+                <span class="font-hud text-[10px] text-indigo-500 uppercase font-bold tracking-wider">SELECTED
+                  OPERATIVE</span>
+                <h4 id="panelStudentName" class="font-headline text-lg font-bold text-indigo-950 mt-1">Select a Student
+                </h4>
               </div>
 
               <!-- Top LP & Gold Stats -->
@@ -639,8 +791,10 @@
                   <span class="font-hud text-[10px] text-slate-500 font-bold uppercase">LIFE POINTS</span>
                   <div id="panelLP" class="font-headline text-2xl font-bold text-indigo-600 mt-0.5">-</div>
                 </div>
-                <div onclick="openShop()" class="p-3 bg-amber-50/60 hover:bg-amber-100/70 rounded-xl border border-amber-200 text-center cursor-pointer transition-all group">
-                  <span class="font-hud text-[10px] text-amber-700 font-bold uppercase flex items-center justify-center gap-1">
+                <div onclick="openShop()"
+                  class="p-3 bg-amber-50/60 hover:bg-amber-100/70 rounded-xl border border-amber-200 text-center cursor-pointer transition-all group">
+                  <span
+                    class="font-hud text-[10px] text-amber-700 font-bold uppercase flex items-center justify-center gap-1">
                     GOLD (OPEN SHOP) <span class="material-symbols-outlined text-[14px]">storefront</span>
                   </span>
                   <div id="panelGold" class="font-headline text-2xl font-bold text-amber-600 mt-0.5">-</div>
@@ -653,7 +807,8 @@
                   <span class="font-headline text-xs font-bold text-indigo-950">HELD CARDS (Click to Expand)</span>
                   <span class="font-hud text-[10px] text-indigo-500">INVENTORY</span>
                 </div>
-                <div id="panelCards" class="flex-1 overflow-y-auto max-h-[350px] bg-slate-50/50 rounded-xl p-3 border border-indigo-50 space-y-2">
+                <div id="panelCards"
+                  class="flex-1 overflow-y-auto max-h-[350px] bg-slate-50/50 rounded-xl p-3 border border-indigo-50 space-y-2">
                   Select a student to view inventory.
                 </div>
               </div>
@@ -668,21 +823,26 @@
           <div class="bg-white/95 rounded-2xl p-5 border border-indigo-100 shadow-sm flex flex-col gap-4">
             <div class="flex flex-wrap items-center justify-between gap-3 border-b border-indigo-50 pb-4">
               <div class="flex items-center gap-2">
-                <button id="reports-subtab-lp-btn" onclick="switchReportsSubtab('lp')" class="subtab-btn active px-3.5 py-1.5 rounded-xl bg-primary text-white font-headline text-xs font-bold shadow-2xs">
+                <button id="reports-subtab-lp-btn" onclick="switchReportsSubtab('lp')"
+                  class="subtab-btn active px-3.5 py-1.5 rounded-xl bg-primary text-white font-headline text-xs font-bold shadow-2xs">
                   🛡️ LP Conduct History
                 </button>
-                <button id="reports-subtab-gold-btn" onclick="switchReportsSubtab('gold')" class="subtab-btn px-3.5 py-1.5 rounded-xl bg-white text-slate-600 font-headline text-xs font-semibold border border-indigo-100 hover:bg-indigo-50">
+                <button id="reports-subtab-gold-btn" onclick="switchReportsSubtab('gold')"
+                  class="subtab-btn px-3.5 py-1.5 rounded-xl bg-white text-slate-600 font-headline text-xs font-semibold border border-indigo-100 hover:bg-indigo-50">
                   🪙 Gold Ledger
                 </button>
               </div>
-              <button onclick="exportReportsToCSV()" class="px-4 py-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-headline text-xs font-bold rounded-xl shadow-2xs flex items-center gap-1.5 transition-all">
+              <button onclick="exportReportsToCSV()"
+                class="px-4 py-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-headline text-xs font-bold rounded-xl shadow-2xs flex items-center gap-1.5 transition-all">
                 <span class="material-symbols-outlined text-[16px]">download</span> Export Class CSV Data
               </button>
             </div>
 
             <div>
-              <h2 id="reportsTabHeading" class="font-headline text-xl font-bold text-indigo-950">📝 Students LP Conduct History</h2>
-              <p class="font-body text-xs text-slate-500 mt-0.5">Click any cadet row below to reveal their full chronological logs.</p>
+              <h2 id="reportsTabHeading" class="font-headline text-xl font-bold text-indigo-950">📝 Students LP Conduct
+                History</h2>
+              <p class="font-body text-xs text-slate-500 mt-0.5">Click any cadet row below to reveal their full
+                chronological logs.</p>
             </div>
 
             <div id="reportsAccordionContainer" class="flex flex-col gap-3 mt-2 overflow-y-auto max-h-[700px]"></div>
@@ -694,11 +854,14 @@
         <!-- ========================================== -->
         <div id="tab-cards-library" class="tab-content">
           <div class="mb-4">
-            <span class="font-hud text-xs text-indigo-500 font-bold uppercase tracking-wider">✦ ARTIFACT ENCYCLOPEDIA</span>
+            <span class="font-hud text-xs text-indigo-500 font-bold uppercase tracking-wider">✦ ARTIFACT
+              ENCYCLOPEDIA</span>
             <h2 class="font-headline text-2xl font-bold text-indigo-950 mt-1">Tactical Relic Cards</h2>
-            <p class="font-body text-xs text-slate-500">Playable intervention scrolls &amp; tactical relics that cadets can draw from the Sanctum Shop.</p>
+            <p class="font-body text-xs text-slate-500">Playable intervention scrolls &amp; tactical relics that cadets
+              can draw from the Sanctum Shop.</p>
           </div>
-          <div id="cardsLibraryContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5"></div>
+          <div id="cardsLibraryContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
+          </div>
         </div>
 
         <!-- ========================================== -->
@@ -707,11 +870,14 @@
         <div id="tab-games" class="tab-content">
           <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
             <div>
-              <span class="font-hud text-xs text-rose-500 font-bold uppercase tracking-wider">✦ CLASSROOM ENGAGEMENT</span>
+              <span class="font-hud text-xs text-rose-500 font-bold uppercase tracking-wider">✦ CLASSROOM
+                ENGAGEMENT</span>
               <h2 class="font-headline text-2xl font-bold text-indigo-950 mt-1">Interactive Classroom Games</h2>
-              <p class="font-body text-xs text-slate-500">Launch live games for English vocabulary, grammar drills, and sentence puzzles with stardust rewards.</p>
+              <p class="font-body text-xs text-slate-500">Launch live games for English vocabulary, grammar drills, and
+                sentence puzzles with stardust rewards.</p>
             </div>
-            <button onclick="goToManageGames()" class="px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-headline text-xs font-bold rounded-xl border border-indigo-200 transition-all flex items-center gap-1.5">
+            <button onclick="goToManageGames()"
+              class="px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-headline text-xs font-bold rounded-xl border border-indigo-200 transition-all flex items-center gap-1.5">
               <span class="material-symbols-outlined text-[16px]">settings</span> Manage Games
             </button>
           </div>
@@ -723,7 +889,8 @@
         <!-- ========================================== -->
         <div id="tab-settings" class="tab-content">
           <div class="mb-4">
-            <span class="font-hud text-xs text-indigo-500 font-bold uppercase tracking-wider">✦ ARCHIVE DIRECTORY CONFIG</span>
+            <span class="font-hud text-xs text-indigo-500 font-bold uppercase tracking-wider">✦ ARCHIVE DIRECTORY
+              CONFIG</span>
             <h2 class="font-headline text-2xl font-bold text-indigo-950 mt-1">Classroom Settings</h2>
           </div>
 
@@ -733,13 +900,17 @@
               <h3 class="font-headline text-base font-bold text-indigo-950 flex items-center gap-2 mb-2">
                 <span class="material-symbols-outlined text-indigo-600">save</span> Data Backup &amp; Restore (JSON)
               </h3>
-              <p class="font-body text-xs text-slate-500 mb-4">Export all classes, student rosters, cards, and reports into a JSON file, or restore from a previously saved backup.</p>
+              <p class="font-body text-xs text-slate-500 mb-4">Export all classes, student rosters, cards, and reports
+                into a JSON file, or restore from a previously saved backup.</p>
               <div class="flex flex-wrap gap-3">
-                <button onclick="exportDataToJSON()" class="px-4 py-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-headline text-xs font-bold rounded-xl shadow-2xs">
+                <button onclick="exportDataToJSON()"
+                  class="px-4 py-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-headline text-xs font-bold rounded-xl shadow-2xs">
                   📥 Export Roster Data (.json)
                 </button>
-                <input type="file" id="importJsonFileInput" accept=".json" class="hidden" onchange="importDataFromJSON(event)">
-                <button onclick="document.getElementById('importJsonFileInput').click()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-headline text-xs font-bold rounded-xl shadow-2xs">
+                <input type="file" id="importJsonFileInput" accept=".json" class="hidden"
+                  onchange="importDataFromJSON(event)">
+                <button onclick="document.getElementById('importJsonFileInput').click()"
+                  class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-headline text-xs font-bold rounded-xl shadow-2xs">
                   📤 Import JSON Backup
                 </button>
               </div>
@@ -749,13 +920,19 @@
             <div class="bg-white/95 rounded-2xl p-5 border border-indigo-100 shadow-sm">
               <h3 class="font-headline text-base font-bold text-indigo-950 mb-3">1. Sanctum (Class) Management</h3>
               <div class="flex flex-wrap gap-3 mb-4">
-                <input id="newClassNameInput" type="text" placeholder="New Class Name (e.g. 7A or 10-Science)" class="px-3.5 py-2 text-xs bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 w-64">
-                <button onclick="addClass()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-headline text-xs font-bold rounded-xl">Add Sanctum</button>
+                <input id="newClassNameInput" type="text" placeholder="New Class Name (e.g. 7A or 10-Science)"
+                  class="px-3.5 py-2 text-xs bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 w-64">
+                <button onclick="addClass()"
+                  class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-headline text-xs font-bold rounded-xl">Add
+                  Sanctum</button>
               </div>
               <div class="flex items-center gap-3 pt-3 border-t border-indigo-50">
                 <label class="font-body text-xs text-slate-600 font-semibold">Delete Sanctum:</label>
-                <select id="deleteClassSelect" class="px-3 py-1.5 text-xs bg-indigo-50/60 border border-indigo-200 rounded-xl"></select>
-                <button onclick="deleteSelectedClass()" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-headline text-xs font-bold rounded-xl">Erase Sanctum</button>
+                <select id="deleteClassSelect"
+                  class="px-3 py-1.5 text-xs bg-indigo-50/60 border border-indigo-200 rounded-xl"></select>
+                <button onclick="deleteSelectedClass()"
+                  class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-headline text-xs font-bold rounded-xl">Erase
+                  Sanctum</button>
               </div>
             </div>
 
@@ -763,10 +940,17 @@
             <div class="bg-white/95 rounded-2xl p-5 border border-indigo-100 shadow-sm">
               <h3 class="font-headline text-base font-bold text-indigo-950 mb-3">2. Cadet (Student) Registration</h3>
               <div class="flex flex-wrap items-center gap-3">
-                <select id="addStudentClassSelect" onchange="changeClassFilter(this.value)" class="px-3 py-2 text-xs bg-indigo-50/60 border border-indigo-200 rounded-xl"></select>
-                <input id="studentNameInput" type="text" placeholder="Full Student Name" onkeydown="if(event.key==='Enter') addStudent()" class="px-3.5 py-2 text-xs bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none w-52">
-                <input id="studentNickInput" type="text" placeholder="Callsign / Nickname" onkeydown="if(event.key==='Enter') addStudent()" class="px-3.5 py-2 text-xs bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none w-44">
-                <button onclick="addStudent()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-headline text-xs font-bold rounded-xl">Add Cadet</button>
+                <select id="addStudentClassSelect" onchange="changeClassFilter(this.value)"
+                  class="px-3 py-2 text-xs bg-indigo-50/60 border border-indigo-200 rounded-xl"></select>
+                <input id="studentNameInput" type="text" placeholder="Full Student Name"
+                  onkeydown="if(event.key==='Enter') addStudent()"
+                  class="px-3.5 py-2 text-xs bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none w-52">
+                <input id="studentNickInput" type="text" placeholder="Callsign / Nickname"
+                  onkeydown="if(event.key==='Enter') addStudent()"
+                  class="px-3.5 py-2 text-xs bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none w-44">
+                <button onclick="addStudent()"
+                  class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-headline text-xs font-bold rounded-xl">Add
+                  Cadet</button>
               </div>
             </div>
 
@@ -775,8 +959,12 @@
               <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
                 <h3 class="font-headline text-base font-bold text-indigo-950">3. Manage Classroom Games</h3>
                 <div class="flex gap-2">
-                  <button onclick="copyGamesCodeToClipboard()" class="px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 text-xs font-headline font-bold rounded-lg">📋 Copy Games Code</button>
-                  <button onclick="openAddGameModal()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-headline font-bold rounded-lg">➕ Add New Game</button>
+                  <button onclick="copyGamesCodeToClipboard()"
+                    class="px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 text-xs font-headline font-bold rounded-lg">📋
+                    Copy Games Code</button>
+                  <button onclick="openAddGameModal()"
+                    class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-headline font-bold rounded-lg">➕
+                    Add New Game</button>
                 </div>
               </div>
               <div class="overflow-x-auto">
@@ -799,12 +987,17 @@
             <!-- 5. Webhook Integration -->
             <div class="bg-white/95 rounded-2xl p-5 border border-amber-200 shadow-sm">
               <h3 class="font-headline text-base font-bold text-amber-800 flex items-center gap-2 mb-2">
-                <span class="material-symbols-outlined text-amber-500">cloud_sync</span> Google Drive &amp; Apps Script Webhook
+                <span class="material-symbols-outlined text-amber-500">cloud_sync</span> Google Drive &amp; Apps Script
+                Webhook
               </h3>
-              <p class="font-body text-xs text-slate-500 mb-3">Paste your published Google Apps Script Web App URL below to automatically synchronize report events to Google Sheets.</p>
+              <p class="font-body text-xs text-slate-500 mb-3">Paste your published Google Apps Script Web App URL below
+                to automatically synchronize report events to Google Sheets.</p>
               <div class="flex gap-3">
-                <input id="webhookUrlInput" type="text" placeholder="https://script.google.com/macros/s/.../exec" class="flex-1 px-3.5 py-2 text-xs bg-amber-50/40 border border-amber-200 rounded-xl focus:outline-none">
-                <button onclick="saveWebhookUrl()" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 font-headline text-xs font-bold rounded-xl shadow-2xs">Save Webhook</button>
+                <input id="webhookUrlInput" type="text" placeholder="https://script.google.com/macros/s/.../exec"
+                  class="flex-1 px-3.5 py-2 text-xs bg-amber-50/40 border border-amber-200 rounded-xl focus:outline-none">
+                <button onclick="saveWebhookUrl()"
+                  class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 font-headline text-xs font-bold rounded-xl shadow-2xs">Save
+                  Webhook</button>
               </div>
             </div>
           </div>
@@ -814,19 +1007,25 @@
         <!-- TAB 7: GUIDELINE & MANUAL                  -->
         <!-- ========================================== -->
         <div id="tab-guideline" class="tab-content">
-          <div class="bg-white/95 rounded-2xl p-6 lg:p-8 border border-indigo-100 shadow-sm max-w-4xl mx-auto space-y-6">
+          <div
+            class="bg-white/95 rounded-2xl p-6 lg:p-8 border border-indigo-100 shadow-sm max-w-4xl mx-auto space-y-6">
             <div>
-              <span class="font-hud text-xs text-indigo-500 font-bold uppercase tracking-wider">✦ ACADEMY GRIMOIRE</span>
-              <h1 class="font-headline text-2xl lg:text-3xl font-bold text-indigo-950 mt-1">CLASS QUEST JOURNAL: LP &amp; GOLD GUIDE</h1>
-              <p class="font-body text-xs text-slate-500 mt-1">Welcome to Class Quest Journal! Your active participation, English discipline, and teamwork are directly tied to your Life Points (LP) and Stardust Gold (GP).</p>
+              <span class="font-hud text-xs text-indigo-500 font-bold uppercase tracking-wider">✦ ACADEMY
+                GRIMOIRE</span>
+              <h1 class="font-headline text-2xl lg:text-3xl font-bold text-indigo-950 mt-1">CLASS QUEST JOURNAL: LP
+                &amp; GOLD GUIDE</h1>
+              <p class="font-body text-xs text-slate-500 mt-1">Welcome to Class Quest Journal! Your active
+                participation, English discipline, and teamwork are directly tied to your Life Points (LP) and Stardust
+                Gold (GP).</p>
             </div>
 
             <hr class="border-indigo-50">
 
             <div>
               <h2 class="font-headline text-lg font-bold text-indigo-900 mb-3">🛡️ 1. The 50 LP Grade Scale</h2>
-              <p class="font-body text-xs text-slate-600 mb-3">Every cadet begins each cycle with <strong>50 LP</strong> (full vitality bar).</p>
-              
+              <p class="font-body text-xs text-slate-600 mb-3">Every cadet begins each cycle with <strong>50 LP</strong>
+                (full vitality bar).</p>
+
               <div class="overflow-x-auto">
                 <table class="w-full text-xs text-left border-collapse rounded-xl overflow-hidden">
                   <thead>
@@ -837,11 +1036,31 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-indigo-50">
-                    <tr class="hover:bg-indigo-50/40"><td class="p-3 font-bold text-sky-600">45 – 50 LP</td><td class="p-3 font-bold">A+ (90 – 100%)</td><td class="p-3">Vanguard Hero</td></tr>
-                    <tr class="hover:bg-indigo-50/40"><td class="p-3 font-bold text-indigo-600">40 – 44 LP</td><td class="p-3 font-bold">A (80 – 89%)</td><td class="p-3">Veteran Scholar</td></tr>
-                    <tr class="hover:bg-indigo-50/40"><td class="p-3 font-bold text-amber-600">31 – 39 LP</td><td class="p-3 font-bold">B (70 – 79%)</td><td class="p-3">Adventurer</td></tr>
-                    <tr class="hover:bg-indigo-50/40"><td class="p-3 font-bold text-orange-600">26 – 30 LP</td><td class="p-3 font-bold">C (60 – 69%)</td><td class="p-3">On Notice</td></tr>
-                    <tr class="hover:bg-indigo-50/40"><td class="p-3 font-bold text-rose-600">Below 25 LP</td><td class="p-3 font-bold">D / Re-evaluation</td><td class="p-3">Danger Zone (Teacher Intervention)</td></tr>
+                    <tr class="hover:bg-indigo-50/40">
+                      <td class="p-3 font-bold text-sky-600">45 – 50 LP</td>
+                      <td class="p-3 font-bold">A+ (90 – 100%)</td>
+                      <td class="p-3">Vanguard Hero</td>
+                    </tr>
+                    <tr class="hover:bg-indigo-50/40">
+                      <td class="p-3 font-bold text-indigo-600">40 – 44 LP</td>
+                      <td class="p-3 font-bold">A (80 – 89%)</td>
+                      <td class="p-3">Veteran Scholar</td>
+                    </tr>
+                    <tr class="hover:bg-indigo-50/40">
+                      <td class="p-3 font-bold text-amber-600">31 – 39 LP</td>
+                      <td class="p-3 font-bold">B (70 – 79%)</td>
+                      <td class="p-3">Adventurer</td>
+                    </tr>
+                    <tr class="hover:bg-indigo-50/40">
+                      <td class="p-3 font-bold text-orange-600">26 – 30 LP</td>
+                      <td class="p-3 font-bold">C (60 – 69%)</td>
+                      <td class="p-3">On Notice</td>
+                    </tr>
+                    <tr class="hover:bg-indigo-50/40">
+                      <td class="p-3 font-bold text-rose-600">Below 25 LP</td>
+                      <td class="p-3 font-bold">D / Re-evaluation</td>
+                      <td class="p-3">Danger Zone (Teacher Intervention)</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -850,8 +1069,10 @@
             <div>
               <h2 class="font-headline text-lg font-bold text-indigo-900 mb-3">⚡ 2. English Hour Conduct Directives</h2>
               <ul class="font-body text-xs text-slate-600 space-y-2 list-disc pl-5">
-                <li><strong>Violating English Hour (-1 LP):</strong> Speaking native language without permit during designated immersion phases.</li>
-                <li><strong>Non-English Permit (-1 LP):</strong> Requesting a pass to explain complex queries in native language.</li>
+                <li><strong>Violating English Hour (-1 LP):</strong> Speaking native language without permit during
+                  designated immersion phases.</li>
+                <li><strong>Non-English Permit (-1 LP):</strong> Requesting a pass to explain complex queries in native
+                  language.</li>
                 <li><strong>AWOL (-3 LP):</strong> Leaving class or unexcused inactivity during mission tasks.</li>
                 <li><strong>Nonparticipation (-1 LP):</strong> Reluctance to engage in dialogues or group quests.</li>
               </ul>
@@ -874,7 +1095,8 @@
         <span class="material-symbols-outlined text-indigo-600 text-[20px]">bolt</span>
         <strong class="font-headline text-sm font-bold text-indigo-950">Quick Cadet Directives</strong>
       </div>
-      <button onclick="toggleQuickReportOverlay()" class="w-7 h-7 text-slate-400 hover:text-slate-700 rounded-lg flex items-center justify-center">✕</button>
+      <button onclick="toggleQuickReportOverlay()"
+        class="w-7 h-7 text-slate-400 hover:text-slate-700 rounded-lg flex items-center justify-center">✕</button>
     </div>
 
     <div class="bg-indigo-50/60 p-2.5 rounded-xl border border-indigo-100 text-xs mb-4">
@@ -884,51 +1106,65 @@
 
     <div class="space-y-4 text-xs">
       <div>
-        <span class="font-hud text-[10px] text-indigo-500 font-bold uppercase tracking-wider block mb-1.5">Language &amp; Conduct</span>
+        <span class="font-hud text-[10px] text-indigo-500 font-bold uppercase tracking-wider block mb-1.5">Language
+          &amp; Conduct</span>
         <div class="space-y-1.5">
-          <button onclick="applyQuickReport('Violating English Hour', -1, 'lp')" class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-rose-50 text-slate-700 hover:text-rose-900 border border-slate-200 hover:border-rose-200 flex justify-between items-center transition-all">
+          <button onclick="applyQuickReport('Violating English Hour', -1, 'lp')"
+            class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-rose-50 text-slate-700 hover:text-rose-900 border border-slate-200 hover:border-rose-200 flex justify-between items-center transition-all">
             <span>Violating English Hour</span><strong class="text-rose-600">-1 LP</strong>
           </button>
-          <button onclick="applyQuickReport('Non-English Permit', -1, 'lp')" class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-rose-50 text-slate-700 hover:text-rose-900 border border-slate-200 hover:border-rose-200 flex justify-between items-center transition-all">
+          <button onclick="applyQuickReport('Non-English Permit', -1, 'lp')"
+            class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-rose-50 text-slate-700 hover:text-rose-900 border border-slate-200 hover:border-rose-200 flex justify-between items-center transition-all">
             <span>Non-English Permit</span><strong class="text-rose-600">-1 LP</strong>
           </button>
-          <button onclick="applyQuickReport('AWOL', -3, 'lp')" class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-rose-50 text-slate-700 hover:text-rose-900 border border-slate-200 hover:border-rose-200 flex justify-between items-center transition-all">
+          <button onclick="applyQuickReport('AWOL', -3, 'lp')"
+            class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-rose-50 text-slate-700 hover:text-rose-900 border border-slate-200 hover:border-rose-200 flex justify-between items-center transition-all">
             <span>AWOL (Unexcused)</span><strong class="text-rose-600">-3 LP</strong>
           </button>
-          <button onclick="applyQuickReport('Nonparticipation', -1, 'lp')" class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-rose-50 text-slate-700 hover:text-rose-900 border border-slate-200 hover:border-rose-200 flex justify-between items-center transition-all">
+          <button onclick="applyQuickReport('Nonparticipation', -1, 'lp')"
+            class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-rose-50 text-slate-700 hover:text-rose-900 border border-slate-200 hover:border-rose-200 flex justify-between items-center transition-all">
             <span>Nonparticipation</span><strong class="text-rose-600">-1 LP</strong>
           </button>
         </div>
       </div>
 
       <div>
-        <span class="font-hud text-[10px] text-amber-600 font-bold uppercase tracking-wider block mb-1.5">Quest Events &amp; Hazards</span>
+        <span class="font-hud text-[10px] text-amber-600 font-bold uppercase tracking-wider block mb-1.5">Quest Events
+          &amp; Hazards</span>
         <div class="space-y-1.5">
-          <button onclick="openCustomPromptReport('Quest Mishaps', 'lp')" class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-amber-50 text-slate-700 hover:text-amber-900 border border-slate-200 flex justify-between items-center transition-all">
+          <button onclick="openCustomPromptReport('Quest Mishaps', 'lp')"
+            class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-amber-50 text-slate-700 hover:text-amber-900 border border-slate-200 flex justify-between items-center transition-all">
             <span>Quest Mishaps</span><strong class="text-amber-600">Custom -LP</strong>
           </button>
-          <button onclick="openCustomPromptReport('Voodoo Victim', 'lp')" class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-amber-50 text-slate-700 hover:text-amber-900 border border-slate-200 flex justify-between items-center transition-all">
+          <button onclick="openCustomPromptReport('Voodoo Victim', 'lp')"
+            class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-amber-50 text-slate-700 hover:text-amber-900 border border-slate-200 flex justify-between items-center transition-all">
             <span>Voodoo Victim</span><strong class="text-amber-600">Custom -LP</strong>
           </button>
-          <button onclick="openCustomPromptReport('Missed Deadline', 'lp')" class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-amber-50 text-slate-700 hover:text-amber-900 border border-slate-200 flex justify-between items-center transition-all">
+          <button onclick="openCustomPromptReport('Missed Deadline', 'lp')"
+            class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-amber-50 text-slate-700 hover:text-amber-900 border border-slate-200 flex justify-between items-center transition-all">
             <span>Missed Deadline</span><strong class="text-amber-600">Custom -LP</strong>
           </button>
         </div>
       </div>
 
       <div>
-        <span class="font-hud text-[10px] text-emerald-600 font-bold uppercase tracking-wider block mb-1.5">Rewards &amp; Commissions</span>
+        <span class="font-hud text-[10px] text-emerald-600 font-bold uppercase tracking-wider block mb-1.5">Rewards
+          &amp; Commissions</span>
         <div class="space-y-1.5">
-          <button onclick="openCustomPromptReport('Quest Reward', 'gold')" class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-amber-50 text-slate-700 hover:text-amber-900 border border-slate-200 flex justify-between items-center transition-all">
+          <button onclick="openCustomPromptReport('Quest Reward', 'gold')"
+            class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-amber-50 text-slate-700 hover:text-amber-900 border border-slate-200 flex justify-between items-center transition-all">
             <span>Quest Reward</span><strong class="text-amber-600">Custom +G</strong>
           </button>
-          <button onclick="openCustomPromptReport('Side Commissions', 'gold')" class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-amber-50 text-slate-700 hover:text-amber-900 border border-slate-200 flex justify-between items-center transition-all">
+          <button onclick="openCustomPromptReport('Side Commissions', 'gold')"
+            class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-amber-50 text-slate-700 hover:text-amber-900 border border-slate-200 flex justify-between items-center transition-all">
             <span>Side Commissions</span><strong class="text-amber-600">Custom +G</strong>
           </button>
-          <button onclick="applyQuickReport('Donor Recipient', 3, 'lp')" class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-900 border border-slate-200 flex justify-between items-center transition-all">
+          <button onclick="applyQuickReport('Donor Recipient', 3, 'lp')"
+            class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-900 border border-slate-200 flex justify-between items-center transition-all">
             <span>Donor Recipient</span><strong class="text-emerald-600">+3 LP</strong>
           </button>
-          <button onclick="applyQuickReport('Health Potion', 2, 'lp')" class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-900 border border-slate-200 flex justify-between items-center transition-all">
+          <button onclick="applyQuickReport('Health Potion', 2, 'lp')"
+            class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-900 border border-slate-200 flex justify-between items-center transition-all">
             <span>Health Potion</span><strong class="text-emerald-600">+2 LP</strong>
           </button>
         </div>
@@ -938,15 +1174,20 @@
 
   <!-- 2. CUSTOM REPORT ENTRY MODAL -->
   <div id="customReportModal" class="astral-modal w-96 p-5">
-    <h3 id="customReportTitle" class="font-headline text-base font-bold text-indigo-950 text-center mb-1">Custom Entry</h3>
+    <h3 id="customReportTitle" class="font-headline text-base font-bold text-indigo-950 text-center mb-1">Custom Entry
+    </h3>
     <p id="customReportDesc" class="font-body text-xs text-slate-500 text-center mb-4"></p>
     <div class="space-y-2 mb-4">
       <label id="customAmountLabel" class="font-headline text-xs font-semibold text-slate-700">Amount:</label>
-      <input id="customAmountInput" type="number" min="1" max="100" class="w-full px-3 py-2 text-xs bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none">
+      <input id="customAmountInput" type="number" min="1" max="100"
+        class="w-full px-3 py-2 text-xs bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none">
     </div>
     <div class="flex justify-between gap-3">
-      <button onclick="closeAllOverlays()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline text-xs font-bold rounded-xl flex-1">Cancel</button>
-      <button onclick="submitCustomReport()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-headline text-xs font-bold rounded-xl flex-1">Apply Entry</button>
+      <button onclick="closeAllOverlays()"
+        class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline text-xs font-bold rounded-xl flex-1">Cancel</button>
+      <button onclick="submitCustomReport()"
+        class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-headline text-xs font-bold rounded-xl flex-1">Apply
+        Entry</button>
     </div>
   </div>
 
@@ -956,17 +1197,21 @@
       <span class="font-hud text-xs text-amber-600 font-bold uppercase tracking-wider">✦ CELESTIAL BAZAAR</span>
       <h3 class="font-headline text-xl font-bold text-indigo-950 mt-0.5">Card Relic Shop</h3>
       <p class="font-body text-xs text-slate-500 mt-1">
-        Sanctum <span id="shopClassName" class="font-bold text-indigo-600"></span> Deck: <strong id="classDeckCount" class="text-amber-600">60</strong> / 60 Cards Left
+        Sanctum <span id="shopClassName" class="font-bold text-indigo-600"></span> Deck: <strong id="classDeckCount"
+          class="text-amber-600">60</strong> / 60 Cards Left
       </p>
     </div>
     <div class="text-center mb-4">
-      <button onclick="generateShopOffers()" class="px-5 py-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-headline text-xs font-bold rounded-xl shadow-sm">
+      <button onclick="generateShopOffers()"
+        class="px-5 py-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-headline text-xs font-bold rounded-xl shadow-sm">
         🎲 Roll 2 Random Relic Cards
       </button>
     </div>
     <div id="shopCardsContainer" class="grid grid-cols-2 gap-4 mb-4 min-h-[160px]"></div>
     <div class="text-center pt-2 border-t border-indigo-50">
-      <button onclick="closeAllOverlays()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline text-xs font-bold rounded-xl">Close Shop</button>
+      <button onclick="closeAllOverlays()"
+        class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline text-xs font-bold rounded-xl">Close
+        Shop</button>
     </div>
   </div>
 
@@ -974,27 +1219,37 @@
   <div id="rewardModal" class="astral-modal w-[460px] p-6">
     <h3 class="font-headline text-lg font-bold text-indigo-950 text-center mb-1">Award Game Stardust</h3>
     <p class="font-body text-xs text-slate-500 text-center mb-4">
-      Select all participating cadets to receive <strong id="rewardAmountText" class="text-amber-600 font-bold">+0 Gold</strong>:
+      Select all participating cadets to receive <strong id="rewardAmountText" class="text-amber-600 font-bold">+0
+        Gold</strong>:
     </p>
     <div class="flex justify-end gap-2 text-xs mb-2">
-      <button onclick="toggleSelectAllStudents(true)" class="text-indigo-600 font-bold hover:underline">Select All</button>
+      <button onclick="toggleSelectAllStudents(true)" class="text-indigo-600 font-bold hover:underline">Select
+        All</button>
       <span>•</span>
-      <button onclick="toggleSelectAllStudents(false)" class="text-slate-500 font-bold hover:underline">Deselect All</button>
+      <button onclick="toggleSelectAllStudents(false)" class="text-slate-500 font-bold hover:underline">Deselect
+        All</button>
     </div>
-    <div id="studentChecklistContainer" class="max-h-56 overflow-y-auto space-y-1.5 p-2 bg-slate-50/80 rounded-xl border border-indigo-100 mb-4 text-xs"></div>
+    <div id="studentChecklistContainer"
+      class="max-h-56 overflow-y-auto space-y-1.5 p-2 bg-slate-50/80 rounded-xl border border-indigo-100 mb-4 text-xs">
+    </div>
     <div class="flex justify-between gap-3">
-      <button onclick="skipGoldAwarding()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline text-xs font-bold rounded-xl flex-1">Skip</button>
-      <button onclick="confirmMultiGoldAward()" class="px-4 py-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-headline text-xs font-bold rounded-xl flex-1">Distribute Gold</button>
+      <button onclick="skipGoldAwarding()"
+        class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline text-xs font-bold rounded-xl flex-1">Skip</button>
+      <button onclick="confirmMultiGoldAward()"
+        class="px-4 py-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-headline text-xs font-bold rounded-xl flex-1">Distribute
+        Gold</button>
     </div>
   </div>
 
   <!-- 5. TARGETED ACTION MODAL (For LP Donor & Voodoo) -->
   <div id="targetModal" class="astral-modal w-96 p-5">
-    <h3 id="targetModalTitle" class="font-headline text-base font-bold text-indigo-950 text-center mb-1">Select Target</h3>
+    <h3 id="targetModalTitle" class="font-headline text-base font-bold text-indigo-950 text-center mb-1">Select Target
+    </h3>
     <p id="targetModalDesc" class="font-body text-xs text-slate-500 text-center mb-4"></p>
     <div id="targetStudentList" class="max-h-56 overflow-y-auto space-y-1.5 mb-4 text-xs"></div>
     <div class="text-center">
-      <button onclick="closeAllOverlays()" class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline text-xs font-bold rounded-xl">Cancel</button>
+      <button onclick="closeAllOverlays()"
+        class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline text-xs font-bold rounded-xl">Cancel</button>
     </div>
   </div>
 
@@ -1004,43 +1259,56 @@
     <div class="space-y-3 mb-4 text-xs">
       <div>
         <label class="font-headline font-semibold text-slate-700 block mb-1">Full Name:</label>
-        <input id="editNameInput" type="text" class="w-full px-3.5 py-2 bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none">
+        <input id="editNameInput" type="text"
+          class="w-full px-3.5 py-2 bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none">
       </div>
       <div>
         <label class="font-headline font-semibold text-slate-700 block mb-1">Callsign / Nickname:</label>
-        <input id="editNickInput" type="text" class="w-full px-3.5 py-2 bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none">
+        <input id="editNickInput" type="text"
+          class="w-full px-3.5 py-2 bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none">
       </div>
     </div>
     <div class="flex justify-between gap-3">
-      <button onclick="closeAllOverlays()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline text-xs font-bold rounded-xl flex-1">Cancel</button>
-      <button onclick="saveEditedStudent()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-headline text-xs font-bold rounded-xl flex-1">Save Changes</button>
+      <button onclick="closeAllOverlays()"
+        class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline text-xs font-bold rounded-xl flex-1">Cancel</button>
+      <button onclick="saveEditedStudent()"
+        class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-headline text-xs font-bold rounded-xl flex-1">Save
+        Changes</button>
     </div>
   </div>
 
   <!-- 7. ADD / EDIT GAME MODAL -->
   <div id="gameModal" class="astral-modal w-96 p-5">
-    <h3 id="gameModalTitle" class="font-headline text-base font-bold text-indigo-950 text-center mb-4">Add / Edit Game</h3>
+    <h3 id="gameModalTitle" class="font-headline text-base font-bold text-indigo-950 text-center mb-4">Add / Edit Game
+    </h3>
     <div class="space-y-3 mb-4 text-xs">
       <div>
         <label class="font-headline font-semibold text-slate-700 block mb-1">Game Title:</label>
-        <input id="gameTitleInput" type="text" placeholder="e.g. Word Scramble" class="w-full px-3.5 py-2 bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none">
+        <input id="gameTitleInput" type="text" placeholder="e.g. Word Scramble"
+          class="w-full px-3.5 py-2 bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none">
       </div>
       <div>
         <label class="font-headline font-semibold text-slate-700 block mb-1">Icon / Emoji:</label>
-        <input id="gameIconInput" type="text" placeholder="e.g. 🎯" class="w-full px-3.5 py-2 bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none">
+        <input id="gameIconInput" type="text" placeholder="e.g. 🎯"
+          class="w-full px-3.5 py-2 bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none">
       </div>
       <div>
         <label class="font-headline font-semibold text-slate-700 block mb-1">Base Gold Reward:</label>
-        <input id="gameGoldInput" type="number" min="0" placeholder="e.g. 4" class="w-full px-3.5 py-2 bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none">
+        <input id="gameGoldInput" type="number" min="0" placeholder="e.g. 4"
+          class="w-full px-3.5 py-2 bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none">
       </div>
       <div>
         <label class="font-headline font-semibold text-slate-700 block mb-1">Internal File Path:</label>
-        <input id="gamePathInput" type="text" placeholder="game/my-game.html" class="w-full px-3.5 py-2 bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none">
+        <input id="gamePathInput" type="text" placeholder="game/my-game.html"
+          class="w-full px-3.5 py-2 bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none">
       </div>
     </div>
     <div class="flex justify-between gap-3">
-      <button onclick="closeAllOverlays()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline text-xs font-bold rounded-xl flex-1">Cancel</button>
-      <button onclick="saveGameModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-headline text-xs font-bold rounded-xl flex-1">Save Game</button>
+      <button onclick="closeAllOverlays()"
+        class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline text-xs font-bold rounded-xl flex-1">Cancel</button>
+      <button onclick="saveGameModal()"
+        class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-headline text-xs font-bold rounded-xl flex-1">Save
+        Game</button>
     </div>
   </div>
 
@@ -1077,7 +1345,7 @@
     ];
 
     const ROLE_TITLES = [
-      'STAR VANGUARD', 'SOL AEGIS', 'HARMONY SCOUT', 'ASTRAL ARCHITECT', 
+      'STAR VANGUARD', 'SOL AEGIS', 'HARMONY SCOUT', 'ASTRAL ARCHITECT',
       'ZEPHYR BLADE', 'PARAGON COMMAND', 'RECON SPECIALIST', 'CHRONO KNIGHT'
     ];
 
@@ -1331,8 +1599,8 @@
 
       // Search & Status filters
       const displayedStudents = filteredByClass.filter(s => {
-        const matchesSearch = s.name.toLowerCase().includes(currentSearchQuery.toLowerCase()) || 
-                              s.nick.toLowerCase().includes(currentSearchQuery.toLowerCase());
+        const matchesSearch = s.name.toLowerCase().includes(currentSearchQuery.toLowerCase()) ||
+          s.nick.toLowerCase().includes(currentSearchQuery.toLowerCase());
         const pct = (s.lp / 50) * 100;
         let status = 'high';
         if (pct < 30) status = 'critical';
@@ -1463,8 +1731,8 @@
 
       const sorted = [...students].sort((a, b) => {
         if (b.lp !== a.lp) return b.lp - a.lp;
-        return ((b.totalGoldEarned || b.gold) + (b.totalCardsEarned || (b.cards ? b.cards.length : 0))) - 
-               ((a.totalGoldEarned || a.gold) + (a.totalCardsEarned || (a.cards ? a.cards.length : 0)));
+        return ((b.totalGoldEarned || b.gold) + (b.totalCardsEarned || (b.cards ? b.cards.length : 0))) -
+          ((a.totalGoldEarned || a.gold) + (a.totalCardsEarned || (a.cards ? a.cards.length : 0)));
       });
 
       const first = sorted[0];
@@ -1699,7 +1967,7 @@
 
       studentsInClass.forEach(s => {
         const isOpen = (openedReportStudentId === s.id);
-        const logs = appData.reports.filter(r => 
+        const logs = appData.reports.filter(r =>
           (r.studentId ? r.studentId === s.id : (r.studentName === s.name && r.className === s.class)) &&
           ((r.type || 'lp') === currentReportsSubtab)
         );
@@ -1724,8 +1992,8 @@
               </thead>
               <tbody class="divide-y divide-indigo-50">
                 ${logs.map(l => {
-                  const globalIdx = appData.reports.indexOf(l);
-                  return `
+            const globalIdx = appData.reports.indexOf(l);
+            return `
                     <tr class="hover:bg-indigo-50/30">
                       <td class="p-2 font-hud font-bold text-amber-600">${l.meeting || 'Meeting #1'}</td>
                       <td class="p-2 font-hud text-[10px] text-slate-400">${l.timestamp}</td>
@@ -1736,7 +2004,7 @@
                       </td>
                     </tr>
                   `;
-                }).join('')}
+          }).join('')}
               </tbody>
             </table>
           `;
@@ -1801,7 +2069,7 @@
       const file = event.target.files[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = function (e) {
         try {
           const parsed = JSON.parse(e.target.result);
           if (parsed && Array.isArray(parsed.classes) && Array.isArray(parsed.students)) {
@@ -2363,4 +2631,5 @@
     render();
   </script>
 </body>
+
 </html>
