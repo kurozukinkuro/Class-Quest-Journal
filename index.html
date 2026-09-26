@@ -1,0 +1,2366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="web_dashboard" name="shell-type">
+  <title>Class Quest Journal // Astral Luminous Fantasy</title>
+
+  <!-- Typography: Sora (Display), Plus Jakarta Sans (Body), JetBrains Mono (Tech/HUD) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN with configuration -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#4648d4",
+            "primary-container": "#6063ee",
+            "primary-fixed": "#e1e0ff",
+            "on-primary": "#ffffff",
+            "secondary": "#0284c7",
+            "secondary-container": "#38bdf8",
+            "secondary-fixed": "#e0f2fe",
+            "on-secondary": "#ffffff",
+            "tertiary": "#d97706",
+            "tertiary-container": "#fef3c7",
+            "tertiary-fixed": "#fde68a",
+            "surface": "#faf8ff",
+            "surface-dim": "#d2d9f8",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f2f4fd",
+            "surface-container": "#ebedfa",
+            "surface-container-high": "#e2e6f7",
+            "on-surface": "#1e1b4b",
+            "on-surface-variant": "#475569",
+            "outline": "#94a3b8",
+            "outline-variant": "#e2e8f0",
+            "error": "#e11d48",
+            "error-container": "#ffe4e6"
+          },
+          fontFamily: {
+            "headline": ["Sora", "sans-serif"],
+            "body": ["Plus Jakarta Sans", "sans-serif"],
+            "hud": ["JetBrains Mono", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    @layer base {
+      html, body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: #f6f7fe;
+        color: #1e1b4b;
+      }
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(241, 245, 249, 0.6);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(99, 102, 241, 0.25);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(99, 102, 241, 0.45);
+    }
+
+    /* Glow & Refraction Utilities */
+    .glow-card {
+      box-shadow: 0 4px 20px -2px rgba(99, 102, 241, 0.08), 0 2px 6px -1px rgba(70, 72, 212, 0.04);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glow-card:hover {
+      box-shadow: 0 10px 28px -4px rgba(99, 102, 241, 0.16), 0 4px 12px -2px rgba(56, 189, 248, 0.12);
+      transform: translateY(-2px);
+    }
+    .glow-card.selected {
+      border-color: #6366f1 !important;
+      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #6366f1, 0 12px 32px -4px rgba(99, 102, 241, 0.25) !important;
+      transform: translateY(-2px);
+    }
+
+    .stella-shimmer {
+      background: linear-gradient(135deg, rgba(255,255,255,0.92) 0%, rgba(246,247,254,0.75) 100%);
+    }
+
+    /* Tab Display Management */
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Modals & Backdrop Blur */
+    .astral-modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 100;
+      max-width: 92vw;
+      border-radius: 1.25rem;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(24px);
+      box-shadow: 0 20px 48px -10px rgba(15, 23, 42, 0.15), 0 0 32px rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+
+    .astral-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(6px);
+      z-index: 90;
+    }
+
+    /* Relic Poker Card Look */
+    .relic-card {
+      background: linear-gradient(180deg, #ffffff 0%, #f8faff 100%);
+      border: 1px solid rgba(99, 102, 241, 0.18);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 240px;
+      position: relative;
+      transition: all 0.25s ease;
+    }
+    .relic-card:hover {
+      transform: translateY(-4px);
+      border-color: #38bdf8;
+      box-shadow: 0 12px 28px -6px rgba(56, 189, 248, 0.2);
+    }
+
+    /* Dragging helper */
+    .student-row.dragging {
+      opacity: 0.5;
+      border-style: dashed;
+      border-color: #6366f1;
+    }
+
+    .negative-gold {
+      color: #e11d48 !important;
+    }
+  </style>
+</head>
+
+<body class="bg-[#f6f7fe] font-body text-[#1e1b4b] min-h-screen antialiased selection:bg-primary selection:text-white">
+
+  <!-- Mobile Drawer Overlay -->
+  <div id="drawerOverlay" class="astral-overlay" onclick="toggleMobileDrawer(false)"></div>
+
+  <!-- FIXED ASTRAL SIDEBAR (VOYAGERS ARCHIVE TERMINAL) -->
+  <aside id="mainSidebar" class="fixed left-0 top-0 h-full w-72 bg-white/95 backdrop-blur-xl z-50 flex flex-col border-r border-indigo-100/70 shadow-sm transition-transform duration-300 -translate-x-full lg:translate-x-0">
+    <!-- Header Brand Section -->
+    <div class="h-16 px-5 flex items-center justify-between border-b border-indigo-50/80 bg-gradient-to-r from-indigo-50/60 via-purple-50/30 to-sky-50/40">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 via-primary to-sky-400 flex items-center justify-center text-white shadow-sm shadow-indigo-200">
+          <span class="text-sm font-bold">✦</span>
+        </div>
+        <div>
+          <span class="font-headline text-[15px] font-bold tracking-tight text-indigo-950 block leading-tight">V O Y A G E R S</span>
+          <span class="font-hud text-[10px] text-indigo-500 font-semibold tracking-wider">ARCHIVE TERMINAL</span>
+        </div>
+      </div>
+      <span class="font-hud text-[9px] px-2 py-0.5 bg-indigo-50/90 text-indigo-600 border border-indigo-200/60 rounded-full font-bold shadow-2xs">ASTRAL // v4.2</span>
+    </div>
+
+    <!-- Directives Status Badge -->
+    <div class="px-5 py-2.5 bg-gradient-to-r from-indigo-50/30 to-transparent border-b border-indigo-50 flex items-center justify-between">
+      <div class="flex items-center gap-1.5">
+        <span class="text-indigo-400 text-xs">✦</span>
+        <span class="font-hud text-[10px] font-semibold text-slate-500 tracking-wider">CELESTIAL DIRECTIVES</span>
+      </div>
+      <span class="font-hud text-[9px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60 font-bold flex items-center gap-1">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>RESONANT
+      </span>
+    </div>
+
+    <!-- Navigation Menus -->
+    <nav class="flex-1 px-3 py-3.5 space-y-1.5 overflow-y-auto">
+      <button class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50/70 hover:text-indigo-900 transition-all group" data-tab="home" onclick="showTab('home')">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors">auto_awesome</span>
+          <span class="font-headline text-[13px] font-semibold">Quest Hub</span>
+        </div>
+        <span class="font-hud text-[9px] px-2 py-0.5 bg-amber-50 text-amber-600 border border-amber-200/60 rounded-full font-bold">STELLAR</span>
+      </button>
+
+      <button class="nav-btn active w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl transition-all bg-gradient-to-r from-indigo-600 via-primary to-indigo-500 text-white font-headline shadow-md shadow-indigo-200" data-tab="display" onclick="showTab('display')">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-[20px] text-white">grid_view</span>
+          <span class="font-headline text-[13px] font-bold tracking-wide">Class Display</span>
+        </div>
+        <span id="navVoyagersCount" class="font-hud text-[9px] px-2 py-0.5 bg-white/20 text-white border border-white/30 rounded-full backdrop-blur-xs font-semibold">VOYAGERS</span>
+      </button>
+
+      <button class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50/70 hover:text-indigo-900 transition-all group" data-tab="teacher" onclick="showTab('teacher')">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors">tune</span>
+          <span class="font-headline text-[13px] font-semibold">Teacher Control</span>
+        </div>
+        <span class="font-hud text-[9px] px-2 py-0.5 bg-indigo-50 text-indigo-600 border border-indigo-200/60 rounded-full font-bold">SYNAPSE</span>
+      </button>
+
+      <button class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50/70 hover:text-indigo-900 transition-all group" data-tab="reports" onclick="showTab('reports')">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors">analytics</span>
+          <span class="font-headline text-[13px] font-semibold">Students Report</span>
+        </div>
+        <span class="font-hud text-[9px] px-2 py-0.5 bg-slate-100 text-slate-500 rounded-full font-semibold">LOGS</span>
+      </button>
+
+      <button class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50/70 hover:text-indigo-900 transition-all group" data-tab="cards-library" onclick="showTab('cards-library')">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors">style</span>
+          <span class="font-headline text-[13px] font-semibold">Cards Library</span>
+        </div>
+        <span class="font-hud text-[9px] px-2 py-0.5 bg-sky-50 text-sky-600 border border-sky-200/60 rounded-full font-bold">RELICS</span>
+      </button>
+
+      <button class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50/70 hover:text-indigo-900 transition-all group" data-tab="games" onclick="showTab('games')">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors">sports_esports</span>
+          <span class="font-headline text-[13px] font-semibold">Games Hub</span>
+        </div>
+        <span class="font-hud text-[9px] px-2 py-0.5 bg-rose-50 text-rose-600 border border-rose-200/60 rounded-full font-bold">NEBULA RAID</span>
+      </button>
+
+      <button class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50/70 hover:text-indigo-900 transition-all group" data-tab="settings" onclick="showTab('settings')">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors">settings</span>
+          <span class="font-headline text-[13px] font-semibold">Classroom Settings</span>
+        </div>
+      </button>
+
+      <button class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50/70 hover:text-indigo-900 transition-all group" data-tab="guideline" onclick="showTab('guideline')">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors">menu_book</span>
+          <span class="font-headline text-[13px] font-semibold">Guideline &amp; Manual</span>
+        </div>
+        <span class="font-hud text-[9px] px-2 py-0.5 bg-purple-50 text-purple-600 border border-purple-200/60 rounded-full font-bold">GRIMOIRE</span>
+      </button>
+    </nav>
+
+    <!-- Mentor Profile Badge -->
+    <div class="p-3 border-t border-indigo-50 bg-gradient-to-b from-transparent to-indigo-50/40">
+      <div class="flex items-center gap-2.5 p-2.5 bg-white/90 border border-indigo-100 rounded-2xl shadow-2xs">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-sky-400 flex items-center justify-center shrink-0 shadow-sm text-white font-bold">
+          <span class="material-symbols-outlined text-[18px]">verified_user</span>
+        </div>
+        <div class="flex flex-col min-w-0 flex-1">
+          <span class="font-headline text-[12px] font-bold text-slate-900 truncate">ARCH-GUIDE ARCHER</span>
+          <span class="font-hud text-[9px] text-indigo-500 font-semibold truncate">RANK: CELESTIAL MENTOR</span>
+        </div>
+        <span class="text-xs text-amber-400 shrink-0">✦</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN WRAPPER (OFFSET BY SIDEBAR ON DESKTOP) -->
+  <div class="lg:pl-72 flex flex-col min-h-screen">
+    
+    <!-- TOP FLOATING HEADER -->
+    <header class="fixed top-0 left-0 lg:left-72 right-0 h-16 bg-white/85 backdrop-blur-xl border-b border-indigo-100/70 z-40 px-4 lg:px-6 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3.5">
+        <button onclick="toggleMobileDrawer(true)" class="lg:hidden w-9 h-9 text-slate-500 hover:bg-indigo-50 hover:text-indigo-600 border border-indigo-100/80 rounded-xl flex items-center justify-center transition-all" type="button">
+          <span class="material-symbols-outlined text-[20px]">menu</span>
+        </button>
+
+        <div class="flex items-center gap-2.5 cursor-pointer" onclick="showTab('home')">
+          <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 via-primary to-sky-400 flex items-center justify-center text-white shadow-xs">
+            <span class="text-xs font-bold">✦</span>
+          </div>
+          <div class="hidden sm:flex flex-col">
+            <div class="flex items-center gap-1.5">
+              <span class="font-headline text-[15px] font-bold tracking-tight text-indigo-950 leading-none">CLASS QUEST JOURNAL</span>
+              <span class="text-indigo-500 text-xs">✦</span>
+            </div>
+            <span class="font-hud text-[9px] text-indigo-500 font-semibold mt-0.5">ASTRAL PEDAGOGY SYSTEM</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Interactive Controls (Sanctum Class Switcher, Meeting Cycle, Actions) -->
+      <div class="flex items-center gap-2 lg:gap-3">
+        <!-- Sanctum Multi-Class Dropdown -->
+        <div class="flex items-center bg-indigo-50/70 border border-indigo-100 rounded-xl px-2.5 py-1.5 shadow-2xs">
+          <span class="font-hud text-[10px] text-indigo-500 font-bold mr-1.5 hidden md:inline">SANCTUM:</span>
+          <select id="headerClassFilter" onchange="changeClassFilter(this.value)" class="bg-transparent font-headline text-[12px] font-semibold text-slate-700 focus:outline-none cursor-pointer pr-1 border-0 py-0"></select>
+        </div>
+
+        <!-- Meeting / Cycle Input -->
+        <div class="flex items-center bg-indigo-50/70 border border-indigo-100 rounded-xl px-2.5 py-1.5 shadow-2xs">
+          <span class="font-hud text-[10px] text-indigo-500 font-bold mr-1 hidden sm:inline">CYCLE:</span>
+          <input id="headerMeetingInput" type="number" min="1" max="100" value="1" onchange="saveCurrentMeetingNumber()" class="w-12 bg-transparent font-headline text-[12px] text-indigo-600 font-bold text-center focus:outline-none border-0 p-0">
+        </div>
+
+        <div class="h-6 w-px bg-indigo-100 mx-1 hidden sm:block"></div>
+
+        <!-- Quick Top Actions -->
+        <div class="flex items-center gap-1.5">
+          <button onclick="toggleQuickReportOverlay()" title="Directives Quick Report" class="w-9 h-9 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100/80 rounded-xl flex items-center justify-center transition-all shadow-2xs">
+            <span class="material-symbols-outlined text-[18px]">bolt</span>
+          </button>
+          <button onclick="showTab('reports')" title="Activity Logs" class="w-9 h-9 text-slate-500 hover:bg-indigo-50 hover:text-indigo-600 border border-indigo-100/80 rounded-xl flex items-center justify-center transition-all">
+            <span class="material-symbols-outlined text-[18px]">notifications</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN STAGE -->
+    <main class="relative pt-16 flex-1 flex flex-col">
+      
+      <!-- SUBTAB / TELEMETRY DIAGNOSTIC BAR -->
+      <div class="bg-white/95 backdrop-blur-md border-b border-indigo-100/70 px-4 lg:px-6 py-2 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-1.5 p-1 bg-indigo-50/70 rounded-xl border border-indigo-100/80 shadow-2xs">
+          <button id="subtab-overview-btn" onclick="switchDisplaySubtab('grid')" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-indigo-600 via-primary to-indigo-500 text-white font-headline text-xs font-bold tracking-wide shadow-2xs flex items-center gap-1.5 transition-all">
+            <span class="text-xs">✦</span><span>CADET HUD OVERVIEW</span>
+          </button>
+          <button id="subtab-ranking-btn" onclick="switchDisplaySubtab('ranking')" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-indigo-900 hover:bg-white font-headline text-xs font-semibold transition-all flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px] text-slate-400">leaderboard</span><span>SANCTUM RANKING</span>
+          </button>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2 font-hud text-[10px] text-indigo-500 font-semibold">
+            <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
+            <span>INTERFACE MODE // TACTICAL VIEW</span>
+          </div>
+          <span class="text-slate-300 hidden sm:inline">|</span>
+          <span id="telemetrySelectedStudent" class="font-hud text-[10px] text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-100 font-bold hidden sm:inline">TARGET: NONE</span>
+        </div>
+      </div>
+
+      <!-- SECONDARY TELEMETRY STRIP -->
+      <div class="px-4 lg:px-6 py-2 bg-gradient-to-r from-indigo-50/80 via-purple-50/40 to-sky-50/60 border-b border-indigo-100/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2 px-2.5 py-0.5 bg-white/90 rounded-full border border-indigo-100 shadow-2xs">
+            <span class="w-2 h-2 bg-indigo-500 rounded-full animate-pulse shadow-sm shadow-indigo-300"></span>
+            <span class="font-hud text-[10px] text-indigo-700 font-bold tracking-wider">ASTRAL HARMONY // RESONANT</span>
+          </div>
+          <span id="currentSanctumLabel" class="font-headline text-[11px] font-semibold text-slate-600 truncate">SANCTUM 8A // ASTRAL VANGUARD</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span id="vitalityPctLabel" class="font-hud text-[10px] text-indigo-500 tracking-wider font-semibold uppercase flex items-center gap-1">✦ STELLAR RESONANCE: 92%</span>
+          <div class="h-2 w-28 bg-indigo-100/70 rounded-full overflow-hidden p-0.5 flex">
+            <div id="vitalityBarFill" class="h-full bg-gradient-to-r from-indigo-500 to-sky-400 rounded-full shadow-2xs transition-all duration-500" style="width: 92%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN TAB VIEWS CONTAINER -->
+      <div class="p-4 lg:p-6 flex flex-col gap-6 max-w-[1600px] mx-auto w-full flex-1">
+
+        <!-- ========================================== -->
+        <!-- TAB 0: HOME / QUEST HUB                    -->
+        <!-- ========================================== -->
+        <div id="tab-home" class="tab-content">
+          <!-- Hero Banner -->
+          <div class="relative bg-gradient-to-br from-indigo-600 via-primary to-sky-500 text-white rounded-3xl p-6 lg:p-10 shadow-lg shadow-indigo-200 overflow-hidden mb-6">
+            <div class="absolute -right-16 -top-16 w-80 h-80 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -left-16 -bottom-16 w-80 h-80 bg-sky-300/20 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="relative z-10 max-w-3xl">
+              <span class="font-hud text-xs tracking-widest text-sky-200 bg-white/10 px-3 py-1 rounded-full border border-white/20 inline-block mb-3">✦ ENGLISH EXPEDITION &amp; QUEST PROTOCOL</span>
+              <h1 class="font-headline text-3xl lg:text-5xl font-extrabold tracking-tight mb-3">LEARN. EARN. SURVIVE.</h1>
+              <p class="font-body text-indigo-100 text-sm lg:text-base leading-relaxed mb-6">
+                Forge your academic destiny, turning English language mastery into a grand astral quest with epic relics, life points, and stardust rewards.
+              </p>
+              
+              <div class="flex flex-wrap gap-3">
+                <button onclick="showTab('display')" class="px-5 py-2.5 bg-white text-indigo-900 font-headline font-bold text-xs rounded-xl shadow-md hover:bg-indigo-50 transition-all flex items-center gap-2">
+                  <span class="material-symbols-outlined text-[18px]">grid_view</span> OPEN CLASS DISPLAY
+                </button>
+                <button onclick="toggleQuickReportOverlay()" class="px-5 py-2.5 bg-white/20 hover:bg-white/30 text-white border border-white/30 font-headline font-bold text-xs rounded-xl backdrop-blur-xs transition-all flex items-center gap-2">
+                  <span class="material-symbols-outlined text-[18px]">bolt</span> DIRECTIVES REPORT
+                </button>
+                <button onclick="showTab('games')" class="px-5 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-900 font-headline font-bold text-xs rounded-xl shadow-sm transition-all flex items-center gap-2">
+                  <span class="material-symbols-outlined text-[18px]">sports_esports</span> LAUNCH GAMES HUB
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Shortcuts Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
+            <div onclick="showTab('display')" class="glow-card p-5 bg-white/95 rounded-2xl border border-indigo-100 cursor-pointer flex flex-col gap-3 group">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-500 to-sky-400 text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined text-[24px]">grid_view</span>
+              </div>
+              <div>
+                <h3 class="font-headline font-bold text-base text-indigo-950">Class Display</h3>
+                <p class="font-body text-xs text-slate-500 mt-1">Live front-of-class interactive view showcasing student vitality, rank badges, and active leaderboards.</p>
+              </div>
+            </div>
+
+            <div onclick="showTab('teacher')" class="glow-card p-5 bg-white/95 rounded-2xl border border-indigo-100 cursor-pointer flex flex-col gap-3 group">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-400 text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined text-[24px]">tune</span>
+              </div>
+              <div>
+                <h3 class="font-headline font-bold text-base text-indigo-950">Teacher Control</h3>
+                <p class="font-body text-xs text-slate-500 mt-1">Manage class rosters, resolve tactical card plays, and batch-distribute Gold rewards to scholars.</p>
+              </div>
+            </div>
+
+            <div onclick="showTab('reports')" class="glow-card p-5 bg-white/95 rounded-2xl border border-indigo-100 cursor-pointer flex flex-col gap-3 group">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-400 text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined text-[24px]">analytics</span>
+              </div>
+              <div>
+                <h3 class="font-headline font-bold text-base text-indigo-950">Students Report</h3>
+                <p class="font-body text-xs text-slate-500 mt-1">Track individual English conduct histories, LP adjustments, and Gold ledgers session by session.</p>
+              </div>
+            </div>
+
+            <div onclick="showTab('cards-library')" class="glow-card p-5 bg-white/95 rounded-2xl border border-indigo-100 cursor-pointer flex flex-col gap-3 group">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-purple-500 to-indigo-500 text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined text-[24px]">style</span>
+              </div>
+              <div>
+                <h3 class="font-headline font-bold text-base text-indigo-950">Cards Library</h3>
+                <p class="font-body text-xs text-slate-500 mt-1">Explore all 7 tactical playable cards including Time Warp, LP Donor, Voodoo, and Gold Rush.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 1: CLASS DISPLAY (CLEAN HUD GRID)       -->
+        <!-- ========================================== -->
+        <div id="tab-display" class="tab-content active">
+          <!-- Top HUD Statistics Banner -->
+          <div class="bg-white/90 backdrop-blur-md rounded-2xl p-5 lg:p-6 shadow-sm border border-indigo-100/80 flex flex-col gap-5 relative overflow-hidden">
+            <div class="absolute -right-12 -top-12 w-56 h-56 bg-gradient-to-br from-indigo-200/30 via-purple-200/20 to-pink-200/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -left-12 -bottom-12 w-56 h-56 bg-gradient-to-tr from-sky-200/30 to-indigo-200/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-5 relative z-10">
+              <!-- Metric Readouts -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 flex-1">
+                <!-- Total Operatives Metric -->
+                <div class="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-br from-indigo-50/60 to-purple-50/30 border border-indigo-100/70 shadow-2xs">
+                  <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-500 to-indigo-600 flex items-center justify-center shrink-0 shadow-md shadow-indigo-200 text-white">
+                    <span class="material-symbols-outlined text-[24px]">group</span>
+                  </div>
+                  <div class="flex flex-col min-w-0">
+                    <span class="font-hud text-[10px] text-indigo-500 font-bold uppercase tracking-wider flex items-center gap-1">✦ STAR VOYAGERS</span>
+                    <div class="flex items-baseline gap-1.5">
+                      <span id="statTotalStudents" class="font-headline text-2xl font-bold text-indigo-950 tracking-tight">0</span>
+                      <span class="font-headline text-xs font-semibold text-indigo-600">CADETS</span>
+                    </div>
+                    <span id="statClassDeployment" class="font-body text-[11px] text-slate-500 truncate">Active in Deployment</span>
+                  </div>
+                </div>
+
+                <!-- Class Gold Metric -->
+                <div class="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-br from-amber-50/80 to-yellow-50/40 border border-amber-200/60 shadow-2xs">
+                  <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-amber-400 to-amber-500 flex items-center justify-center shrink-0 shadow-md shadow-amber-200 text-white">
+                    <span class="material-symbols-outlined text-[24px]">toll</span>
+                  </div>
+                  <div class="flex flex-col min-w-0">
+                    <span class="font-hud text-[10px] text-amber-700 font-bold uppercase tracking-wider flex items-center gap-1">✦ STARDUST GOLD</span>
+                    <div class="flex items-baseline gap-1.5">
+                      <span id="statClassGold" class="font-headline text-2xl font-bold text-amber-900 tracking-tight">0</span>
+                      <span class="font-headline text-xs font-bold text-amber-600">GP</span>
+                    </div>
+                    <span class="font-body text-[11px] text-slate-500 truncate">Total Vault Reserve</span>
+                  </div>
+                </div>
+
+                <!-- Avg Class LP Metric -->
+                <div class="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-br from-sky-50/80 to-indigo-50/40 border border-sky-200/60 shadow-2xs">
+                  <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-sky-400 to-indigo-500 flex items-center justify-center shrink-0 shadow-md shadow-sky-200 text-white">
+                    <span class="material-symbols-outlined text-[24px]">favorite</span>
+                  </div>
+                  <div class="flex flex-col min-w-0">
+                    <span class="font-hud text-[10px] text-sky-700 font-bold uppercase tracking-wider flex items-center gap-1">✦ SANCTUM VITALITY</span>
+                    <div class="flex items-baseline gap-1.5">
+                      <span id="statAvgLP" class="font-headline text-2xl font-bold text-indigo-950 tracking-tight">0.0</span>
+                      <span class="font-headline text-xs font-bold text-sky-600">/ 50 LP</span>
+                    </div>
+                    <span class="font-body text-[11px] text-slate-500 truncate">Morale Stable // Zero Overload</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick Search Field -->
+              <div class="xl:w-72 flex items-center bg-indigo-50/50 hover:bg-indigo-50/80 px-3.5 py-2.5 rounded-xl border border-indigo-100 transition-all shadow-2xs">
+                <span class="material-symbols-outlined text-indigo-400 text-[20px] mr-2">search</span>
+                <input id="studentSearchInput" type="text" placeholder="SEARCH VOYAGER..." class="bg-transparent font-headline text-[12px] text-indigo-950 placeholder:text-slate-400 focus:outline-none w-full font-medium border-0 p-0">
+                <span class="font-hud text-[9px] text-indigo-400 uppercase px-1.5 py-0.5 bg-white rounded-md border border-indigo-100 font-bold shadow-2xs">ESC</span>
+              </div>
+            </div>
+
+            <!-- Tactical Filter Tabs & Quick Report Launch -->
+            <div class="flex flex-wrap items-center justify-between border-t border-indigo-50 pt-4 gap-3">
+              <div class="flex flex-wrap items-center gap-2">
+                <button data-filter="all" class="filter-btn active px-3 py-1.5 rounded-xl bg-primary text-white font-headline text-xs font-bold shadow-sm shadow-indigo-200 transition-all flex items-center gap-1.5">
+                  <span class="text-xs">✦</span>ALL CADETS
+                </button>
+                <button data-filter="high" class="filter-btn px-3 py-1.5 rounded-xl bg-white text-slate-600 font-headline text-xs font-medium border border-indigo-100 hover:bg-indigo-50 hover:text-indigo-700 transition-all">
+                  HIGH VITALITY
+                </button>
+                <button data-filter="mid" class="filter-btn px-3 py-1.5 rounded-xl bg-white text-slate-600 font-headline text-xs font-medium border border-indigo-100 hover:bg-indigo-50 hover:text-indigo-700 transition-all">
+                  VULNERABLE
+                </button>
+                <button data-filter="critical" class="filter-btn px-3 py-1.5 rounded-xl bg-white text-slate-600 font-headline text-xs font-medium border border-indigo-100 hover:bg-indigo-50 hover:text-indigo-700 transition-all">
+                  CRITICAL
+                </button>
+              </div>
+
+              <button onclick="toggleQuickReportOverlay()" class="px-5 py-2.5 bg-gradient-to-r from-indigo-600 via-primary to-indigo-500 text-white font-headline text-xs font-bold tracking-wide rounded-xl flex items-center gap-2 hover:shadow-md hover:shadow-indigo-200 transition-all group shadow-sm">
+                <span class="material-symbols-outlined text-[18px] group-hover:rotate-12 transition-transform">bolt</span>
+                <span>QUICK REPORT</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- SUBVIEW 1: CLEAN CADET ROSTER GRID (No interactive buttons underneath) -->
+          <div id="displaySubtabGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6"></div>
+
+          <!-- SUBVIEW 2: PLAYER'S RANKING PODIUM & LIST -->
+          <div id="displaySubtabRanking" class="hidden flex-col gap-6">
+            <!-- Podium 1-2-3 -->
+            <div class="bg-white/95 rounded-2xl p-6 border border-indigo-100 shadow-sm flex flex-col items-center">
+              <span class="font-hud text-xs text-amber-600 font-bold uppercase tracking-wider mb-2">✦ SANCTUM PODIUM OF HONOR</span>
+              <h2 class="font-headline text-xl font-bold text-indigo-950 mb-6">Top Astral Achievers</h2>
+              <div id="podiumWrapper" class="flex justify-center items-end gap-4 w-full max-w-lg min-h-[220px]"></div>
+            </div>
+
+            <!-- Full Ranking List -->
+            <div class="bg-white/95 rounded-2xl p-6 border border-indigo-100 shadow-sm">
+              <h3 class="font-headline text-lg font-bold text-indigo-950 mb-4 flex items-center gap-2">
+                <span class="text-indigo-500">✦</span> All Cadets Standings
+              </h3>
+              <div id="rankingListItems" class="divide-y divide-indigo-50"></div>
+            </div>
+          </div>
+
+          <!-- Bottom Floating Voyager Directive Bar -->
+          <div class="bg-white/90 backdrop-blur-md rounded-2xl p-5 shadow-sm border border-indigo-100 flex flex-col sm:flex-row items-center justify-between gap-4 mt-2">
+            <div class="flex items-center gap-3.5">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-sky-400 flex items-center justify-center text-white shadow-sm shadow-indigo-200">
+                <span class="material-symbols-outlined text-[22px]">layers</span>
+              </div>
+              <div class="flex flex-col">
+                <div class="flex items-center gap-1.5">
+                  <span class="font-headline text-[15px] font-bold text-indigo-950">VOYAGER DIRECTIVE</span>
+                  <span class="text-xs text-indigo-500">✦</span>
+                </div>
+                <span class="font-body text-xs text-slate-500">Centralized directives for all registered cadets in this Sanctum</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+              <button onclick="resetLP()" class="px-4 py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-headline text-xs font-bold rounded-xl border border-indigo-200/60 transition-all flex items-center gap-1.5">
+                RESET LIFE POINT (50 LP)
+              </button>
+              <button onclick="toggleQuickReportOverlay()" class="px-5 py-2.5 bg-gradient-to-r from-indigo-600 via-primary to-indigo-500 text-white font-headline text-xs font-bold tracking-wide rounded-xl flex items-center gap-2 hover:shadow-md hover:shadow-indigo-200 transition-all shadow-sm group">
+                <span class="material-symbols-outlined text-[18px] group-hover:rotate-12 transition-transform">bolt</span>
+                <span>QUICK REPORT</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 2: TEACHER CONTROL                     -->
+        <!-- ========================================== -->
+        <div id="tab-teacher" class="tab-content">
+          <!-- Batch Gold Awarding Bar -->
+          <div class="bg-white/95 rounded-2xl p-4 border border-amber-200 shadow-sm flex flex-wrap items-center justify-between gap-4 mb-6">
+            <div class="flex items-center gap-3">
+              <span class="text-xl">🪙</span>
+              <div>
+                <strong class="font-headline text-sm font-bold text-amber-800 block">Batch Gold Awarding</strong>
+                <span class="font-body text-xs text-slate-500">Quickly award participation stardust to selected scholars.</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 flex-wrap">
+              <button onclick="toggleSelectAllRoster(true)" class="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-headline text-xs font-bold rounded-lg border border-indigo-200 transition-all">Select All</button>
+              <button onclick="toggleSelectAllRoster(false)" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-headline text-xs font-bold rounded-lg border border-slate-200 transition-all">Deselect All</button>
+              <div class="flex items-center gap-2">
+                <label class="font-headline text-xs font-semibold text-slate-700">Amount (+G):</label>
+                <input id="batchGoldInput" type="number" value="5" min="1" max="100" class="w-16 px-2 py-1 text-center font-bold text-xs bg-indigo-50 border border-indigo-200 rounded-lg">
+                <button onclick="awardBatchGold()" class="px-4 py-1.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-headline text-xs font-bold rounded-lg shadow-sm transition-all">
+                  Distribute Gold
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dual Panel: Roster Left + Selected Cadet Right -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1 min-h-0">
+            <!-- Left: Class Roster Drag & Drop -->
+            <div class="lg:col-span-8 bg-white/95 rounded-2xl p-5 border border-indigo-100 shadow-sm flex flex-col">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="font-headline text-base font-bold text-indigo-950 flex items-center gap-2">
+                  <span class="text-indigo-500">✦</span> Class Roster Order &amp; Direct Actions
+                </h3>
+                <span class="font-hud text-xs text-slate-400">Drag ☰ handle to reorder</span>
+              </div>
+              <div id="teacherStudentList" class="flex flex-col gap-2.5 overflow-y-auto max-h-[650px] pr-1"></div>
+            </div>
+
+            <!-- Right: Selected Student Detail Panel -->
+            <div class="lg:col-span-4 bg-white/95 rounded-2xl p-5 border border-indigo-100 shadow-sm flex flex-col gap-5">
+              <div class="text-center pb-3 border-b border-indigo-50">
+                <span class="font-hud text-[10px] text-indigo-500 uppercase font-bold tracking-wider">SELECTED OPERATIVE</span>
+                <h4 id="panelStudentName" class="font-headline text-lg font-bold text-indigo-950 mt-1">Select a Student</h4>
+              </div>
+
+              <!-- Top LP & Gold Stats -->
+              <div class="grid grid-cols-2 gap-3">
+                <div class="p-3 bg-indigo-50/60 rounded-xl border border-indigo-100 text-center">
+                  <span class="font-hud text-[10px] text-slate-500 font-bold uppercase">LIFE POINTS</span>
+                  <div id="panelLP" class="font-headline text-2xl font-bold text-indigo-600 mt-0.5">-</div>
+                </div>
+                <div onclick="openShop()" class="p-3 bg-amber-50/60 hover:bg-amber-100/70 rounded-xl border border-amber-200 text-center cursor-pointer transition-all group">
+                  <span class="font-hud text-[10px] text-amber-700 font-bold uppercase flex items-center justify-center gap-1">
+                    GOLD (OPEN SHOP) <span class="material-symbols-outlined text-[14px]">storefront</span>
+                  </span>
+                  <div id="panelGold" class="font-headline text-2xl font-bold text-amber-600 mt-0.5">-</div>
+                </div>
+              </div>
+
+              <!-- Held Cards Container -->
+              <div class="flex-1 flex flex-col min-h-[220px]">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="font-headline text-xs font-bold text-indigo-950">HELD CARDS (Click to Expand)</span>
+                  <span class="font-hud text-[10px] text-indigo-500">INVENTORY</span>
+                </div>
+                <div id="panelCards" class="flex-1 overflow-y-auto max-h-[350px] bg-slate-50/50 rounded-xl p-3 border border-indigo-50 space-y-2">
+                  Select a student to view inventory.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 3: STUDENTS REPORT                     -->
+        <!-- ========================================== -->
+        <div id="tab-reports" class="tab-content">
+          <div class="bg-white/95 rounded-2xl p-5 border border-indigo-100 shadow-sm flex flex-col gap-4">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-indigo-50 pb-4">
+              <div class="flex items-center gap-2">
+                <button id="reports-subtab-lp-btn" onclick="switchReportsSubtab('lp')" class="subtab-btn active px-3.5 py-1.5 rounded-xl bg-primary text-white font-headline text-xs font-bold shadow-2xs">
+                  🛡️ LP Conduct History
+                </button>
+                <button id="reports-subtab-gold-btn" onclick="switchReportsSubtab('gold')" class="subtab-btn px-3.5 py-1.5 rounded-xl bg-white text-slate-600 font-headline text-xs font-semibold border border-indigo-100 hover:bg-indigo-50">
+                  🪙 Gold Ledger
+                </button>
+              </div>
+              <button onclick="exportReportsToCSV()" class="px-4 py-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-headline text-xs font-bold rounded-xl shadow-2xs flex items-center gap-1.5 transition-all">
+                <span class="material-symbols-outlined text-[16px]">download</span> Export Class CSV Data
+              </button>
+            </div>
+
+            <div>
+              <h2 id="reportsTabHeading" class="font-headline text-xl font-bold text-indigo-950">📝 Students LP Conduct History</h2>
+              <p class="font-body text-xs text-slate-500 mt-0.5">Click any cadet row below to reveal their full chronological logs.</p>
+            </div>
+
+            <div id="reportsAccordionContainer" class="flex flex-col gap-3 mt-2 overflow-y-auto max-h-[700px]"></div>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 4: CARDS LIBRARY                       -->
+        <!-- ========================================== -->
+        <div id="tab-cards-library" class="tab-content">
+          <div class="mb-4">
+            <span class="font-hud text-xs text-indigo-500 font-bold uppercase tracking-wider">✦ ARTIFACT ENCYCLOPEDIA</span>
+            <h2 class="font-headline text-2xl font-bold text-indigo-950 mt-1">Tactical Relic Cards</h2>
+            <p class="font-body text-xs text-slate-500">Playable intervention scrolls &amp; tactical relics that cadets can draw from the Sanctum Shop.</p>
+          </div>
+          <div id="cardsLibraryContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5"></div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 5: GAMES HUB (NEBULA RAID)             -->
+        <!-- ========================================== -->
+        <div id="tab-games" class="tab-content">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <div>
+              <span class="font-hud text-xs text-rose-500 font-bold uppercase tracking-wider">✦ CLASSROOM ENGAGEMENT</span>
+              <h2 class="font-headline text-2xl font-bold text-indigo-950 mt-1">Interactive Classroom Games</h2>
+              <p class="font-body text-xs text-slate-500">Launch live games for English vocabulary, grammar drills, and sentence puzzles with stardust rewards.</p>
+            </div>
+            <button onclick="goToManageGames()" class="px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-headline text-xs font-bold rounded-xl border border-indigo-200 transition-all flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[16px]">settings</span> Manage Games
+            </button>
+          </div>
+          <div id="gameGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5"></div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 6: CLASSROOM SETTINGS                  -->
+        <!-- ========================================== -->
+        <div id="tab-settings" class="tab-content">
+          <div class="mb-4">
+            <span class="font-hud text-xs text-indigo-500 font-bold uppercase tracking-wider">✦ ARCHIVE DIRECTORY CONFIG</span>
+            <h2 class="font-headline text-2xl font-bold text-indigo-950 mt-1">Classroom Settings</h2>
+          </div>
+
+          <div class="space-y-6">
+            <!-- 1. JSON Backup & Restore -->
+            <div class="bg-white/95 rounded-2xl p-5 border border-indigo-200 shadow-sm">
+              <h3 class="font-headline text-base font-bold text-indigo-950 flex items-center gap-2 mb-2">
+                <span class="material-symbols-outlined text-indigo-600">save</span> Data Backup &amp; Restore (JSON)
+              </h3>
+              <p class="font-body text-xs text-slate-500 mb-4">Export all classes, student rosters, cards, and reports into a JSON file, or restore from a previously saved backup.</p>
+              <div class="flex flex-wrap gap-3">
+                <button onclick="exportDataToJSON()" class="px-4 py-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-headline text-xs font-bold rounded-xl shadow-2xs">
+                  📥 Export Roster Data (.json)
+                </button>
+                <input type="file" id="importJsonFileInput" accept=".json" class="hidden" onchange="importDataFromJSON(event)">
+                <button onclick="document.getElementById('importJsonFileInput').click()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-headline text-xs font-bold rounded-xl shadow-2xs">
+                  📤 Import JSON Backup
+                </button>
+              </div>
+            </div>
+
+            <!-- 2. Class / Sanctum Management -->
+            <div class="bg-white/95 rounded-2xl p-5 border border-indigo-100 shadow-sm">
+              <h3 class="font-headline text-base font-bold text-indigo-950 mb-3">1. Sanctum (Class) Management</h3>
+              <div class="flex flex-wrap gap-3 mb-4">
+                <input id="newClassNameInput" type="text" placeholder="New Class Name (e.g. 7A or 10-Science)" class="px-3.5 py-2 text-xs bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 w-64">
+                <button onclick="addClass()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-headline text-xs font-bold rounded-xl">Add Sanctum</button>
+              </div>
+              <div class="flex items-center gap-3 pt-3 border-t border-indigo-50">
+                <label class="font-body text-xs text-slate-600 font-semibold">Delete Sanctum:</label>
+                <select id="deleteClassSelect" class="px-3 py-1.5 text-xs bg-indigo-50/60 border border-indigo-200 rounded-xl"></select>
+                <button onclick="deleteSelectedClass()" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-headline text-xs font-bold rounded-xl">Erase Sanctum</button>
+              </div>
+            </div>
+
+            <!-- 3. Student Management -->
+            <div class="bg-white/95 rounded-2xl p-5 border border-indigo-100 shadow-sm">
+              <h3 class="font-headline text-base font-bold text-indigo-950 mb-3">2. Cadet (Student) Registration</h3>
+              <div class="flex flex-wrap items-center gap-3">
+                <select id="addStudentClassSelect" onchange="changeClassFilter(this.value)" class="px-3 py-2 text-xs bg-indigo-50/60 border border-indigo-200 rounded-xl"></select>
+                <input id="studentNameInput" type="text" placeholder="Full Student Name" onkeydown="if(event.key==='Enter') addStudent()" class="px-3.5 py-2 text-xs bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none w-52">
+                <input id="studentNickInput" type="text" placeholder="Callsign / Nickname" onkeydown="if(event.key==='Enter') addStudent()" class="px-3.5 py-2 text-xs bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none w-44">
+                <button onclick="addStudent()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-headline text-xs font-bold rounded-xl">Add Cadet</button>
+              </div>
+            </div>
+
+            <!-- 4. Manage Games Section -->
+            <div id="manage-games-section" class="bg-white/95 rounded-2xl p-5 border border-indigo-100 shadow-sm">
+              <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+                <h3 class="font-headline text-base font-bold text-indigo-950">3. Manage Classroom Games</h3>
+                <div class="flex gap-2">
+                  <button onclick="copyGamesCodeToClipboard()" class="px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 text-xs font-headline font-bold rounded-lg">📋 Copy Games Code</button>
+                  <button onclick="openAddGameModal()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-headline font-bold rounded-lg">➕ Add New Game</button>
+                </div>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-xs text-left border-collapse">
+                  <thead>
+                    <tr class="bg-indigo-50/80 text-indigo-900 border-b border-indigo-100">
+                      <th class="p-2.5 text-center w-10">Select</th>
+                      <th class="p-2.5">Icon</th>
+                      <th class="p-2.5">Title</th>
+                      <th class="p-2.5">Reward</th>
+                      <th class="p-2.5">Path</th>
+                      <th class="p-2.5 text-center">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="manageGamesTableBody" class="divide-y divide-indigo-50"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- 5. Webhook Integration -->
+            <div class="bg-white/95 rounded-2xl p-5 border border-amber-200 shadow-sm">
+              <h3 class="font-headline text-base font-bold text-amber-800 flex items-center gap-2 mb-2">
+                <span class="material-symbols-outlined text-amber-500">cloud_sync</span> Google Drive &amp; Apps Script Webhook
+              </h3>
+              <p class="font-body text-xs text-slate-500 mb-3">Paste your published Google Apps Script Web App URL below to automatically synchronize report events to Google Sheets.</p>
+              <div class="flex gap-3">
+                <input id="webhookUrlInput" type="text" placeholder="https://script.google.com/macros/s/.../exec" class="flex-1 px-3.5 py-2 text-xs bg-amber-50/40 border border-amber-200 rounded-xl focus:outline-none">
+                <button onclick="saveWebhookUrl()" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 font-headline text-xs font-bold rounded-xl shadow-2xs">Save Webhook</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 7: GUIDELINE & MANUAL                  -->
+        <!-- ========================================== -->
+        <div id="tab-guideline" class="tab-content">
+          <div class="bg-white/95 rounded-2xl p-6 lg:p-8 border border-indigo-100 shadow-sm max-w-4xl mx-auto space-y-6">
+            <div>
+              <span class="font-hud text-xs text-indigo-500 font-bold uppercase tracking-wider">✦ ACADEMY GRIMOIRE</span>
+              <h1 class="font-headline text-2xl lg:text-3xl font-bold text-indigo-950 mt-1">CLASS QUEST JOURNAL: LP &amp; GOLD GUIDE</h1>
+              <p class="font-body text-xs text-slate-500 mt-1">Welcome to Class Quest Journal! Your active participation, English discipline, and teamwork are directly tied to your Life Points (LP) and Stardust Gold (GP).</p>
+            </div>
+
+            <hr class="border-indigo-50">
+
+            <div>
+              <h2 class="font-headline text-lg font-bold text-indigo-900 mb-3">🛡️ 1. The 50 LP Grade Scale</h2>
+              <p class="font-body text-xs text-slate-600 mb-3">Every cadet begins each cycle with <strong>50 LP</strong> (full vitality bar).</p>
+              
+              <div class="overflow-x-auto">
+                <table class="w-full text-xs text-left border-collapse rounded-xl overflow-hidden">
+                  <thead>
+                    <tr class="bg-indigo-50 text-indigo-900 font-bold">
+                      <th class="p-3">LP Range</th>
+                      <th class="p-3">Grade Equivalent</th>
+                      <th class="p-3">Status Classification</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-indigo-50">
+                    <tr class="hover:bg-indigo-50/40"><td class="p-3 font-bold text-sky-600">45 – 50 LP</td><td class="p-3 font-bold">A+ (90 – 100%)</td><td class="p-3">Vanguard Hero</td></tr>
+                    <tr class="hover:bg-indigo-50/40"><td class="p-3 font-bold text-indigo-600">40 – 44 LP</td><td class="p-3 font-bold">A (80 – 89%)</td><td class="p-3">Veteran Scholar</td></tr>
+                    <tr class="hover:bg-indigo-50/40"><td class="p-3 font-bold text-amber-600">31 – 39 LP</td><td class="p-3 font-bold">B (70 – 79%)</td><td class="p-3">Adventurer</td></tr>
+                    <tr class="hover:bg-indigo-50/40"><td class="p-3 font-bold text-orange-600">26 – 30 LP</td><td class="p-3 font-bold">C (60 – 69%)</td><td class="p-3">On Notice</td></tr>
+                    <tr class="hover:bg-indigo-50/40"><td class="p-3 font-bold text-rose-600">Below 25 LP</td><td class="p-3 font-bold">D / Re-evaluation</td><td class="p-3">Danger Zone (Teacher Intervention)</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div>
+              <h2 class="font-headline text-lg font-bold text-indigo-900 mb-3">⚡ 2. English Hour Conduct Directives</h2>
+              <ul class="font-body text-xs text-slate-600 space-y-2 list-disc pl-5">
+                <li><strong>Violating English Hour (-1 LP):</strong> Speaking native language without permit during designated immersion phases.</li>
+                <li><strong>Non-English Permit (-1 LP):</strong> Requesting a pass to explain complex queries in native language.</li>
+                <li><strong>AWOL (-3 LP):</strong> Leaving class or unexcused inactivity during mission tasks.</li>
+                <li><strong>Nonparticipation (-1 LP):</strong> Reluctance to engage in dialogues or group quests.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODALS & OVERLAYS                                        -->
+  <!-- ======================================================== -->
+
+  <!-- 1. QUICK REPORT OVERLAY (Glassmorphic Popover) -->
+  <div id="quickReportPanel" class="astral-modal w-96 max-h-[85vh] overflow-y-auto p-5">
+    <div class="flex items-center justify-between border-b border-indigo-100 pb-3 mb-3">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-indigo-600 text-[20px]">bolt</span>
+        <strong class="font-headline text-sm font-bold text-indigo-950">Quick Cadet Directives</strong>
+      </div>
+      <button onclick="toggleQuickReportOverlay()" class="w-7 h-7 text-slate-400 hover:text-slate-700 rounded-lg flex items-center justify-center">✕</button>
+    </div>
+
+    <div class="bg-indigo-50/60 p-2.5 rounded-xl border border-indigo-100 text-xs mb-4">
+      <span class="text-slate-500 font-hud text-[10px] uppercase font-bold block">TARGET OPERATIVE:</span>
+      <strong id="quickReportTargetName" class="font-headline text-sm text-indigo-900">None Selected</strong>
+    </div>
+
+    <div class="space-y-4 text-xs">
+      <div>
+        <span class="font-hud text-[10px] text-indigo-500 font-bold uppercase tracking-wider block mb-1.5">Language &amp; Conduct</span>
+        <div class="space-y-1.5">
+          <button onclick="applyQuickReport('Violating English Hour', -1, 'lp')" class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-rose-50 text-slate-700 hover:text-rose-900 border border-slate-200 hover:border-rose-200 flex justify-between items-center transition-all">
+            <span>Violating English Hour</span><strong class="text-rose-600">-1 LP</strong>
+          </button>
+          <button onclick="applyQuickReport('Non-English Permit', -1, 'lp')" class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-rose-50 text-slate-700 hover:text-rose-900 border border-slate-200 hover:border-rose-200 flex justify-between items-center transition-all">
+            <span>Non-English Permit</span><strong class="text-rose-600">-1 LP</strong>
+          </button>
+          <button onclick="applyQuickReport('AWOL', -3, 'lp')" class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-rose-50 text-slate-700 hover:text-rose-900 border border-slate-200 hover:border-rose-200 flex justify-between items-center transition-all">
+            <span>AWOL (Unexcused)</span><strong class="text-rose-600">-3 LP</strong>
+          </button>
+          <button onclick="applyQuickReport('Nonparticipation', -1, 'lp')" class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-rose-50 text-slate-700 hover:text-rose-900 border border-slate-200 hover:border-rose-200 flex justify-between items-center transition-all">
+            <span>Nonparticipation</span><strong class="text-rose-600">-1 LP</strong>
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <span class="font-hud text-[10px] text-amber-600 font-bold uppercase tracking-wider block mb-1.5">Quest Events &amp; Hazards</span>
+        <div class="space-y-1.5">
+          <button onclick="openCustomPromptReport('Quest Mishaps', 'lp')" class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-amber-50 text-slate-700 hover:text-amber-900 border border-slate-200 flex justify-between items-center transition-all">
+            <span>Quest Mishaps</span><strong class="text-amber-600">Custom -LP</strong>
+          </button>
+          <button onclick="openCustomPromptReport('Voodoo Victim', 'lp')" class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-amber-50 text-slate-700 hover:text-amber-900 border border-slate-200 flex justify-between items-center transition-all">
+            <span>Voodoo Victim</span><strong class="text-amber-600">Custom -LP</strong>
+          </button>
+          <button onclick="openCustomPromptReport('Missed Deadline', 'lp')" class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-amber-50 text-slate-700 hover:text-amber-900 border border-slate-200 flex justify-between items-center transition-all">
+            <span>Missed Deadline</span><strong class="text-amber-600">Custom -LP</strong>
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <span class="font-hud text-[10px] text-emerald-600 font-bold uppercase tracking-wider block mb-1.5">Rewards &amp; Commissions</span>
+        <div class="space-y-1.5">
+          <button onclick="openCustomPromptReport('Quest Reward', 'gold')" class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-amber-50 text-slate-700 hover:text-amber-900 border border-slate-200 flex justify-between items-center transition-all">
+            <span>Quest Reward</span><strong class="text-amber-600">Custom +G</strong>
+          </button>
+          <button onclick="openCustomPromptReport('Side Commissions', 'gold')" class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-amber-50 text-slate-700 hover:text-amber-900 border border-slate-200 flex justify-between items-center transition-all">
+            <span>Side Commissions</span><strong class="text-amber-600">Custom +G</strong>
+          </button>
+          <button onclick="applyQuickReport('Donor Recipient', 3, 'lp')" class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-900 border border-slate-200 flex justify-between items-center transition-all">
+            <span>Donor Recipient</span><strong class="text-emerald-600">+3 LP</strong>
+          </button>
+          <button onclick="applyQuickReport('Health Potion', 2, 'lp')" class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-900 border border-slate-200 flex justify-between items-center transition-all">
+            <span>Health Potion</span><strong class="text-emerald-600">+2 LP</strong>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. CUSTOM REPORT ENTRY MODAL -->
+  <div id="customReportModal" class="astral-modal w-96 p-5">
+    <h3 id="customReportTitle" class="font-headline text-base font-bold text-indigo-950 text-center mb-1">Custom Entry</h3>
+    <p id="customReportDesc" class="font-body text-xs text-slate-500 text-center mb-4"></p>
+    <div class="space-y-2 mb-4">
+      <label id="customAmountLabel" class="font-headline text-xs font-semibold text-slate-700">Amount:</label>
+      <input id="customAmountInput" type="number" min="1" max="100" class="w-full px-3 py-2 text-xs bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none">
+    </div>
+    <div class="flex justify-between gap-3">
+      <button onclick="closeAllOverlays()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline text-xs font-bold rounded-xl flex-1">Cancel</button>
+      <button onclick="submitCustomReport()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-headline text-xs font-bold rounded-xl flex-1">Apply Entry</button>
+    </div>
+  </div>
+
+  <!-- 3. SHOP MODAL (Roll 2 Random Relic Cards) -->
+  <div id="shopModal" class="astral-modal w-[520px] p-6">
+    <div class="text-center mb-4">
+      <span class="font-hud text-xs text-amber-600 font-bold uppercase tracking-wider">✦ CELESTIAL BAZAAR</span>
+      <h3 class="font-headline text-xl font-bold text-indigo-950 mt-0.5">Card Relic Shop</h3>
+      <p class="font-body text-xs text-slate-500 mt-1">
+        Sanctum <span id="shopClassName" class="font-bold text-indigo-600"></span> Deck: <strong id="classDeckCount" class="text-amber-600">60</strong> / 60 Cards Left
+      </p>
+    </div>
+    <div class="text-center mb-4">
+      <button onclick="generateShopOffers()" class="px-5 py-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-headline text-xs font-bold rounded-xl shadow-sm">
+        🎲 Roll 2 Random Relic Cards
+      </button>
+    </div>
+    <div id="shopCardsContainer" class="grid grid-cols-2 gap-4 mb-4 min-h-[160px]"></div>
+    <div class="text-center pt-2 border-t border-indigo-50">
+      <button onclick="closeAllOverlays()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline text-xs font-bold rounded-xl">Close Shop</button>
+    </div>
+  </div>
+
+  <!-- 4. REWARD MODAL (Multi-student Game Award Checklist) -->
+  <div id="rewardModal" class="astral-modal w-[460px] p-6">
+    <h3 class="font-headline text-lg font-bold text-indigo-950 text-center mb-1">Award Game Stardust</h3>
+    <p class="font-body text-xs text-slate-500 text-center mb-4">
+      Select all participating cadets to receive <strong id="rewardAmountText" class="text-amber-600 font-bold">+0 Gold</strong>:
+    </p>
+    <div class="flex justify-end gap-2 text-xs mb-2">
+      <button onclick="toggleSelectAllStudents(true)" class="text-indigo-600 font-bold hover:underline">Select All</button>
+      <span>•</span>
+      <button onclick="toggleSelectAllStudents(false)" class="text-slate-500 font-bold hover:underline">Deselect All</button>
+    </div>
+    <div id="studentChecklistContainer" class="max-h-56 overflow-y-auto space-y-1.5 p-2 bg-slate-50/80 rounded-xl border border-indigo-100 mb-4 text-xs"></div>
+    <div class="flex justify-between gap-3">
+      <button onclick="skipGoldAwarding()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline text-xs font-bold rounded-xl flex-1">Skip</button>
+      <button onclick="confirmMultiGoldAward()" class="px-4 py-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-headline text-xs font-bold rounded-xl flex-1">Distribute Gold</button>
+    </div>
+  </div>
+
+  <!-- 5. TARGETED ACTION MODAL (For LP Donor & Voodoo) -->
+  <div id="targetModal" class="astral-modal w-96 p-5">
+    <h3 id="targetModalTitle" class="font-headline text-base font-bold text-indigo-950 text-center mb-1">Select Target</h3>
+    <p id="targetModalDesc" class="font-body text-xs text-slate-500 text-center mb-4"></p>
+    <div id="targetStudentList" class="max-h-56 overflow-y-auto space-y-1.5 mb-4 text-xs"></div>
+    <div class="text-center">
+      <button onclick="closeAllOverlays()" class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline text-xs font-bold rounded-xl">Cancel</button>
+    </div>
+  </div>
+
+  <!-- 6. EDIT STUDENT INFO MODAL -->
+  <div id="editStudentModal" class="astral-modal w-96 p-5">
+    <h3 class="font-headline text-base font-bold text-indigo-950 text-center mb-4">Edit Cadet Information</h3>
+    <div class="space-y-3 mb-4 text-xs">
+      <div>
+        <label class="font-headline font-semibold text-slate-700 block mb-1">Full Name:</label>
+        <input id="editNameInput" type="text" class="w-full px-3.5 py-2 bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none">
+      </div>
+      <div>
+        <label class="font-headline font-semibold text-slate-700 block mb-1">Callsign / Nickname:</label>
+        <input id="editNickInput" type="text" class="w-full px-3.5 py-2 bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none">
+      </div>
+    </div>
+    <div class="flex justify-between gap-3">
+      <button onclick="closeAllOverlays()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline text-xs font-bold rounded-xl flex-1">Cancel</button>
+      <button onclick="saveEditedStudent()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-headline text-xs font-bold rounded-xl flex-1">Save Changes</button>
+    </div>
+  </div>
+
+  <!-- 7. ADD / EDIT GAME MODAL -->
+  <div id="gameModal" class="astral-modal w-96 p-5">
+    <h3 id="gameModalTitle" class="font-headline text-base font-bold text-indigo-950 text-center mb-4">Add / Edit Game</h3>
+    <div class="space-y-3 mb-4 text-xs">
+      <div>
+        <label class="font-headline font-semibold text-slate-700 block mb-1">Game Title:</label>
+        <input id="gameTitleInput" type="text" placeholder="e.g. Word Scramble" class="w-full px-3.5 py-2 bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none">
+      </div>
+      <div>
+        <label class="font-headline font-semibold text-slate-700 block mb-1">Icon / Emoji:</label>
+        <input id="gameIconInput" type="text" placeholder="e.g. 🎯" class="w-full px-3.5 py-2 bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none">
+      </div>
+      <div>
+        <label class="font-headline font-semibold text-slate-700 block mb-1">Base Gold Reward:</label>
+        <input id="gameGoldInput" type="number" min="0" placeholder="e.g. 4" class="w-full px-3.5 py-2 bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none">
+      </div>
+      <div>
+        <label class="font-headline font-semibold text-slate-700 block mb-1">Internal File Path:</label>
+        <input id="gamePathInput" type="text" placeholder="game/my-game.html" class="w-full px-3.5 py-2 bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none">
+      </div>
+    </div>
+    <div class="flex justify-between gap-3">
+      <button onclick="closeAllOverlays()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline text-xs font-bold rounded-xl flex-1">Cancel</button>
+      <button onclick="saveGameModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-headline text-xs font-bold rounded-xl flex-1">Save Game</button>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT ENGINE & ARCHITECTURE -->
+  <script>
+    const CARD_LIBRARY = {
+      'Time Warp': { icon: '⏳', price: 8, type: 'defensive', desc: 'Cancel LP damage (up to 3 LP), but prevents receiving gold.' },
+      'LP Donor': { icon: '🤝', price: 2, type: 'targeted', desc: 'Donate up to 3 LP while receiving 2 gold for each LP donated.' },
+      'Voodoo': { icon: '🎎', price: 5, type: 'targeted', desc: 'Redirect incoming LP damage to another chosen player.' },
+      'Shield': { icon: '🛡️', price: 3, type: 'defensive', desc: 'Prevent 1 point of incoming LP damage.' },
+      'Health Potion': { icon: '🧪', price: 6, type: 'instant', desc: 'Recover +2 LP instantly.' },
+      'Gold Rush': { icon: '💰', price: 3, type: 'buff', desc: 'Double the amount of gold received after a single winning game.' },
+      'Master Thief': { icon: '🕵️‍♀️', price: 4, type: 'instant', desc: 'Deduct 1 Gold from all classmates and gain half total stolen.' }
+    };
+
+    const DEFAULT_GAMES = [
+      { id: 'vocab-blitz', title: 'Vocab Blitz', icon: '⚡', goldReward: 3, path: 'game/vocab-blitz.html' },
+      { id: 'sentence-auction', title: 'Sentence Auction', icon: '🔨', goldReward: 5, path: 'game/sentence-auction.html' },
+      { id: 'clue-deduction', title: 'Clue Deduction', icon: '🔍', goldReward: 2, path: 'game/clue-deduction.html' },
+      { id: 'picture-vocab', title: 'Picture Matching', icon: '🖼️', goldReward: 4, path: 'game/picture-vocab.html' },
+      { id: 'future-hunt', title: 'DILEMMA: Future Hunt', icon: '🏹', goldReward: 6, path: 'game/hunting-game.html' }
+    ];
+
+    // Anime Cadet Portraits library for rich anime fantasy HUD
+    const AVATAR_LIST = [
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuBvRdBiSBeyw0WmsLb466gf7tJjnUYRu4d_zhN5mtBdwUBPa2BQrACVdbXU-9UZl6TsqMwydSj_qkl4iFRSdShh0JHTFHVQnEZgqXYGP1-u4ZG9je7wNz2aUjzA9Tt8M15wrZQsky7zwSQY9Dl2ZddWeh2t315wgEI9diJf41nW0e3_8pINXTMm4EQwzyGQUMNfQDlBzD6kDP71I4FbG-KeYZlkztSm6b5_wjlwAOTywfS2rMMepdnd',
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuDGRSZ42Py4cUYtqJkhCezEsgjG3KnmRLKr810VnPUH5CMvWQSQZftzbstPUe0sdUHIoARx6UDGWvAu1b2cBWQItjLhtVZ42JLhFEBJdDvFOKs28jvAiwTXk0BoORS0TezjUa-GZy7anlFMfmSGZnIvVjLi1lOrxiHc6_y-xZKOkGNFFI4hzAXeQkHNavpm9s2oZ7-mz9J1INEjfixj5N_ao-u8aaEu_9xvI0IMG8mh1k7HjojgDE7L',
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuBaLixZ1_LEcERrUpuAPXPhgrptxT7cuL4C7Q8vcGVUryzO1Oqg9KmVLC8aPMtin994oKv2AgCtdIYaaPn60MQSZKQKqoRTKnm6ER4sFd-70I4AyY1Gv7-LI2d54TcH3aXUZYzBQKZOAjJ18GnyFdZC8QIbCjsU3ie5AJ8xjh21y7O1TG4olzs6uZbSmHLRx9tabB5G40Eqei_PFirupw3Ze_rJ1-OZalfPoxioK3ZyGTuyYbjOXz_g',
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuC3iqcT8NtpAF-8pIVy7aDCgm6Y94dpQDxFEjktnWla0z4uT22eGDFICDogzo8jnAtZUnp6lOfMvrL8bxaZYx0bFSanJe9ect3yuW7Qr62PDyyx5iWrDLh3KCIzwQs3id8BoCdHRIiDF-nVgw96HRUjgwxUvfX6LuPCpcB8SYC8rxYUI7QwCfCPpQzCxJd0NK4qskF_dYKi_pyU-nQ-C0FC-vUprHFtMEfvrJFefb6ccq_pUBYZ5Qbr',
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuCsJalIXhuF1xHNysD1os6DapgV4T4-old1Nczn6Wt9TgkpgNXRaoQ0A0AqefAeAftzLUFbo6NzMvPjYnS43T-_RylxrSrVLiGjUtCyKIdE0EQ1QfsOmyjegm9ONF9ZYuAhMS-zha8DFLhZmqDo7yNx8M8Cye5P_UxIcCo1SREFk7V3-qGdEI1tI-ICkKy8m28Wdk9umI50vbcq_lZJKnYpxz1MdwPvmQJotyUNg18DenhmckcpqWCC',
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuCyJ1EwMn9obKZAVAkTr96_JHI-yvM5RjrYjy8OwvX3_9oEaKtq04VOkme-uABMkvIFeK-hKXOL4sDoAiAaHhoq1Nk_ho_FyuGSaKxM_pTG_Zeh8EP1t_k7Fnp1THrEEc2xckPJNdG6UEgxw4ppE2bpWLyNKViSqiquY10RqYO7IiQrT8qCuJGWgkt5RUiUQU8XrBE92V5CL51yqCjWAqCWiRxAtFv1VLn21RFzWnVgoLPJ24tymdfU',
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuAAtB86u1r9FpT_U9MooWNC_6Z9uzLwLv4HIIGZnIoJXpNWU_W3SRd3UAZVsukXrqYPelsUy80nVzpPyjWjyJBeK9S--YQ90Rwgbuh4cd60HEfSqua9JHt_4YgdBhu5DBSicbh2Vll7bqiR9AWPT-cjoe7bgnHbJHmFEVC_j8HS5StCEUoFJBC9Z3PeCfYlibKIyQgOtjUlHQbzjnxi2zL7ozhdMbS1K73SWH3G2GAwTcxxeDH-B7f5',
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuArJNnadtwzWDDFPzW3fLR9zHrtY8rY5B6vbPWuWtyIIG7PmK8rmFrDRCYDauDq94utVfqe0XsBqWc0R5HE4DeRGSaJKC3kGyRcwnOHwgVF9sD6ouxbM2ucXnr-kv96POlPgUO3ZozTHpDpDn-RJJps_qBPxMcSnOUxf555H3GitebIeVUHDwjEvPohLqa7Ou49UODmh-TwuDovVA5NW8CGmpvCtw8uOX90lAWe-w3oSFfe816E5fIm'
+    ];
+
+    const ROLE_TITLES = [
+      'STAR VANGUARD', 'SOL AEGIS', 'HARMONY SCOUT', 'ASTRAL ARCHITECT', 
+      'ZEPHYR BLADE', 'PARAGON COMMAND', 'RECON SPECIALIST', 'CHRONO KNIGHT'
+    ];
+
+    const CLASS_DECK_LIMIT = 60;
+
+    // Load or Seed Initial State
+    let appData = JSON.parse(localStorage.getItem('class_quest_center_v1')) || {
+      currentClass: '8A',
+      currentMeeting: 1,
+      classes: ['8A', '9A'],
+      webhookUrl: '',
+      students: [
+        { id: 1, class: '8A', name: 'Aria Chen', nick: 'Aria', lp: 50, gold: 145, cards: ['Gold Rush', 'Shield', 'Time Warp', 'Health Potion'], totalCardsEarned: 4, totalGoldEarned: 145, effects: [] },
+        { id: 2, class: '8A', name: 'Marcus Vance', nick: 'Marcus', lp: 35, gold: 210, cards: ['Voodoo', 'Shield'], totalCardsEarned: 2, totalGoldEarned: 210, effects: [] },
+        { id: 3, class: '8A', name: 'Elena Rostova', nick: 'Elena', lp: 12, gold: 80, cards: ['Health Potion'], totalCardsEarned: 1, totalGoldEarned: 80, effects: [] },
+        { id: 4, class: '8A', name: 'Kai Takahashi', nick: 'Kai', lp: 48, gold: 190, cards: ['Time Warp', 'LP Donor', 'Shield', 'Health Potion', 'Gold Rush'], totalCardsEarned: 5, totalGoldEarned: 190, effects: [] },
+        { id: 5, class: '8A', name: 'Sophia Patel', nick: 'Sophia', lp: 32, gold: 320, cards: ['Gold Rush', 'Master Thief', 'Shield'], totalCardsEarned: 3, totalGoldEarned: 320, effects: [] },
+        { id: 6, class: '8A', name: 'Dante Brooks', nick: 'Dante', lp: 8, gold: 60, cards: ['Voodoo'], totalCardsEarned: 1, totalGoldEarned: 60, effects: [] },
+        { id: 7, class: '8A', name: 'Zoe Alvarez', nick: 'Zoe', lp: 50, gold: 295, cards: ['Gold Rush', 'Shield', 'Health Potion', 'Time Warp', 'LP Donor', 'Master Thief'], totalCardsEarned: 6, totalGoldEarned: 295, effects: [] },
+        { id: 8, class: '8A', name: 'Leo Sterling', nick: 'Leo', lp: 42, gold: 175, cards: ['Shield', 'Time Warp', 'Health Potion', 'Gold Rush'], totalCardsEarned: 4, totalGoldEarned: 175, effects: [] },
+        { id: 9, class: '9A', name: 'Budi Santoso', nick: 'Budi', lp: 46, gold: 120, cards: ['Gold Rush'], totalCardsEarned: 1, totalGoldEarned: 120, effects: [] },
+        { id: 10, class: '9A', name: 'Siti Rahma', nick: 'Siti', lp: 40, gold: 150, cards: ['Shield', 'Health Potion'], totalCardsEarned: 2, totalGoldEarned: 150, effects: [] }
+      ],
+      games: DEFAULT_GAMES,
+      reports: []
+    };
+
+    if (!Array.isArray(appData.games) || appData.games.length === 0) appData.games = DEFAULT_GAMES;
+    if (!Array.isArray(appData.reports)) appData.reports = [];
+    if (!appData.currentMeeting) appData.currentMeeting = 1;
+
+    let selectedStudentId = null;
+    let editingStudentId = null;
+    let editingGameId = null;
+    let currentShopOffers = [];
+    let activePlayingGame = null;
+    let currentDisplaySubtab = 'grid';
+    let currentReportsSubtab = 'lp';
+    let pendingCustomReport = null;
+    let pendingCustomReportType = 'lp';
+    let openedReportStudentId = null;
+    let currentStatusFilter = 'all';
+    let currentSearchQuery = '';
+
+    function saveData() {
+      localStorage.setItem('class_quest_center_v1', JSON.stringify(appData));
+      render();
+    }
+
+    function toggleMobileDrawer(open) {
+      const sidebar = document.getElementById('mainSidebar');
+      const overlay = document.getElementById('drawerOverlay');
+      if (open) {
+        sidebar.classList.remove('-translate-x-full');
+        overlay.style.display = 'block';
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        overlay.style.display = 'none';
+      }
+    }
+
+    function closeAllOverlays() {
+      document.querySelectorAll('.astral-modal').forEach(m => m.style.display = 'none');
+      document.getElementById('drawerOverlay').style.display = 'none';
+      toggleMobileDrawer(false);
+    }
+
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => {
+        b.classList.remove('active', 'bg-gradient-to-r', 'from-indigo-600', 'via-primary', 'to-indigo-500', 'text-white', 'shadow-md');
+        b.classList.add('text-slate-600');
+        const badge = b.querySelector('.font-hud');
+        if (badge && b.dataset.tab === 'display') {
+          badge.classList.remove('bg-white/20', 'text-white', 'border-white/30');
+          badge.classList.add('bg-indigo-50', 'text-indigo-600', 'border-indigo-200/60');
+        }
+      });
+
+      const target = document.getElementById(`tab-${tabId}`);
+      if (target) target.classList.add('active');
+
+      const activeBtn = document.querySelector(`.nav-btn[data-tab="${tabId}"]`);
+      if (activeBtn) {
+        activeBtn.classList.remove('text-slate-600');
+        activeBtn.classList.add('active', 'bg-gradient-to-r', 'from-indigo-600', 'via-primary', 'to-indigo-500', 'text-white', 'shadow-md');
+        const badge = activeBtn.querySelector('.font-hud');
+        if (badge && tabId === 'display') {
+          badge.classList.add('bg-white/20', 'text-white', 'border-white/30');
+          badge.classList.remove('bg-indigo-50', 'text-indigo-600', 'border-indigo-200/60');
+        }
+      }
+
+      closeAllOverlays();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function switchDisplaySubtab(sub) {
+      currentDisplaySubtab = sub;
+      const btnGrid = document.getElementById('subtab-overview-btn');
+      const btnRanking = document.getElementById('subtab-ranking-btn');
+
+      if (sub === 'grid') {
+        btnGrid.classList.add('bg-gradient-to-r', 'from-indigo-600', 'via-primary', 'to-indigo-500', 'text-white', 'shadow-2xs');
+        btnGrid.classList.remove('text-slate-600', 'hover:bg-white');
+        btnRanking.classList.remove('bg-gradient-to-r', 'from-indigo-600', 'via-primary', 'to-indigo-500', 'text-white', 'shadow-2xs');
+        btnRanking.classList.add('text-slate-600', 'hover:bg-white');
+
+        document.getElementById('displaySubtabGrid').classList.remove('hidden');
+        document.getElementById('displaySubtabRanking').classList.add('hidden');
+      } else {
+        btnRanking.classList.add('bg-gradient-to-r', 'from-indigo-600', 'via-primary', 'to-indigo-500', 'text-white', 'shadow-2xs');
+        btnRanking.classList.remove('text-slate-600', 'hover:bg-white');
+        btnGrid.classList.remove('bg-gradient-to-r', 'from-indigo-600', 'via-primary', 'to-indigo-500', 'text-white', 'shadow-2xs');
+        btnGrid.classList.add('text-slate-600', 'hover:bg-white');
+
+        document.getElementById('displaySubtabGrid').classList.add('hidden');
+        document.getElementById('displaySubtabRanking').classList.remove('hidden');
+      }
+      renderDisplay();
+    }
+
+    function changeClassFilter(className) {
+      if (!className) return;
+      appData.currentClass = className;
+      selectedStudentId = null;
+      saveData();
+    }
+
+    function saveCurrentMeetingNumber() {
+      const val = parseInt(document.getElementById('headerMeetingInput').value) || 1;
+      appData.currentMeeting = val;
+      localStorage.setItem('class_quest_center_v1', JSON.stringify(appData));
+    }
+
+    function selectStudent(id) {
+      selectedStudentId = (selectedStudentId === id) ? null : id;
+      updateSelectedStudentLabels();
+      renderDisplay();
+      renderTeacher();
+    }
+
+    function updateSelectedStudentLabels() {
+      const student = appData.students.find(s => s.id === selectedStudentId);
+      const tel = document.getElementById('telemetrySelectedStudent');
+      const quickTarget = document.getElementById('quickReportTargetName');
+
+      if (student) {
+        if (tel) tel.textContent = `TARGET: ${student.nick.toUpperCase()} (${student.class})`;
+        if (quickTarget) quickTarget.textContent = `${student.nick} - ${student.name} (${student.class})`;
+      } else {
+        if (tel) tel.textContent = `TARGET: NONE`;
+        if (quickTarget) quickTarget.textContent = `None Selected`;
+      }
+    }
+
+    /* QUICK REPORT DRAWER & DISPATCH */
+    function toggleQuickReportOverlay() {
+      const modal = document.getElementById('quickReportPanel');
+      const overlay = document.getElementById('drawerOverlay');
+      if (modal.style.display === 'block') {
+        modal.style.display = 'none';
+        overlay.style.display = 'none';
+      } else {
+        updateSelectedStudentLabels();
+        modal.style.display = 'block';
+        overlay.style.display = 'block';
+      }
+    }
+
+    function applyQuickReport(reason, changeVal, type = 'lp') {
+      const student = appData.students.find(s => s.id === selectedStudentId);
+      if (!student) {
+        alert('Please select a cadet from the Class Display or Roster first!');
+        return;
+      }
+
+      let changeLabel = '';
+      if (type === 'lp') {
+        student.lp = Math.max(0, Math.min(50, student.lp + changeVal));
+        changeLabel = changeVal > 0 ? `+${changeVal} LP` : `${changeVal} LP`;
+      } else {
+        student.gold += changeVal;
+        if (changeVal > 0) student.totalGoldEarned = (student.totalGoldEarned || 0) + changeVal;
+        changeLabel = changeVal > 0 ? `+${changeVal} G` : `${changeVal} G`;
+      }
+
+      const meetingNum = appData.currentMeeting || 1;
+      const logEntry = {
+        meeting: `Meeting #${meetingNum}`,
+        timestamp: new Date().toLocaleString(),
+        studentName: student.name,
+        studentId: student.id,
+        className: student.class,
+        action: reason,
+        type: type,
+        change: changeLabel
+      };
+
+      appData.reports.unshift(logEntry);
+      sendWebhookReport(logEntry);
+      saveData();
+      closeAllOverlays();
+    }
+
+    function openCustomPromptReport(reasonTitle, type = 'lp') {
+      const student = appData.students.find(s => s.id === selectedStudentId);
+      if (!student) {
+        alert('Please select a cadet first!');
+        return;
+      }
+
+      pendingCustomReport = reasonTitle;
+      pendingCustomReportType = type;
+
+      document.getElementById('customReportTitle').textContent = `Directive: ${reasonTitle}`;
+      document.getElementById('customReportDesc').textContent = `Target Cadet: ${student.nick} (${student.class})`;
+      document.getElementById('customAmountLabel').textContent = type === 'lp' ? 'Deduct LP Amount:' : 'Award Gold Amount:';
+      document.getElementById('customAmountInput').value = type === 'lp' ? '2' : '5';
+
+      document.getElementById('quickReportPanel').style.display = 'none';
+      document.getElementById('customReportModal').style.display = 'block';
+    }
+
+    function submitCustomReport() {
+      const val = parseInt(document.getElementById('customAmountInput').value) || 1;
+      if (pendingCustomReport) {
+        const finalVal = pendingCustomReportType === 'lp' ? -Math.abs(val) : Math.abs(val);
+        applyQuickReport(pendingCustomReport, finalVal, pendingCustomReportType);
+      }
+      closeAllOverlays();
+      pendingCustomReport = null;
+    }
+
+    function sendWebhookReport(logEntry) {
+      if (!appData.webhookUrl) return;
+      fetch(appData.webhookUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(logEntry)
+      }).catch(err => console.log('Webhook error:', err));
+    }
+
+    /* RENDER CLASS DISPLAY */
+    function renderDisplay() {
+      const grid = document.getElementById('displaySubtabGrid');
+      grid.innerHTML = '';
+
+      const filteredByClass = appData.students.filter(s => s.class === appData.currentClass);
+
+      // Search & Status filters
+      const displayedStudents = filteredByClass.filter(s => {
+        const matchesSearch = s.name.toLowerCase().includes(currentSearchQuery.toLowerCase()) || 
+                              s.nick.toLowerCase().includes(currentSearchQuery.toLowerCase());
+        const pct = (s.lp / 50) * 100;
+        let status = 'high';
+        if (pct < 30) status = 'critical';
+        else if (pct < 70) status = 'mid';
+
+        const matchesStatus = (currentStatusFilter === 'all') || (status === currentStatusFilter);
+        return matchesSearch && matchesStatus;
+      });
+
+      displayedStudents.forEach((s, idx) => {
+        const pct = Math.max(0, Math.min(100, (s.lp / 50) * 100));
+        let statusTier = 'high';
+        let statusLabel = '✦ ASTRAL HARMONY: 100% NOMINAL';
+        let barGradient = 'from-sky-400 via-cyan-400 to-indigo-500';
+        let topBarColor = 'bg-gradient-to-r from-cyan-400 via-sky-500 to-indigo-500';
+        let badgeColor = 'bg-indigo-50 text-indigo-700 border-indigo-200/60';
+        let heartColor = 'text-sky-500';
+        let statusNotice = 'STAMINA FULL';
+
+        if (pct < 30) {
+          statusTier = 'critical';
+          statusLabel = '✦ ASTRAL WEAKNESS: CRITICAL';
+          barGradient = 'from-rose-500 via-red-500 to-pink-500';
+          topBarColor = 'bg-gradient-to-r from-rose-500 via-pink-500 to-red-500';
+          badgeColor = 'bg-rose-50 text-rose-700 border-rose-200';
+          heartColor = 'text-rose-500';
+          statusNotice = 'AURA LOCKED // INTERVENTION QUEUED';
+        } else if (pct < 70) {
+          statusTier = 'mid';
+          statusLabel = '✦ SHIELD STRAINED: RECHARGE NEEDED';
+          barGradient = 'from-amber-400 via-orange-400 to-yellow-500';
+          topBarColor = 'bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500';
+          badgeColor = 'bg-amber-50 text-amber-700 border-amber-200/60';
+          heartColor = 'text-amber-500';
+          statusNotice = 'RECHARGE NEEDED';
+        }
+
+        const avatarUrl = s.avatar || AVATAR_LIST[idx % AVATAR_LIST.length];
+        const role = s.role || ROLE_TITLES[idx % ROLE_TITLES.length];
+        const isSelected = (s.id === selectedStudentId);
+
+        const card = document.createElement('div');
+        card.className = `student-card glow-card bg-white/95 backdrop-blur-md rounded-2xl border border-indigo-100/90 hover:border-indigo-300 flex flex-col overflow-hidden relative cursor-pointer select-none transition-all duration-300 ${isSelected ? 'selected' : ''}`;
+        card.onclick = () => selectStudent(s.id);
+
+        card.innerHTML = `
+          <div class="h-1.5 w-full ${topBarColor}"></div>
+          <div class="p-5 flex flex-col flex-1 gap-3.5">
+            <!-- Top Badges -->
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-50 to-amber-100/60 text-amber-800 border border-amber-200/80 shadow-2xs">
+                <span class="material-symbols-outlined text-[15px] text-amber-500">toll</span>
+                <span class="font-headline text-xs font-bold">${s.gold} GP</span>
+              </div>
+              <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-50/70 text-indigo-700 border border-indigo-100 shadow-2xs">
+                <span class="material-symbols-outlined text-[15px] text-indigo-500">style</span>
+                <span class="font-hud text-[10px] font-bold">${s.cards ? s.cards.length : 0} RELIC CARDS</span>
+              </div>
+            </div>
+
+            <!-- Identity Block -->
+            <div class="flex items-center gap-3.5 pt-1">
+              <div class="relative w-16 h-16 shrink-0 rounded-2xl overflow-hidden bg-indigo-50 ring-2 ring-indigo-100/80 shadow-sm">
+                <img class="w-full h-full object-cover" src="${avatarUrl}" alt="${s.nick}">
+                <span class="absolute bottom-0 right-0 font-hud text-[9px] bg-gradient-to-r from-indigo-600 to-sky-500 text-white px-1.5 py-0.5 rounded-tl-lg font-bold">✦ ${(idx + 1).toString().padStart(2, '0')}</span>
+              </div>
+              <div class="flex flex-col min-w-0">
+                <span class="font-hud text-[9px] text-indigo-500 font-semibold tracking-wider uppercase flex items-center gap-1">✦ ${role}</span>
+                <h3 class="font-headline text-[18px] font-bold text-indigo-950 truncate tracking-tight">${s.name.toUpperCase()}</h3>
+                <div class="flex items-center gap-1.5 mt-0.5">
+                  <span class="font-hud text-[10px] px-2 py-0.5 rounded-full ${badgeColor} font-bold">${s.nick}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Vitality Gauge -->
+            <div class="p-3 rounded-xl bg-gradient-to-br from-indigo-50/40 via-sky-50/30 to-purple-50/20 border border-indigo-100 flex flex-col gap-2 mt-auto">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-[18px] ${heartColor}">favorite</span>
+                  <span class="font-headline text-xs font-bold text-indigo-950 tracking-wide">ASTRAL RESONANCE</span>
+                </div>
+                <span class="font-headline text-xs font-bold text-indigo-700">${s.lp} / 50 LP</span>
+              </div>
+
+              <!-- Segmented Meter -->
+              <div class="w-full h-2.5 bg-indigo-100/70 rounded-full overflow-hidden flex p-0.5">
+                <div class="h-full bg-gradient-to-r ${barGradient} rounded-full transition-all duration-300 shadow-2xs" style="width: ${pct}%;"></div>
+              </div>
+
+              <div class="flex items-center justify-between font-hud text-[9px] text-slate-500">
+                <span class="truncate">${statusLabel}</span>
+                <span class="font-semibold text-indigo-600 shrink-0 ml-1">${statusNotice}</span>
+              </div>
+            </div>
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+
+      // Update Header & Diagnostic Statistics
+      const totalStudents = filteredByClass.length;
+      document.getElementById('statTotalStudents').textContent = totalStudents;
+      document.getElementById('statClassDeployment').textContent = `Class ${appData.currentClass} // Deployment M-0${appData.currentMeeting || 1}`;
+      document.getElementById('navVoyagersCount').textContent = `${totalStudents} VOYAGERS`;
+
+      const sumGold = filteredByClass.reduce((sum, s) => sum + s.gold, 0);
+      document.getElementById('statClassGold').textContent = sumGold.toLocaleString();
+
+      const avgLp = totalStudents > 0 ? (filteredByClass.reduce((sum, s) => sum + s.lp, 0) / totalStudents).toFixed(1) : '0.0';
+      document.getElementById('statAvgLP').textContent = avgLp;
+
+      const avgPct = totalStudents > 0 ? Math.round((parseFloat(avgLp) / 50) * 100) : 0;
+      document.getElementById('vitalityPctLabel').textContent = `✦ STELLAR RESONANCE: ${avgPct}%`;
+      document.getElementById('vitalityBarFill').style.width = `${avgPct}%`;
+      document.getElementById('currentSanctumLabel').textContent = `SANCTUM ${appData.currentClass} // CELESTIAL VANGUARD`;
+
+      renderRanking(filteredByClass);
+    }
+
+    /* RENDER RANKING PODIUM & LIST */
+    function renderRanking(students) {
+      const podium = document.getElementById('podiumWrapper');
+      const list = document.getElementById('rankingListItems');
+      podium.innerHTML = '';
+      list.innerHTML = '';
+
+      const sorted = [...students].sort((a, b) => {
+        if (b.lp !== a.lp) return b.lp - a.lp;
+        return ((b.totalGoldEarned || b.gold) + (b.totalCardsEarned || (b.cards ? b.cards.length : 0))) - 
+               ((a.totalGoldEarned || a.gold) + (a.totalCardsEarned || (a.cards ? a.cards.length : 0)));
+      });
+
+      const first = sorted[0];
+      const second = sorted[1];
+      const third = sorted[2];
+
+      const renderPodiumStep = (cadet, rankNum, heightClass, bgGradient) => {
+        if (!cadet) return `<div class="w-28 opacity-0"></div>`;
+        return `
+          <div class="flex flex-col items-center w-28 sm:w-32">
+            <div class="p-3 bg-white/90 border border-indigo-100 rounded-2xl shadow-sm text-center w-full mb-2">
+              <strong class="font-headline text-xs font-bold text-indigo-950 block truncate">${cadet.nick}</strong>
+              <span class="font-hud text-[11px] text-indigo-600 font-bold">${cadet.lp} LP</span>
+              <span class="font-hud text-[10px] text-amber-600 block">${cadet.gold} GP</span>
+            </div>
+            <div class="w-full ${heightClass} ${bgGradient} text-white font-headline text-2xl font-black flex items-center justify-center rounded-t-2xl shadow-md">
+              ${rankNum}
+            </div>
+          </div>
+        `;
+      };
+
+      podium.innerHTML = `
+        ${renderPodiumStep(second, '2', 'h-24', 'bg-gradient-to-t from-slate-400 to-slate-300')}
+        ${renderPodiumStep(first, '1', 'h-36', 'bg-gradient-to-t from-amber-500 to-amber-300 text-slate-900')}
+        ${renderPodiumStep(third, '3', 'h-16', 'bg-gradient-to-t from-amber-700 to-amber-600')}
+      `;
+
+      sorted.forEach((s, idx) => {
+        const item = document.createElement('div');
+        item.className = 'py-3 px-2 flex items-center justify-between text-xs hover:bg-indigo-50/50 transition-colors';
+        item.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="w-6 font-hud font-bold text-sm ${idx < 3 ? 'text-amber-500' : 'text-slate-400'}">#${idx + 1}</span>
+            <div class="flex flex-col">
+              <span class="font-headline font-bold text-indigo-950 text-sm">${s.name}</span>
+              <span class="font-hud text-[10px] text-slate-500">Callsign: ${s.nick}</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="font-hud text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-lg border border-indigo-100">${s.lp} LP</span>
+            <span class="font-hud text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-lg border border-amber-200">${s.gold} GP</span>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    /* RENDER TEACHER CONTROL */
+    let draggedElement = null;
+
+    function renderTeacher() {
+      const list = document.getElementById('teacherStudentList');
+      list.innerHTML = '';
+      const filtered = appData.students.filter(s => s.class === appData.currentClass);
+
+      filtered.forEach((s, index) => {
+        const row = document.createElement('div');
+        row.className = `student-row p-3 bg-white border border-indigo-100 rounded-xl shadow-2xs flex items-center justify-between transition-all select-none ${s.id === selectedStudentId ? 'ring-2 ring-indigo-400 bg-indigo-50/30' : ''}`;
+        row.draggable = true;
+        row.dataset.id = s.id;
+        row.onclick = () => selectStudent(s.id);
+
+        row.addEventListener('dragstart', handleDragStart);
+        row.addEventListener('dragover', handleDragOver);
+        row.addEventListener('drop', handleDrop);
+        row.addEventListener('dragend', handleDragEnd);
+
+        row.innerHTML = `
+          <div class="flex items-center gap-3">
+            <input type="checkbox" value="${s.id}" class="rounded text-indigo-600 focus:ring-indigo-400" onclick="event.stopPropagation()">
+            <span class="cursor-grab text-slate-400 text-sm">☰</span>
+            <span class="font-hud text-xs font-bold text-indigo-600">#${(index + 1).toString().padStart(2, '0')}</span>
+            <div class="flex flex-col">
+              <strong class="font-headline text-xs font-bold text-indigo-950">${s.name} (${s.nick})</strong>
+              <span class="font-hud text-[10px] text-slate-500">${s.lp} LP | ${s.gold} GP | ${s.cards ? s.cards.length : 0} Relics</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5" onclick="event.stopPropagation()">
+            <button onclick="openEditStudent(${s.id})" class="px-2 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-headline text-[11px] font-bold rounded-lg border border-indigo-200 transition-all">✏️ Edit</button>
+            <button onclick="modifyGold(${s.id}, -1)" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-hud text-[11px] font-bold rounded-lg transition-all">-1G</button>
+            <button onclick="modifyGold(${s.id}, 1)" class="px-2 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 font-hud text-[11px] font-bold rounded-lg transition-all">+1G</button>
+            <button onclick="removeStudent(${s.id})" class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg text-[11px] font-bold transition-all">✕</button>
+          </div>
+        `;
+        list.appendChild(row);
+      });
+
+      // Update Selected Student Details in Side Panel
+      const active = appData.students.find(s => s.id === selectedStudentId);
+      if (active) {
+        document.getElementById('panelStudentName').textContent = active.name;
+        document.getElementById('panelLP').textContent = `${active.lp} LP`;
+        document.getElementById('panelGold').textContent = `${active.gold} GP`;
+
+        const cardsContainer = document.getElementById('panelCards');
+        cardsContainer.innerHTML = '';
+        if (!active.cards || active.cards.length === 0) {
+          cardsContainer.innerHTML = `<span class="text-xs text-slate-400 text-center block py-4">No tactical cards held in inventory.</span>`;
+        } else {
+          active.cards.forEach((cardName, cIdx) => {
+            const cardData = CARD_LIBRARY[cardName] || { icon: '🃏', desc: 'Custom Relic' };
+            const cardEl = document.createElement('div');
+            cardEl.className = 'bg-white p-2.5 rounded-xl border border-indigo-100 text-xs shadow-2xs space-y-1.5';
+            cardEl.innerHTML = `
+              <div class="flex items-center justify-between font-headline font-bold text-indigo-950">
+                <span>${cardData.icon} ${cardName}</span>
+                <span class="font-hud text-[9px] text-amber-600">READY</span>
+              </div>
+              <p class="font-body text-[11px] text-slate-500 leading-tight">${cardData.desc}</p>
+              <button onclick="event.stopPropagation(); useCard(${active.id}, ${cIdx})" class="w-full py-1 bg-gradient-to-r from-indigo-600 to-sky-500 text-white font-headline text-[10px] font-bold rounded-lg shadow-2xs">
+                ▶️ Play Card
+              </button>
+            `;
+            cardsContainer.appendChild(cardEl);
+          });
+        }
+      } else {
+        document.getElementById('panelStudentName').textContent = 'Select a Student';
+        document.getElementById('panelLP').textContent = '-';
+        document.getElementById('panelGold').textContent = '-';
+        document.getElementById('panelCards').innerHTML = `<span class="text-xs text-slate-400 text-center block py-4">Select a student from the roster to inspect inventory.</span>`;
+      }
+    }
+
+    function handleDragStart(e) {
+      draggedElement = this;
+      this.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    }
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+    }
+    function handleDrop(e) {
+      e.preventDefault();
+      if (draggedElement !== this) {
+        const rows = Array.from(document.querySelectorAll('#teacherStudentList .student-row'));
+        const draggedIdx = rows.indexOf(draggedElement);
+        const targetIdx = rows.indexOf(this);
+
+        const currentClassStudents = appData.students.filter(s => s.class === appData.currentClass);
+        const draggedStudent = currentClassStudents[draggedIdx];
+
+        currentClassStudents.splice(draggedIdx, 1);
+        currentClassStudents.splice(targetIdx, 0, draggedStudent);
+
+        const otherStudents = appData.students.filter(s => s.class !== appData.currentClass);
+        appData.students = [...otherStudents, ...currentClassStudents];
+        saveData();
+      }
+    }
+    function handleDragEnd() {
+      this.classList.remove('dragging');
+      draggedElement = null;
+    }
+
+    function toggleSelectAllRoster(state) {
+      document.querySelectorAll('#teacherStudentList input[type="checkbox"]').forEach(cb => cb.checked = state);
+    }
+
+    function awardBatchGold() {
+      const checkboxes = document.querySelectorAll('#teacherStudentList input[type="checkbox"]:checked');
+      if (checkboxes.length === 0) return alert('No cadets selected in the roster.');
+
+      const goldVal = parseInt(document.getElementById('batchGoldInput').value) || 0;
+      if (goldVal <= 0) return alert('Please enter a valid gold amount.');
+
+      const meetingNum = appData.currentMeeting || 1;
+      checkboxes.forEach(cb => {
+        const studentId = parseInt(cb.value);
+        const student = appData.students.find(s => s.id === studentId);
+        if (student) {
+          student.gold += goldVal;
+          student.totalGoldEarned = (student.totalGoldEarned || 0) + goldVal;
+
+          const logEntry = {
+            meeting: `Meeting #${meetingNum}`,
+            timestamp: new Date().toLocaleString(),
+            studentName: student.name,
+            studentId: student.id,
+            className: student.class,
+            action: 'Batch Teacher Reward',
+            type: 'gold',
+            change: `+${goldVal} G`
+          };
+          appData.reports.unshift(logEntry);
+        }
+      });
+
+      saveData();
+      alert(`Awarded +${goldVal} Gold to ${checkboxes.length} cadet(s)!`);
+    }
+
+    /* RENDER STUDENTS REPORT ACCORDION */
+    function switchReportsSubtab(type) {
+      currentReportsSubtab = type;
+      document.getElementById('reports-subtab-lp-btn').classList.toggle('active', type === 'lp');
+      document.getElementById('reports-subtab-lp-btn').classList.toggle('bg-primary', type === 'lp');
+      document.getElementById('reports-subtab-lp-btn').classList.toggle('text-white', type === 'lp');
+
+      document.getElementById('reports-subtab-gold-btn').classList.toggle('active', type === 'gold');
+      document.getElementById('reports-subtab-gold-btn').classList.toggle('bg-primary', type === 'gold');
+      document.getElementById('reports-subtab-gold-btn').classList.toggle('text-white', type === 'gold');
+
+      document.getElementById('reportsTabHeading').textContent = type === 'lp' ? '📝 Students LP Conduct History' : '🪙 Students Gold Ledger';
+      renderReportsTab();
+    }
+
+    function toggleReportStudentDrawer(studentId) {
+      openedReportStudentId = (openedReportStudentId === studentId) ? null : studentId;
+      renderReportsTab();
+    }
+
+    function deleteReportEntry(reportIndex) {
+      if (confirm('Delete this report entry permanently?')) {
+        appData.reports.splice(reportIndex, 1);
+        saveData();
+      }
+    }
+
+    function renderReportsTab() {
+      const container = document.getElementById('reportsAccordionContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const studentsInClass = appData.students.filter(s => s.class === appData.currentClass);
+      if (studentsInClass.length === 0) {
+        container.innerHTML = `<div class="p-8 text-center text-slate-400 bg-indigo-50/30 rounded-xl border border-indigo-100">No registered cadets in Sanctum ${appData.currentClass}.</div>`;
+        return;
+      }
+
+      studentsInClass.forEach(s => {
+        const isOpen = (openedReportStudentId === s.id);
+        const logs = appData.reports.filter(r => 
+          (r.studentId ? r.studentId === s.id : (r.studentName === s.name && r.className === s.class)) &&
+          ((r.type || 'lp') === currentReportsSubtab)
+        );
+
+        const card = document.createElement('div');
+        card.className = `bg-white border rounded-xl shadow-2xs overflow-hidden transition-all ${isOpen ? 'border-indigo-400 ring-1 ring-indigo-200' : 'border-indigo-100'}`;
+
+        let logsHTML = '';
+        if (logs.length === 0) {
+          logsHTML = `<div class="text-xs text-slate-400 py-3 text-center">No ${currentReportsSubtab.toUpperCase()} events logged for ${s.nick} yet.</div>`;
+        } else {
+          logsHTML = `
+            <table class="w-full text-xs text-left border-collapse mt-2">
+              <thead>
+                <tr class="bg-indigo-50/70 text-indigo-900 border-b border-indigo-100">
+                  <th class="p-2 font-hud">Meeting #</th>
+                  <th class="p-2">Timestamp</th>
+                  <th class="p-2">Directive / Reason</th>
+                  <th class="p-2 font-hud">${currentReportsSubtab === 'lp' ? 'LP Change' : 'Gold Change'}</th>
+                  <th class="p-2 text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-indigo-50">
+                ${logs.map(l => {
+                  const globalIdx = appData.reports.indexOf(l);
+                  return `
+                    <tr class="hover:bg-indigo-50/30">
+                      <td class="p-2 font-hud font-bold text-amber-600">${l.meeting || 'Meeting #1'}</td>
+                      <td class="p-2 font-hud text-[10px] text-slate-400">${l.timestamp}</td>
+                      <td class="p-2 font-body">${l.action}</td>
+                      <td class="p-2 font-hud font-bold ${l.change && l.change.includes('-') ? 'text-rose-600' : 'text-emerald-600'}">${l.change}</td>
+                      <td class="p-2 text-center">
+                        <button onclick="deleteReportEntry(${globalIdx})" class="text-rose-500 hover:text-rose-700 text-xs font-bold">🗑️</button>
+                      </td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          `;
+        }
+
+        card.innerHTML = `
+          <div onclick="toggleReportStudentDrawer(${s.id})" class="p-3.5 flex items-center justify-between cursor-pointer hover:bg-indigo-50/40 select-none">
+            <div class="flex items-center gap-2">
+              <strong class="font-headline text-sm font-bold text-indigo-950">${s.name}</strong>
+              <span class="font-hud text-xs text-slate-400">(${s.nick})</span>
+            </div>
+            <div class="flex items-center gap-4">
+              <span class="font-hud text-xs font-bold text-indigo-600">${s.lp} LP</span>
+              <span class="font-hud text-xs font-bold text-amber-600">${s.gold} GP</span>
+              <span class="font-hud text-xs text-indigo-400">${isOpen ? '▲' : '▼'}</span>
+            </div>
+          </div>
+          ${isOpen ? `
+            <div class="p-4 bg-slate-50/50 border-t border-indigo-100">
+              <div class="flex items-center justify-between pb-2 mb-2 border-b border-indigo-100">
+                <span class="font-hud text-xs text-slate-500">Sanctum: Class ${s.class} | Inventory: ${s.cards ? s.cards.length : 0} Relics | Lifetime Stardust: ${s.totalGoldEarned || s.gold} GP</span>
+                <button onclick="toggleReportStudentDrawer(${s.id})" class="text-xs text-slate-400 hover:text-slate-600">Close</button>
+              </div>
+              ${logsHTML}
+            </div>
+          ` : ''}
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function exportReportsToCSV() {
+      const classLogs = appData.reports.filter(r => r.className === appData.currentClass);
+      if (classLogs.length === 0) return alert(`No report logs found for Class ${appData.currentClass}.`);
+
+      let csv = "Meeting #,Timestamp,Student Name,Class,Type,Action / Reason,Adjustment\n";
+      classLogs.forEach(r => {
+        csv += `"${r.meeting || 'Meeting #1'}","${r.timestamp}","${r.studentName}","${r.className}","${(r.type || 'lp').toUpperCase()}","${r.action}","${r.change}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `Class_${appData.currentClass}_Report_${new Date().toISOString().slice(0, 10)}.csv`;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportDataToJSON() {
+      const blob = new Blob([JSON.stringify(appData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `Class_Quest_Journal_${new Date().toISOString().slice(0, 10)}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importDataFromJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (parsed && Array.isArray(parsed.classes) && Array.isArray(parsed.students)) {
+            appData = parsed;
+            if (!Array.isArray(appData.games)) appData.games = DEFAULT_GAMES;
+            if (!Array.isArray(appData.reports)) appData.reports = [];
+            selectedStudentId = null;
+            saveData();
+            alert('Roster data successfully restored!');
+          }
+        } catch (err) {
+          alert('Error parsing JSON backup file.');
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    /* RENDER CARDS LIBRARY */
+    function renderCardsLibrary() {
+      const container = document.getElementById('cardsLibraryContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      Object.keys(CARD_LIBRARY).forEach(cardName => {
+        const c = CARD_LIBRARY[cardName];
+        const card = document.createElement('div');
+        card.className = 'relic-card';
+        card.innerHTML = `
+          <div class="flex items-center justify-between font-hud text-xs text-indigo-400">
+            <span>ASTRAL RELIC</span>
+            <span>✦</span>
+          </div>
+          <div class="text-center my-3 text-4xl">${c.icon}</div>
+          <div class="text-center font-headline font-bold text-base text-indigo-950">${cardName}</div>
+          <p class="text-center font-body text-xs text-slate-500 my-2 leading-relaxed flex-1 flex items-center justify-center">${c.desc}</p>
+          <div class="text-center font-hud text-xs font-bold text-amber-600 bg-amber-50 py-1 rounded-lg border border-amber-200">
+            Cost: ${c.price} GP
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    /* RENDER GAMES HUB */
+    function renderGames() {
+      const grid = document.getElementById('gameGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      appData.games.forEach(game => {
+        const card = document.createElement('div');
+        card.className = 'glow-card bg-white p-5 rounded-2xl border border-indigo-100 flex flex-col items-center text-center cursor-pointer select-none group';
+        card.onclick = () => launchGame(game);
+        card.innerHTML = `
+          <div class="text-5xl mb-3 group-hover:scale-110 transition-transform">${game.icon || '🎮'}</div>
+          <h3 class="font-headline font-bold text-sm text-indigo-950 group-hover:text-indigo-600 transition-colors">${game.title}</h3>
+          <span class="font-hud text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-lg border border-amber-200 mt-2">
+            💰 +${game.goldReward} Base GP
+          </span>
+        `;
+        grid.appendChild(card);
+      });
+
+      const tableBody = document.getElementById('manageGamesTableBody');
+      if (tableBody) {
+        tableBody.innerHTML = '';
+        appData.games.forEach(g => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-indigo-50/30';
+          tr.innerHTML = `
+            <td class="p-2.5 text-center"><input type="checkbox" value="${g.id}" class="rounded text-indigo-600"></td>
+            <td class="p-2.5 text-xl">${g.icon || '🎮'}</td>
+            <td class="p-2.5 font-headline font-bold text-indigo-950">${g.title}</td>
+            <td class="p-2.5 font-hud font-bold text-amber-600">+${g.goldReward} GP</td>
+            <td class="p-2.5 font-hud text-slate-400">${g.path}</td>
+            <td class="p-2.5 text-center">
+              <button onclick="openEditGameModal('${g.id}')" class="px-2 py-1 bg-indigo-50 text-indigo-700 font-headline text-[10px] font-bold rounded-md">✏️ Edit</button>
+              <button onclick="deleteSingleGame('${g.id}')" class="px-2 py-1 bg-rose-50 text-rose-600 font-headline text-[10px] font-bold rounded-md">✕</button>
+            </td>
+          `;
+          tableBody.appendChild(tr);
+        });
+      }
+    }
+
+    function launchGame(game) {
+      activePlayingGame = game;
+      window.open(game.path, '_blank');
+      finishGamePrompt();
+    }
+
+    function finishGamePrompt() {
+      const currentStudents = appData.students.filter(s => s.class === appData.currentClass);
+      if (currentStudents.length === 0) return;
+
+      document.getElementById('rewardAmountText').textContent = `+${activePlayingGame.goldReward} Gold`;
+      const container = document.getElementById('studentChecklistContainer');
+      container.innerHTML = '';
+
+      currentStudents.forEach((st, idx) => {
+        const item = document.createElement('label');
+        item.className = 'flex items-center gap-2 p-1.5 hover:bg-indigo-50/50 rounded-lg cursor-pointer';
+        item.innerHTML = `
+          <input type="checkbox" value="${st.id}" class="rounded text-indigo-600">
+          <span class="font-headline text-xs font-semibold text-slate-800">#${idx + 1} ${st.nick} (${st.name})</span>
+        `;
+        container.appendChild(item);
+      });
+
+      document.getElementById('rewardModal').style.display = 'block';
+    }
+
+    function toggleSelectAllStudents(selectState) {
+      document.querySelectorAll('#studentChecklistContainer input[type="checkbox"]').forEach(cb => cb.checked = selectState);
+    }
+
+    function confirmMultiGoldAward() {
+      const checkboxes = document.querySelectorAll('#studentChecklistContainer input[type="checkbox"]:checked');
+      if (checkboxes.length === 0) return alert('No cadets selected.');
+
+      const baseReward = activePlayingGame ? activePlayingGame.goldReward : 0;
+      checkboxes.forEach(cb => {
+        const studentId = parseInt(cb.value);
+        const student = appData.students.find(s => s.id === studentId);
+        if (student) {
+          let reward = baseReward;
+          if (student.effects.includes('Time Warp')) {
+            reward = 0;
+            student.effects.splice(student.effects.indexOf('Time Warp'), 1);
+          } else if (student.effects.includes('Gold Rush')) {
+            reward = baseReward * 2;
+            student.effects.splice(student.effects.indexOf('Gold Rush'), 1);
+          }
+          student.gold += reward;
+          student.totalGoldEarned = (student.totalGoldEarned || 0) + reward;
+        }
+      });
+
+      saveData();
+      closeAllOverlays();
+      activePlayingGame = null;
+    }
+
+    function skipGoldAwarding() {
+      closeAllOverlays();
+      activePlayingGame = null;
+    }
+
+    /* CARD USAGE & SHOP */
+    function getClassCardsCount(className) {
+      return appData.students.filter(s => s.class === className).reduce((sum, s) => sum + (s.cards ? s.cards.length : 0), 0);
+    }
+
+    function openShop() {
+      if (!selectedStudentId) return alert('Please select a cadet from the Class Display or Roster first!');
+      document.getElementById('shopModal').style.display = 'block';
+      document.getElementById('shopCardsContainer').innerHTML = '';
+      updateShopHeader();
+    }
+
+    function updateShopHeader() {
+      const remainingDeck = CLASS_DECK_LIMIT - getClassCardsCount(appData.currentClass);
+      document.getElementById('shopClassName').textContent = appData.currentClass;
+      document.getElementById('classDeckCount').textContent = Math.max(0, remainingDeck);
+    }
+
+    function generateShopOffers() {
+      const remaining = CLASS_DECK_LIMIT - getClassCardsCount(appData.currentClass);
+      if (remaining <= 0) return alert('Class deck limit reached (60/60 cards held)!');
+
+      const keys = Object.keys(CARD_LIBRARY);
+      currentShopOffers = [
+        keys[Math.floor(Math.random() * keys.length)],
+        keys[Math.floor(Math.random() * keys.length)]
+      ];
+      renderShopOffers();
+    }
+
+    function renderShopOffers() {
+      const container = document.getElementById('shopCardsContainer');
+      container.innerHTML = '';
+      currentShopOffers.forEach((cardName, idx) => {
+        const c = CARD_LIBRARY[cardName];
+        const cardEl = document.createElement('div');
+        cardEl.className = 'relic-card cursor-pointer hover:border-amber-400';
+        cardEl.onclick = () => buyCardChoice(cardName);
+        cardEl.innerHTML = `
+          <div class="flex items-center justify-between font-hud text-[10px] text-amber-600">
+            <span>OFFER 0${idx + 1}</span>
+            <span>✦</span>
+          </div>
+          <div class="text-center my-2 text-3xl">${c.icon}</div>
+          <div class="text-center font-headline font-bold text-sm text-indigo-950">${cardName}</div>
+          <p class="text-center font-body text-[11px] text-slate-500 my-1 leading-tight flex-1 flex items-center justify-center">${c.desc}</p>
+          <div class="text-center font-hud text-xs font-bold text-amber-600 bg-amber-50 py-1 rounded-lg border border-amber-200">
+            Cost: ${c.price} GP
+          </div>
+        `;
+        container.appendChild(cardEl);
+      });
+    }
+
+    function buyCardChoice(cardName) {
+      const student = appData.students.find(s => s.id === selectedStudentId);
+      const c = CARD_LIBRARY[cardName];
+      if (getClassCardsCount(appData.currentClass) >= CLASS_DECK_LIMIT) return alert('60-card limit reached!');
+      if (student.gold < c.price) return alert('Insufficient Gold for this cadet.');
+
+      student.gold -= c.price;
+      if (!Array.isArray(student.cards)) student.cards = [];
+      student.cards.push(cardName);
+      student.totalCardsEarned = (student.totalCardsEarned || 0) + 1;
+      saveData();
+      closeAllOverlays();
+    }
+
+    function useCard(studentId, cardIndex) {
+      const student = appData.students.find(s => s.id === studentId);
+      if (!student || !student.cards || !student.cards[cardIndex]) return;
+
+      const cardName = student.cards[cardIndex];
+
+      if (cardName === 'Health Potion') {
+        if (confirm(`Play "Health Potion"? Restores +2 LP to ${student.nick}.`)) {
+          student.lp = Math.min(50, student.lp + 2);
+          removeCardIndexFromStudent(student, cardIndex);
+        }
+      } else if (cardName === 'Master Thief') {
+        const classmates = appData.students.filter(s => s.class === student.class && s.id !== student.id);
+        if (classmates.length === 0) return alert('No classmates to steal from!');
+        if (confirm(`Play "Master Thief"? Deducts 1 Gold from classmates and gives half to ${student.nick}.`)) {
+          let totalStolen = 0;
+          classmates.forEach(st => { st.gold -= 1; totalStolen += 1; });
+          const earned = Math.floor(totalStolen / 2);
+          student.gold += earned;
+          student.totalGoldEarned = (student.totalGoldEarned || 0) + earned;
+          removeCardIndexFromStudent(student, cardIndex);
+        }
+      } else if (cardName === 'LP Donor') {
+        promptTargetSelection('LP Donor', student, (target) => {
+          const donorAmount = Math.min(3, student.lp - 1);
+          if (donorAmount <= 0) return alert('Not enough LP to donate!');
+          student.lp -= donorAmount;
+          target.lp = Math.min(50, target.lp + donorAmount);
+          student.gold += donorAmount * 2;
+          student.totalGoldEarned = (student.totalGoldEarned || 0) + (donorAmount * 2);
+          removeCardIndexFromStudent(student, cardIndex);
+        });
+      } else if (['Gold Rush', 'Shield', 'Time Warp', 'Voodoo'].includes(cardName)) {
+        if (confirm(`Activate tactical buff "${cardName}"?`)) {
+          if (!student.effects.includes(cardName)) student.effects.push(cardName);
+          removeCardIndexFromStudent(student, cardIndex);
+        }
+      }
+    }
+
+    function removeCardIndexFromStudent(student, cardIndex) {
+      if (cardIndex > -1 && cardIndex < student.cards.length) {
+        student.cards.splice(cardIndex, 1);
+      }
+      saveData();
+    }
+
+    function promptTargetSelection(actionName, actorStudent, onConfirmCallback) {
+      const targets = appData.students.filter(s => s.class === actorStudent.class && s.id !== actorStudent.id);
+      if (targets.length === 0) return alert('No valid target cadet available!');
+
+      document.getElementById('targetModalTitle').textContent = `Target for ${actionName}`;
+      document.getElementById('targetModalDesc').textContent = `Choose recipient from Sanctum ${actorStudent.class}:`;
+      const listContainer = document.getElementById('targetStudentList');
+      listContainer.innerHTML = '';
+
+      targets.forEach(t => {
+        const div = document.createElement('div');
+        div.className = 'flex items-center justify-between p-2 bg-slate-50 hover:bg-indigo-50 rounded-xl border border-indigo-100';
+        div.innerHTML = `<span><strong>${t.nick}</strong> (${t.lp} LP)</span>`;
+        const selectBtn = document.createElement('button');
+        selectBtn.className = 'px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white font-headline text-xs font-bold rounded-lg';
+        selectBtn.textContent = 'Select';
+        selectBtn.onclick = () => { closeAllOverlays(); onConfirmCallback(t); };
+        div.appendChild(selectBtn);
+        listContainer.appendChild(div);
+      });
+
+      document.getElementById('targetModal').style.display = 'block';
+    }
+
+    /* STUDENT & CLASS MANAGEMENT */
+    function addClass() {
+      const input = document.getElementById('newClassNameInput');
+      const name = input.value.trim();
+      if (name && !appData.classes.includes(name)) {
+        appData.classes.push(name);
+        appData.currentClass = name;
+        input.value = '';
+        saveData();
+      }
+    }
+
+    function deleteSelectedClass() {
+      const target = document.getElementById('deleteClassSelect').value;
+      if (!target) return alert('Please select a class to delete.');
+      if (confirm(`Erase entire Sanctum ${target} and its student records?`)) {
+        appData.classes = appData.classes.filter(c => c !== target);
+        appData.students = appData.students.filter(s => s.class !== target);
+        appData.currentClass = appData.classes[0] || '';
+        saveData();
+      }
+    }
+
+    function addStudent() {
+      const cls = document.getElementById('addStudentClassSelect').value;
+      const nameInput = document.getElementById('studentNameInput');
+      const nickInput = document.getElementById('studentNickInput');
+
+      const name = nameInput.value.trim();
+      const nick = nickInput.value.trim() || name;
+
+      if (cls && name) {
+        appData.students.push({
+          id: Date.now(),
+          class: cls,
+          name,
+          nick,
+          lp: 50,
+          gold: 10,
+          cards: [],
+          totalCardsEarned: 0,
+          totalGoldEarned: 10,
+          effects: []
+        });
+        nameInput.value = '';
+        nickInput.value = '';
+        saveData();
+        nameInput.focus();
+      }
+    }
+
+    function removeStudent(id) {
+      if (confirm('Remove this cadet from the roster?')) {
+        appData.students = appData.students.filter(s => s.id !== id);
+        if (selectedStudentId === id) selectedStudentId = null;
+        saveData();
+      }
+    }
+
+    function modifyGold(studentId, amount) {
+      const student = appData.students.find(s => s.id === studentId);
+      if (student) {
+        student.gold += amount;
+        if (amount > 0) student.totalGoldEarned = (student.totalGoldEarned || 0) + amount;
+        saveData();
+      }
+    }
+
+    function openEditStudent(id) {
+      const student = appData.students.find(s => s.id === id);
+      if (!student) return;
+      editingStudentId = id;
+      document.getElementById('editNameInput').value = student.name;
+      document.getElementById('editNickInput').value = student.nick;
+      document.getElementById('editStudentModal').style.display = 'block';
+    }
+
+    function saveEditedStudent() {
+      if (!editingStudentId) return;
+      const student = appData.students.find(s => s.id === editingStudentId);
+      if (student) {
+        const newName = document.getElementById('editNameInput').value.trim();
+        const newNick = document.getElementById('editNickInput').value.trim();
+        if (newName) {
+          student.name = newName;
+          student.nick = newNick || newName;
+          saveData();
+          closeAllOverlays();
+        }
+      }
+    }
+
+    function resetLP() {
+      if (confirm(`Reset Life Points to 50 for all cadets in Class ${appData.currentClass}?`)) {
+        const meetingNum = appData.currentMeeting || 1;
+        const timestampStr = new Date().toLocaleString();
+
+        appData.students.filter(s => s.class === appData.currentClass).forEach(s => {
+          const diff = 50 - s.lp;
+          s.lp = 50;
+
+          const logEntry = {
+            meeting: `Meeting #${meetingNum}`,
+            timestamp: timestampStr,
+            studentName: s.name,
+            studentId: s.id,
+            className: s.class,
+            action: 'Class LP Reset',
+            type: 'lp',
+            change: diff >= 0 ? `+${diff} LP` : `${diff} LP`
+          };
+          appData.reports.unshift(logEntry);
+          sendWebhookReport(logEntry);
+        });
+
+        saveData();
+        alert(`LP reset to 50 for Class ${appData.currentClass} and logged to Student Reports!`);
+      }
+    }
+
+    function saveWebhookUrl() {
+      const url = document.getElementById('webhookUrlInput').value.trim();
+      appData.webhookUrl = url;
+      saveData();
+      alert('Google Apps Script Webhook URL saved successfully!');
+    }
+
+    function goToManageGames() {
+      showTab('settings');
+      setTimeout(() => {
+        const el = document.getElementById('manage-games-section');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+
+    function openAddGameModal() {
+      editingGameId = null;
+      document.getElementById('gameModalTitle').textContent = 'Add New Game';
+      document.getElementById('gameTitleInput').value = '';
+      document.getElementById('gameIconInput').value = '🎮';
+      document.getElementById('gameGoldInput').value = '3';
+      document.getElementById('gamePathInput').value = 'game/';
+      document.getElementById('gameModal').style.display = 'block';
+    }
+
+    function openEditGameModal(gameId) {
+      const g = appData.games.find(x => x.id === gameId);
+      if (!g) return;
+      editingGameId = gameId;
+      document.getElementById('gameModalTitle').textContent = 'Edit Game Info';
+      document.getElementById('gameTitleInput').value = g.title;
+      document.getElementById('gameIconInput').value = g.icon || '🎮';
+      document.getElementById('gameGoldInput').value = g.goldReward;
+      document.getElementById('gamePathInput').value = g.path;
+      document.getElementById('gameModal').style.display = 'block';
+    }
+
+    function saveGameModal() {
+      const title = document.getElementById('gameTitleInput').value.trim();
+      const icon = document.getElementById('gameIconInput').value.trim() || '🎮';
+      const goldReward = parseInt(document.getElementById('gameGoldInput').value) || 0;
+      let path = document.getElementById('gamePathInput').value.trim();
+
+      if (!title || !path) return alert('Title and Path are required!');
+      if (!path.startsWith('game/')) path = 'game/' + path;
+
+      if (editingGameId) {
+        const g = appData.games.find(x => x.id === editingGameId);
+        if (g) { g.title = title; g.icon = icon; g.goldReward = goldReward; g.path = path; }
+      } else {
+        appData.games.push({ id: 'game-' + Date.now(), title, icon, goldReward, path });
+      }
+      saveData();
+      closeAllOverlays();
+    }
+
+    function deleteSingleGame(gameId) {
+      if (confirm('Delete this game from the hub?')) {
+        appData.games = appData.games.filter(g => g.id !== gameId);
+        saveData();
+      }
+    }
+
+    function copyGamesCodeToClipboard() {
+      navigator.clipboard.writeText(JSON.stringify(appData.games, null, 2)).then(() => alert('Games JSON copied to clipboard!'));
+    }
+
+    function populateDropdowns() {
+      const headerSelect = document.getElementById('headerClassFilter');
+      if (headerSelect) {
+        headerSelect.innerHTML = '';
+        appData.classes.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c;
+          opt.textContent = `Class ${c} // Sanctum`;
+          if (c === appData.currentClass) opt.selected = true;
+          headerSelect.appendChild(opt);
+        });
+      }
+
+      const delSelect = document.getElementById('deleteClassSelect');
+      if (delSelect) {
+        delSelect.innerHTML = '<option value="">-- Select Class --</option>';
+        appData.classes.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c;
+          opt.textContent = `Class ${c}`;
+          delSelect.appendChild(opt);
+        });
+      }
+
+      const addStSelect = document.getElementById('addStudentClassSelect');
+      if (addStSelect) {
+        addStSelect.innerHTML = '';
+        appData.classes.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c;
+          opt.textContent = `Class ${c}`;
+          if (c === appData.currentClass) opt.selected = true;
+          addStSelect.appendChild(opt);
+        });
+      }
+
+      const webhookInput = document.getElementById('webhookUrlInput');
+      if (webhookInput) webhookInput.value = appData.webhookUrl || '';
+
+      const meetingInput = document.getElementById('headerMeetingInput');
+      if (meetingInput) meetingInput.value = appData.currentMeeting || 1;
+    }
+
+    /* FILTER BUTTON LISTENERS */
+    function initFilterButtons() {
+      const search = document.getElementById('studentSearchInput');
+      if (search) {
+        search.addEventListener('input', (e) => {
+          currentSearchQuery = e.target.value.trim();
+          renderDisplay();
+        });
+      }
+
+      const buttons = document.querySelectorAll('.filter-btn');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          buttons.forEach(b => {
+            b.classList.remove('bg-primary', 'text-white', 'shadow-sm', 'shadow-indigo-200', 'active');
+            b.classList.add('bg-white', 'text-slate-600', 'border', 'border-indigo-100');
+          });
+
+          btn.classList.remove('bg-white', 'text-slate-600', 'border', 'border-indigo-100');
+          btn.classList.add('bg-primary', 'text-white', 'shadow-sm', 'shadow-indigo-200', 'active');
+
+          currentStatusFilter = btn.dataset.filter || 'all';
+          renderDisplay();
+        });
+      });
+    }
+
+    function render() {
+      populateDropdowns();
+      renderDisplay();
+      renderTeacher();
+      renderReportsTab();
+      renderCardsLibrary();
+      renderGames();
+      updateShopHeader();
+      updateSelectedStudentLabels();
+    }
+
+    // Initialize application
+    initFilterButtons();
+    render();
+  </script>
+</body>
+</html>
