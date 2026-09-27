@@ -179,10 +179,109 @@
       color: #e11d48 !important;
     }
   </style>
+
+  <!-- FIREBASE SDK INJECTION -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-analytics.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA0OTmnsc1M-53apz8ZDLGwYje9nhsKL9w",
+      authDomain: "class-quest-journal.firebaseapp.com",
+      projectId: "class-quest-journal",
+      storageBucket: "class-quest-journal.firebasestorage.app",
+      messagingSenderId: "82365875566",
+      appId: "1:82365875566:web:f6129d7cf9961ae8b52d7f",
+      measurementId: "G-QPSZ53WV4C"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    // Bind to window to allow interaction with traditional script block functions
+    window.firebaseDb = db;
+    window.doc = doc;
+    window.getDoc = getDoc;
+    window.setDoc = setDoc;
+
+    // Auth State Observer
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        window.currentUserUid = user.uid;
+
+        // Update Sidebar Profile UI
+        document.getElementById('userProfileName').textContent = user.displayName || 'Arch-Guide';
+        if (user.photoURL) {
+          document.getElementById('userProfilePic').src = user.photoURL;
+          document.getElementById('userProfilePic').classList.remove('hidden');
+          document.getElementById('userProfilePlaceholder').classList.add('hidden');
+        }
+
+        // Sync Data
+        if (typeof window.loadUserData === 'function') {
+          window.loadUserData();
+        }
+      } else {
+        window.currentUserUid = null;
+
+        // Reset Profile UI
+        document.getElementById('userProfileName').textContent = 'Loading...';
+        document.getElementById('userProfilePic').classList.add('hidden');
+        document.getElementById('userProfilePlaceholder').classList.remove('hidden');
+
+        // Show Auth Overlay
+        const overlay = document.getElementById('authOverlay');
+        overlay.style.display = 'flex';
+        // A slight timeout to ensure CSS transitions apply smoothly
+        setTimeout(() => {
+          overlay.classList.remove('opacity-0', 'pointer-events-none');
+          document.getElementById('authBox').classList.remove('scale-95', 'opacity-0');
+        }, 50);
+      }
+    });
+
+    // Login Action
+    document.getElementById('btnGoogleSignIn').addEventListener('click', () => {
+      signInWithPopup(auth, provider).catch(error => {
+        console.error("Login Error:", error);
+        alert("Authentication failed. Please try again.");
+      });
+    });
+
+    // Logout Action
+    document.getElementById('btnSignOut').addEventListener('click', () => {
+      signOut(auth).catch(error => console.error("Logout Error:", error));
+    });
+  </script>
 </head>
 
 <body
   class="bg-[#f6f7fe] font-body text-[#1e1b4b] min-h-screen antialiased selection:bg-primary selection:text-white overflow-x-hidden">
+
+  <!-- AUTHENTICATION OVERLAY (Shown by default until Firebase verifies auth) -->
+  <div id="authOverlay"
+    class="fixed inset-0 bg-indigo-950/90 backdrop-blur-xl z-[999] flex flex-col items-center justify-center transition-all duration-500">
+    <div id="authBox"
+      class="bg-white p-8 lg:p-10 rounded-3xl max-w-md w-full text-center shadow-2xl border border-indigo-100 transform transition-all duration-500 scale-95 opacity-0">
+      <div
+        class="w-20 h-20 bg-gradient-to-tr from-indigo-600 via-primary to-sky-400 rounded-3xl mx-auto flex items-center justify-center text-white font-bold mb-6 shadow-xl shadow-indigo-200/50">
+        <span class="material-symbols-outlined text-[36px]">auto_awesome</span>
+      </div>
+      <h2 class="font-headline text-2xl lg:text-3xl font-extrabold text-indigo-950 mb-2">Class Quest Journal</h2>
+      <p class="font-body text-slate-500 text-sm mb-8">Authenticate with your Google account to access your Sanctum and
+        safely sync your roster data to the cloud.</p>
+      <button id="btnGoogleSignIn"
+        class="w-full py-3.5 px-4 bg-white border border-slate-300 hover:bg-slate-50 hover:border-indigo-300 text-slate-700 hover:text-indigo-700 font-headline font-bold rounded-xl flex items-center justify-center gap-3 transition-all shadow-sm">
+        <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google">
+        Sign In with Google
+      </button>
+    </div>
+  </div>
 
   <!-- Mobile Drawer Overlay -->
   <div id="drawerOverlay" class="astral-overlay" onclick="toggleMobileDrawer(false)"></div>
@@ -324,16 +423,24 @@
 
     <!-- Mentor Profile Badge -->
     <div class="p-3 border-t border-indigo-50 bg-gradient-to-b from-transparent to-indigo-50/40">
-      <div class="flex items-center gap-2.5 p-2.5 bg-white/90 border border-indigo-100 rounded-2xl shadow-2xs">
-        <div
-          class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-sky-400 flex items-center justify-center shrink-0 shadow-sm text-white font-bold">
-          <span class="material-symbols-outlined text-[18px]">verified_user</span>
+      <div class="flex items-center justify-between p-2.5 bg-white/90 border border-indigo-100 rounded-2xl shadow-2xs">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <img id="userProfilePic" src="" alt="Profile" class="w-9 h-9 rounded-xl shadow-sm object-cover hidden">
+          <div id="userProfilePlaceholder"
+            class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-sky-400 flex items-center justify-center shrink-0 shadow-sm text-white font-bold">
+            <span class="material-symbols-outlined text-[18px]">person</span>
+          </div>
+          <div class="flex flex-col min-w-0 flex-1 pr-2">
+            <span id="userProfileName"
+              class="font-headline text-[12px] font-bold text-slate-900 truncate">Loading...</span>
+            <span class="font-hud text-[9px] text-indigo-500 font-semibold truncate">RANK: CELESTIAL MENTOR</span>
+          </div>
         </div>
-        <div class="flex flex-col min-w-0 flex-1">
-          <span class="font-headline text-[12px] font-bold text-slate-900 truncate">ARCH-GUIDE ARCHER</span>
-          <span class="font-hud text-[9px] text-indigo-500 font-semibold truncate">RANK: CELESTIAL MENTOR</span>
-        </div>
-        <span class="text-xs text-amber-400 shrink-0">✦</span>
+        <button id="btnSignOut"
+          class="w-8 h-8 flex items-center justify-center rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 hover:scale-105 transition-all shrink-0"
+          title="Secure Logout">
+          <span class="material-symbols-outlined text-[16px]">logout</span>
+        </button>
       </div>
     </div>
   </aside>
@@ -1351,27 +1458,31 @@
 
     const CLASS_DECK_LIMIT = 60;
 
-    // Load or Seed Initial State
-    let appData = JSON.parse(localStorage.getItem('class_quest_center_v1')) || {
-      currentClass: '8A',
-      currentMeeting: 1,
-      classes: ['8A', '9A'],
-      webhookUrl: '',
-      students: [
-        { id: 1, class: '8A', name: 'Aria Chen', nick: 'Aria', lp: 50, gold: 145, cards: ['Gold Rush', 'Shield', 'Time Warp', 'Health Potion'], totalCardsEarned: 4, totalGoldEarned: 145, effects: [] },
-        { id: 2, class: '8A', name: 'Marcus Vance', nick: 'Marcus', lp: 35, gold: 210, cards: ['Voodoo', 'Shield'], totalCardsEarned: 2, totalGoldEarned: 210, effects: [] },
-        { id: 3, class: '8A', name: 'Elena Rostova', nick: 'Elena', lp: 12, gold: 80, cards: ['Health Potion'], totalCardsEarned: 1, totalGoldEarned: 80, effects: [] },
-        { id: 4, class: '8A', name: 'Kai Takahashi', nick: 'Kai', lp: 48, gold: 190, cards: ['Time Warp', 'LP Donor', 'Shield', 'Health Potion', 'Gold Rush'], totalCardsEarned: 5, totalGoldEarned: 190, effects: [] },
-        { id: 5, class: '8A', name: 'Sophia Patel', nick: 'Sophia', lp: 32, gold: 320, cards: ['Gold Rush', 'Master Thief', 'Shield'], totalCardsEarned: 3, totalGoldEarned: 320, effects: [] },
-        { id: 6, class: '8A', name: 'Dante Brooks', nick: 'Dante', lp: 8, gold: 60, cards: ['Voodoo'], totalCardsEarned: 1, totalGoldEarned: 60, effects: [] },
-        { id: 7, class: '8A', name: 'Zoe Alvarez', nick: 'Zoe', lp: 50, gold: 295, cards: ['Gold Rush', 'Shield', 'Health Potion', 'Time Warp', 'LP Donor', 'Master Thief'], totalCardsEarned: 6, totalGoldEarned: 295, effects: [] },
-        { id: 8, class: '8A', name: 'Leo Sterling', nick: 'Leo', lp: 42, gold: 175, cards: ['Shield', 'Time Warp', 'Health Potion', 'Gold Rush'], totalCardsEarned: 4, totalGoldEarned: 175, effects: [] },
-        { id: 9, class: '9A', name: 'Budi Santoso', nick: 'Budi', lp: 46, gold: 120, cards: ['Gold Rush'], totalCardsEarned: 1, totalGoldEarned: 120, effects: [] },
-        { id: 10, class: '9A', name: 'Siti Rahma', nick: 'Siti', lp: 40, gold: 150, cards: ['Shield', 'Health Potion'], totalCardsEarned: 2, totalGoldEarned: 150, effects: [] }
-      ],
-      games: DEFAULT_GAMES,
-      reports: []
-    };
+    function getEmptyState() {
+      return {
+        currentClass: '8A',
+        currentMeeting: 1,
+        classes: ['8A', '9A'],
+        webhookUrl: '',
+        students: [
+          { id: 1, class: '8A', name: 'Aria Chen', nick: 'Aria', lp: 50, gold: 145, cards: ['Gold Rush', 'Shield', 'Time Warp', 'Health Potion'], totalCardsEarned: 4, totalGoldEarned: 145, effects: [] },
+          { id: 2, class: '8A', name: 'Marcus Vance', nick: 'Marcus', lp: 35, gold: 210, cards: ['Voodoo', 'Shield'], totalCardsEarned: 2, totalGoldEarned: 210, effects: [] },
+          { id: 3, class: '8A', name: 'Elena Rostova', nick: 'Elena', lp: 12, gold: 80, cards: ['Health Potion'], totalCardsEarned: 1, totalGoldEarned: 80, effects: [] },
+          { id: 4, class: '8A', name: 'Kai Takahashi', nick: 'Kai', lp: 48, gold: 190, cards: ['Time Warp', 'LP Donor', 'Shield', 'Health Potion', 'Gold Rush'], totalCardsEarned: 5, totalGoldEarned: 190, effects: [] },
+          { id: 5, class: '8A', name: 'Sophia Patel', nick: 'Sophia', lp: 32, gold: 320, cards: ['Gold Rush', 'Master Thief', 'Shield'], totalCardsEarned: 3, totalGoldEarned: 320, effects: [] },
+          { id: 6, class: '8A', name: 'Dante Brooks', nick: 'Dante', lp: 8, gold: 60, cards: ['Voodoo'], totalCardsEarned: 1, totalGoldEarned: 60, effects: [] },
+          { id: 7, class: '8A', name: 'Zoe Alvarez', nick: 'Zoe', lp: 50, gold: 295, cards: ['Gold Rush', 'Shield', 'Health Potion', 'Time Warp', 'LP Donor', 'Master Thief'], totalCardsEarned: 6, totalGoldEarned: 295, effects: [] },
+          { id: 8, class: '8A', name: 'Leo Sterling', nick: 'Leo', lp: 42, gold: 175, cards: ['Shield', 'Time Warp', 'Health Potion', 'Gold Rush'], totalCardsEarned: 4, totalGoldEarned: 175, effects: [] },
+          { id: 9, class: '9A', name: 'Budi Santoso', nick: 'Budi', lp: 46, gold: 120, cards: ['Gold Rush'], totalCardsEarned: 1, totalGoldEarned: 120, effects: [] },
+          { id: 10, class: '9A', name: 'Siti Rahma', nick: 'Siti', lp: 40, gold: 150, cards: ['Shield', 'Health Potion'], totalCardsEarned: 2, totalGoldEarned: 150, effects: [] }
+        ],
+        games: DEFAULT_GAMES,
+        reports: []
+      };
+    }
+
+    // Load Initial State from LocalStorage temporarily while Firebase authenticates
+    let appData = JSON.parse(localStorage.getItem('class_quest_center_v1')) || getEmptyState();
 
     if (!Array.isArray(appData.games) || appData.games.length === 0) appData.games = DEFAULT_GAMES;
     if (!Array.isArray(appData.reports)) appData.reports = [];
@@ -1390,8 +1501,55 @@
     let currentStatusFilter = 'all';
     let currentSearchQuery = '';
 
-    function saveData() {
+    // Data Load hooked by Firebase
+    window.loadUserData = async function () {
+      try {
+        const docRef = window.doc(window.firebaseDb, "teachers", window.currentUserUid);
+        const docSnap = await window.getDoc(docRef);
+
+        if (docSnap.exists()) {
+          // Cloud Data Found
+          appData = docSnap.data();
+        } else {
+          // New User or Migrating from LocalStorage - Push local to Cloud
+          await window.setDoc(docRef, appData);
+        }
+
+        // Ensure Structural Defaults after Cloud fetch
+        if (!Array.isArray(appData.games) || appData.games.length === 0) appData.games = DEFAULT_GAMES;
+        if (!Array.isArray(appData.reports)) appData.reports = [];
+        if (!appData.currentMeeting) appData.currentMeeting = 1;
+
+        render();
+
+        // Hide Overlay Smoothly
+        const overlay = document.getElementById('authOverlay');
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+        setTimeout(() => overlay.style.display = 'none', 500);
+
+      } catch (error) {
+        console.error("Cloud Sync Loading Error:", error);
+        alert("Failed to load data from Cloud Storage. Using local cache fallback.");
+        render();
+        const overlay = document.getElementById('authOverlay');
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+        setTimeout(() => overlay.style.display = 'none', 500);
+      }
+    };
+
+    // Modified Save function to write to Cloud and Local Backup
+    async function saveData() {
       localStorage.setItem('class_quest_center_v1', JSON.stringify(appData));
+
+      if (window.currentUserUid && window.firebaseDb) {
+        try {
+          const docRef = window.doc(window.firebaseDb, "teachers", window.currentUserUid);
+          await window.setDoc(docRef, appData);
+        } catch (error) {
+          console.error("Cloud Save Error:", error);
+        }
+      }
+
       render();
     }
 
@@ -1478,7 +1636,7 @@
     function saveCurrentMeetingNumber() {
       const val = parseInt(document.getElementById('headerMeetingInput').value) || 1;
       appData.currentMeeting = val;
-      localStorage.setItem('class_quest_center_v1', JSON.stringify(appData));
+      saveData();
     }
 
     function selectStudent(id) {
@@ -2626,7 +2784,7 @@
       updateSelectedStudentLabels();
     }
 
-    // Initialize application
+    // Initialize application immediately with cache for fast layout (Firebase overrides on callback)
     initFilterButtons();
     render();
   </script>
