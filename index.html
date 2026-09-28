@@ -303,15 +303,15 @@
     <!-- Navigation Menus -->
     <nav class="flex-1 px-3 py-3.5 space-y-1.5 overflow-y-auto">
       <button
-        class="nav-btn active w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl transition-all bg-gradient-to-r from-indigo-600 via-primary to-indigo-500 text-white font-headline shadow-md shadow-indigo-200"
+        class="nav-btn active w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl transition-all bg-gradient-to-r from-indigo-600 via-primary to-indigo-500 text-white font-headline shadow-md shadow-indigo-200 group"
         data-tab="home" onclick="showTab('home')">
         <div class="flex items-center gap-3">
           <span
-            class="material-symbols-outlined text-[20px] text-white">auto_awesome</span>
+            class="material-symbols-outlined text-[20px] text-white transition-colors">auto_awesome</span>
           <span class="font-headline text-[13px] font-semibold">Quest Hub</span>
         </div>
         <span
-          class="font-hud text-[9px] px-2 py-0.5 bg-white/20 text-white border border-white/30 rounded-full backdrop-blur-xs font-semibold">STELLAR</span>
+          class="font-hud text-[9px] px-2 py-0.5 bg-white/20 text-white border border-white/30 rounded-full font-bold transition-all">STELLAR</span>
       </button>
 
       <button
@@ -335,6 +335,18 @@
         </div>
         <span
           class="font-hud text-[9px] px-2 py-0.5 bg-indigo-50 text-indigo-600 border border-indigo-200/60 rounded-full font-bold">SYNAPSE</span>
+      </button>
+
+      <button
+        class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50/70 hover:text-indigo-900 transition-all group"
+        data-tab="admin-profile" onclick="showTab('admin-profile')">
+        <div class="flex items-center gap-3">
+          <span
+            class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors">badge</span>
+          <span class="font-headline text-[13px] font-semibold">Administrator Profile</span>
+        </div>
+        <span
+          class="font-hud text-[9px] px-2 py-0.5 bg-purple-50 text-purple-600 border border-purple-200/60 rounded-full font-bold">PROFILE</span>
       </button>
 
       <button
@@ -412,67 +424,72 @@
 
     <!-- TOP FLOATING HEADER -->
     <header
-      class="fixed top-0 left-0 right-0 h-16 bg-white/85 backdrop-blur-xl border-b border-indigo-100/70 z-40 px-4 lg:px-6 flex items-center justify-between gap-4">
-      <div class="flex items-center gap-3.5">
+      class="fixed top-0 left-0 right-0 h-16 bg-white/85 backdrop-blur-xl border-b border-indigo-100/70 z-40 px-3 sm:px-4 lg:px-6 flex items-center justify-between gap-2 sm:gap-4">
+      <div class="flex items-center gap-2 sm:gap-3.5 min-w-0">
         <button onclick="toggleMobileDrawer(true)"
-          class="w-9 h-9 text-slate-500 hover:bg-indigo-50 hover:text-indigo-600 border border-indigo-100/80 rounded-xl flex items-center justify-center transition-all"
+          class="w-9 h-9 text-slate-500 hover:bg-indigo-50 hover:text-indigo-600 border border-indigo-100/80 rounded-xl flex items-center justify-center transition-all shrink-0"
           type="button">
           <span class="material-symbols-outlined text-[20px]">menu</span>
         </button>
 
-        <div class="flex items-center gap-2.5 cursor-pointer" onclick="showTab('home')">
+        <div class="flex items-center gap-2 sm:gap-2.5 cursor-pointer min-w-0" onclick="showTab('home')">
           <div
-            class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 via-primary to-sky-400 flex items-center justify-center text-white shadow-xs">
+            class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 via-primary to-sky-400 flex items-center justify-center text-white shadow-xs shrink-0">
             <span class="text-xs font-bold">✦</span>
           </div>
-          <div class="hidden sm:flex flex-col">
+          <div class="hidden sm:flex flex-col min-w-0">
             <div class="flex items-center gap-1.5">
-              <span class="font-headline text-[15px] font-bold tracking-tight text-indigo-950 leading-none">CLASS QUEST
-                JOURNAL</span>
-              <span class="text-indigo-500 text-xs">✦</span>
+              <span class="font-headline text-[14px] lg:text-[15px] font-bold tracking-tight text-indigo-950 leading-none truncate">CLASS QUEST JOURNAL</span>
+              <span class="text-indigo-500 text-xs shrink-0">✦</span>
             </div>
             <span class="font-hud text-[9px] text-indigo-500 font-semibold mt-0.5">ASTRAL PEDAGOGY SYSTEM</span>
           </div>
         </div>
+
+        <!-- Dynamic Active Section Breadcrumb (Requirement 6) -->
+        <div id="activeSectionBreadcrumb"
+          class="hidden md:flex items-center gap-1.5 px-3 py-1 bg-indigo-50/80 border border-indigo-100/90 rounded-xl font-headline text-[11px] font-bold text-indigo-700 shadow-2xs whitespace-nowrap">
+          <span class="text-indigo-500">✦</span> <span>Quest Hub</span>
+        </div>
       </div>
 
       <!-- Top Interactive Controls (Sanctum Class Switcher, Meeting Cycle, Actions) -->
-      <div class="flex items-center gap-2 lg:gap-3">
+      <div class="flex items-center gap-1.5 sm:gap-2 lg:gap-3 shrink-0">
         <!-- Sanctum Multi-Class Dropdown -->
-        <div class="flex items-center bg-indigo-50/70 border border-indigo-100 rounded-xl px-2.5 py-1.5 shadow-2xs">
+        <div class="flex items-center bg-indigo-50/70 border border-indigo-100 rounded-xl px-2 sm:px-2.5 py-1.5 shadow-2xs">
           <span class="font-hud text-[10px] text-indigo-500 font-bold mr-1.5 hidden md:inline">SANCTUM:</span>
           <select id="headerClassFilter" onchange="changeClassFilter(this.value)"
-            class="bg-transparent font-headline text-[12px] font-semibold text-slate-700 focus:outline-none cursor-pointer pr-1 border-0 py-0"></select>
+            class="bg-transparent font-headline text-[11px] sm:text-[12px] font-semibold text-slate-700 focus:outline-none cursor-pointer pr-1 border-0 py-0"></select>
         </div>
 
         <!-- Meeting / Cycle Input -->
-        <div class="flex items-center bg-indigo-50/70 border border-indigo-100 rounded-xl px-2.5 py-1.5 shadow-2xs">
-          <span class="font-hud text-[10px] text-indigo-500 font-bold mr-1 hidden sm:inline">CYCLE:</span>
+        <div class="hidden sm:flex items-center bg-indigo-50/70 border border-indigo-100 rounded-xl px-2 sm:px-2.5 py-1.5 shadow-2xs">
+          <span class="font-hud text-[10px] text-indigo-500 font-bold mr-1 hidden md:inline">CYCLE:</span>
           <input id="headerMeetingInput" type="number" min="1" max="100" value="1" onchange="saveCurrentMeetingNumber()"
-            class="w-12 bg-transparent font-headline text-[12px] text-indigo-600 font-bold text-center focus:outline-none border-0 p-0">
+            class="w-10 sm:w-12 bg-transparent font-headline text-[11px] sm:text-[12px] text-indigo-600 font-bold text-center focus:outline-none border-0 p-0">
         </div>
 
-        <div class="h-6 w-px bg-indigo-100 mx-1 hidden sm:block"></div>
+        <div class="h-6 w-px bg-indigo-100 mx-0.5 sm:mx-1 hidden sm:block"></div>
 
-        <!-- Quick Top Actions & Auth Status -->
-        <div class="flex items-center gap-2">
-          <!-- Auth User Status / Sign In Button -->
+        <!-- Quick Top Actions & Auth Status (Requirement 3: guest name opens admin profile) -->
+        <div class="flex items-center gap-1.5 sm:gap-2">
+          <!-- Auth User Status / Guest Pill -->
           <div id="headerAuthPill" class="flex items-center"></div>
 
           <button onclick="toggleQuickReportOverlay()" title="Directives Quick Report"
-            class="w-9 h-9 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100/80 rounded-xl flex items-center justify-center transition-all shadow-2xs">
-            <span class="material-symbols-outlined text-[18px]">bolt</span>
+            class="w-8 h-8 sm:w-9 sm:h-9 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100/80 rounded-xl flex items-center justify-center transition-all shadow-2xs shrink-0">
+            <span class="material-symbols-outlined text-[17px] sm:text-[18px]">bolt</span>
           </button>
           <button onclick="showTab('reports')" title="Activity Logs"
-            class="w-9 h-9 text-slate-500 hover:bg-indigo-50 hover:text-indigo-600 border border-indigo-100/80 rounded-xl flex items-center justify-center transition-all">
-            <span class="material-symbols-outlined text-[18px]">notifications</span>
+            class="w-8 h-8 sm:w-9 sm:h-9 text-slate-500 hover:bg-indigo-50 hover:text-indigo-600 border border-indigo-100/80 rounded-xl flex items-center justify-center transition-all shrink-0">
+            <span class="material-symbols-outlined text-[17px] sm:text-[18px]">notifications</span>
           </button>
         </div>
       </div>
     </header>
 
     <!-- MAIN STAGE -->
-    <main class="relative pt-16 flex-1 flex flex-col">
+    <main class="relative pt-16 flex-1 flex flex-col pb-24 sm:pb-8">
 
       <!-- SUBTAB / TELEMETRY DIAGNOSTIC BAR -->
       <div
@@ -928,6 +945,191 @@
         </div>
 
         <!-- ========================================== -->
+        <!-- TAB 2.5: ADMINISTRATOR PROFILE             -->
+        <!-- ========================================== -->
+        <div id="tab-admin-profile" class="tab-content">
+          <!-- Administrator Profile Header Banner -->
+          <div class="relative bg-gradient-to-r from-indigo-700 via-primary to-sky-600 rounded-3xl p-6 lg:p-8 text-white shadow-lg shadow-indigo-200/50 mb-6 overflow-hidden">
+            <div class="absolute -right-12 -top-12 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -left-12 -bottom-12 w-64 h-64 bg-sky-300/15 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="font-hud text-[10px] tracking-widest text-sky-200 bg-white/15 px-3 py-0.5 rounded-full border border-white/20 uppercase font-bold">
+                    ✦ TEACHER CONTROL TERMINAL
+                  </span>
+                  <span id="adminProfileBadgeRole" class="font-hud text-[10px] bg-emerald-400/20 text-emerald-200 border border-emerald-300/30 px-2.5 py-0.5 rounded-full font-bold">
+                    ADMINISTRATOR
+                  </span>
+                </div>
+                <h2 class="font-headline text-2xl lg:text-3xl font-extrabold tracking-tight">Administrator Profile</h2>
+                <p class="font-body text-indigo-100 text-xs lg:text-sm mt-1 max-w-2xl leading-relaxed">
+                  Configure your educator credentials, academy designation, pedagogue insignia, and unique cadet connection key. Editable and synchronizable with your local and cloud vault.
+                </p>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <button onclick="saveAdministratorProfile()" type="button"
+                  class="px-5 py-2.5 bg-white text-indigo-950 hover:bg-indigo-50 font-headline text-xs font-bold rounded-xl shadow-md transition-all flex items-center gap-2 active:scale-95">
+                  <span class="material-symbols-outlined text-[18px] text-indigo-600">save</span>
+                  <span>Save Profile</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main Profile Grid -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Left Column: Persona Card & Cadet Access Card -->
+            <div class="lg:col-span-4 space-y-6">
+              <!-- Persona Identity Card -->
+              <div class="bg-white/95 rounded-2xl p-6 border border-indigo-100 shadow-sm flex flex-col items-center text-center relative overflow-hidden">
+                <div class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-indigo-600 via-primary to-sky-400 text-white flex items-center justify-center text-3xl font-bold shadow-md shadow-indigo-300/50 mb-3 ring-4 ring-indigo-50" id="adminAvatarDisplay">
+                  ✦
+                </div>
+                <h3 id="adminPreviewName" class="font-headline text-lg font-bold text-indigo-950">Dawam Nofal</h3>
+                <span id="adminPreviewRole" class="font-hud text-[10px] text-indigo-600 font-semibold tracking-wider uppercase mt-0.5">SANCTUM MASTER // EDUCATOR</span>
+                <p id="adminPreviewSchool" class="font-body text-xs text-slate-500 mt-1">Astral Vanguard Academy</p>
+
+                <!-- Persona Icon Chooser -->
+                <div class="w-full pt-4 mt-4 border-t border-indigo-50 text-left">
+                  <label class="font-hud text-[10px] text-slate-500 font-bold tracking-wider uppercase block mb-2">CHOOSE ASTRAL INSIGNIA</label>
+                  <div class="grid grid-cols-5 gap-2" id="avatarPickerGrid">
+                    <button type="button" onclick="selectAdminAvatar('✦')" class="admin-avatar-btn p-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-bold text-center border border-indigo-200 transition-all text-sm">✦</button>
+                    <button type="button" onclick="selectAdminAvatar('🛡️')" class="admin-avatar-btn p-2 rounded-xl bg-slate-50 hover:bg-indigo-50 text-slate-700 font-bold text-center border border-slate-200 transition-all text-sm">🛡️</button>
+                    <button type="button" onclick="selectAdminAvatar('⚡')" class="admin-avatar-btn p-2 rounded-xl bg-slate-50 hover:bg-indigo-50 text-slate-700 font-bold text-center border border-slate-200 transition-all text-sm">⚡</button>
+                    <button type="button" onclick="selectAdminAvatar('🔮')" class="admin-avatar-btn p-2 rounded-xl bg-slate-50 hover:bg-indigo-50 text-slate-700 font-bold text-center border border-slate-200 transition-all text-sm">🔮</button>
+                    <button type="button" onclick="selectAdminAvatar('📜')" class="admin-avatar-btn p-2 rounded-xl bg-slate-50 hover:bg-indigo-50 text-slate-700 font-bold text-center border border-slate-200 transition-all text-sm">📜</button>
+                  </div>
+                </div>
+
+                <!-- Access Code Box -->
+                <div class="w-full mt-4 p-3.5 bg-gradient-to-r from-indigo-50/80 to-purple-50/80 rounded-xl border border-indigo-100 text-left">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="font-hud text-[10px] font-bold text-indigo-700">CADET ACCESS CODE</span>
+                    <button type="button" onclick="copyTeacherCode()" class="font-hud text-[9px] text-indigo-600 hover:text-indigo-800 font-bold bg-white px-2 py-0.5 rounded border border-indigo-200 shadow-2xs">COPY</button>
+                  </div>
+                  <div id="adminPreviewCode" class="font-mono text-base font-bold text-indigo-950 tracking-wider">CQ-DEMO8A</div>
+                  <p class="font-body text-[10px] text-slate-500 mt-1">Share this code with cadets to grant view-only access to your class.</p>
+                </div>
+              </div>
+
+              <!-- Quick Status Card -->
+              <div class="bg-white/95 rounded-2xl p-5 border border-indigo-100 shadow-sm space-y-3">
+                <h4 class="font-headline text-xs font-bold text-indigo-950 uppercase tracking-wider flex items-center gap-1.5">
+                  <span class="text-indigo-500">✦</span> Sanctum Telemetry
+                </h4>
+                <div class="flex items-center justify-between text-xs py-1.5 border-b border-indigo-50">
+                  <span class="text-slate-500 font-body">Managed Sanctums:</span>
+                  <span id="adminStatClasses" class="font-hud font-bold text-indigo-950">1 Class</span>
+                </div>
+                <div class="flex items-center justify-between text-xs py-1.5 border-b border-indigo-50">
+                  <span class="text-slate-500 font-body">Active Cadets:</span>
+                  <span id="adminStatStudents" class="font-hud font-bold text-indigo-950">0 Cadets</span>
+                </div>
+                <div class="flex items-center justify-between text-xs py-1.5 border-b border-indigo-50">
+                  <span class="text-slate-500 font-body">Terminal Auth:</span>
+                  <span id="adminStatAuth" class="font-hud font-bold text-emerald-600">Local Verified</span>
+                </div>
+                <div class="pt-2">
+                  <button type="button" onclick="confirmSignOut()"
+                    class="w-full px-3 py-2 rounded-xl border border-rose-200 bg-rose-50/70 hover:bg-rose-100 text-rose-700 font-headline text-xs font-bold transition-all flex items-center justify-center gap-1.5">
+                    <span class="material-symbols-outlined text-[16px]">logout</span>
+                    <span>Disengage Sanctum (Log Out)</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Column: Editable Profile Settings Form -->
+            <div class="lg:col-span-8 space-y-6">
+              <!-- Profile Fields -->
+              <div class="bg-white/95 rounded-2xl p-6 border border-indigo-100 shadow-sm">
+                <h3 class="font-headline text-base font-bold text-indigo-950 flex items-center gap-2 mb-4 pb-3 border-b border-indigo-50">
+                  <span class="material-symbols-outlined text-indigo-600">badge</span>
+                  <span>Educator Credentials &amp; Sanctum Keys</span>
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label class="block font-headline text-xs font-bold text-slate-700 mb-1.5">Administrator / Teacher Name</label>
+                    <input id="adminProfileName" type="text" placeholder="e.g. Dawam Nofal, M.Ed"
+                      class="w-full px-3.5 py-2.5 text-xs bg-indigo-50/40 border border-indigo-200/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 font-body text-slate-800">
+                  </div>
+                  <div>
+                    <label class="block font-headline text-xs font-bold text-slate-700 mb-1.5">Cadet Access Key (Unique)</label>
+                    <div class="flex gap-2">
+                      <input id="adminProfileCode" type="text" placeholder="e.g. CQ-DEMO8A"
+                        class="w-full px-3.5 py-2.5 text-xs bg-indigo-50/40 border border-indigo-200/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 font-mono font-bold text-indigo-900 uppercase">
+                      <button type="button" onclick="generateNewAccessCode()" title="Generate Random Code"
+                        class="px-3 py-2 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-xl text-indigo-700 font-bold text-xs shrink-0">
+                        🎲
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block font-headline text-xs font-bold text-slate-700 mb-1.5">Email Address</label>
+                    <input id="adminProfileEmail" type="email" placeholder="e.g. teacher@classquest.edu"
+                      class="w-full px-3.5 py-2.5 text-xs bg-indigo-50/40 border border-indigo-200/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 font-body text-slate-800">
+                  </div>
+                  <div>
+                    <label class="block font-headline text-xs font-bold text-slate-700 mb-1.5">Academy / School Designation</label>
+                    <input id="adminProfileSchool" type="text" placeholder="e.g. Astral Vanguard Academy"
+                      class="w-full px-3.5 py-2.5 text-xs bg-indigo-50/40 border border-indigo-200/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 font-body text-slate-800">
+                  </div>
+                </div>
+
+                <div class="mb-4">
+                  <label class="block font-headline text-xs font-bold text-slate-700 mb-1.5">Subject / Department</label>
+                  <input id="adminProfileSubject" type="text" placeholder="e.g. English Expedition &amp; Gamified Literature"
+                    class="w-full px-3.5 py-2.5 text-xs bg-indigo-50/40 border border-indigo-200/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 font-body text-slate-800">
+                </div>
+
+                <div>
+                  <label class="block font-headline text-xs font-bold text-slate-700 mb-1.5">Educator Philosophy &amp; Quest Mission Lore</label>
+                  <textarea id="adminProfileMotto" rows="3" placeholder="Write your class mission statement or lore message for your voyagers..."
+                    class="w-full px-3.5 py-2.5 text-xs bg-indigo-50/40 border border-indigo-200/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 font-body text-slate-800"></textarea>
+                </div>
+              </div>
+
+              <!-- Sanctum Classroom Defaults -->
+              <div class="bg-white/95 rounded-2xl p-6 border border-indigo-100 shadow-sm">
+                <h3 class="font-headline text-base font-bold text-indigo-950 flex items-center gap-2 mb-4 pb-3 border-b border-indigo-50">
+                  <span class="material-symbols-outlined text-indigo-600">tune</span>
+                  <span>Pedagogical Parameters</span>
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="p-4 bg-indigo-50/40 rounded-xl border border-indigo-100">
+                    <label class="block font-headline text-xs font-bold text-indigo-950 mb-1">Default Cadet Life Points (LP)</label>
+                    <p class="font-body text-[11px] text-slate-500 mb-2">Initial vitality granted to enrolled students upon admission.</p>
+                    <input id="adminProfileStartingLP" type="number" value="50" min="10" max="100"
+                      class="w-24 px-3 py-1.5 text-xs bg-white border border-indigo-200 rounded-lg font-bold font-hud text-indigo-600 text-center">
+                  </div>
+                  <div class="p-4 bg-amber-50/40 rounded-xl border border-amber-200/60">
+                    <label class="block font-headline text-xs font-bold text-amber-950 mb-1">Default Cadet Starting Gold (GP)</label>
+                    <p class="font-body text-[11px] text-slate-500 mb-2">Initial stardust currency provided for acquiring relics in the shop.</p>
+                    <input id="adminProfileStartingGold" type="number" value="10" min="0" max="1000"
+                      class="w-24 px-3 py-1.5 text-xs bg-white border border-amber-200 rounded-lg font-bold font-hud text-amber-600 text-center">
+                  </div>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-between gap-3 pt-6 mt-6 border-t border-indigo-50">
+                  <button type="button" onclick="resetAdminProfileFields()"
+                    class="px-4 py-2 border border-slate-200 text-slate-600 hover:bg-slate-50 font-headline text-xs font-bold rounded-xl transition-all">
+                    Reset Fields
+                  </button>
+                  <button type="button" onclick="saveAdministratorProfile()"
+                    class="px-6 py-2.5 bg-gradient-to-r from-indigo-600 via-primary to-sky-500 hover:opacity-95 text-white font-headline text-xs font-bold rounded-xl shadow-md shadow-indigo-200 transition-all flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">verified</span>
+                    <span>Save Administrator Profile</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
         <!-- TAB 3: STUDENTS REPORT                     -->
         <!-- ========================================== -->
         <div id="tab-reports" class="tab-content">
@@ -1020,7 +1222,7 @@
                 </button>
                 <input type="file" id="importJsonFileInput" accept=".json" class="hidden"
                   onchange="importDataFromJSON(event)">
-                <button onclick="document.getElementById('importJsonFileInput').click()"
+                <button onclick="handleImportJsonClick()"
                   class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-headline text-xs font-bold rounded-xl shadow-2xs">
                   📤 Import JSON Backup
                 </button>
@@ -1208,6 +1410,75 @@
   <!-- ======================================================== -->
   <!-- MODALS & OVERLAYS                                        -->
   <!-- ======================================================== -->
+
+  <!-- LOGOUT CONFIRMATION MODAL (Requirement 4) -->
+  <div id="logoutConfirmModal" class="astral-modal w-[420px] max-w-[92vw] p-6 text-center border-rose-200/90 shadow-2xl">
+    <div class="w-14 h-14 mx-auto rounded-2xl bg-rose-50 border border-rose-200 text-rose-500 flex items-center justify-center mb-3 shadow-xs">
+      <span class="material-symbols-outlined text-[28px]">power_settings_new</span>
+    </div>
+    <span class="font-hud text-[9px] px-2.5 py-0.5 rounded-full bg-rose-50 border border-rose-200 text-rose-600 font-bold uppercase tracking-wider inline-block mb-2">
+      SANCTUM DISCONNECT
+    </span>
+    <h3 class="font-headline text-lg font-bold text-indigo-950 mb-1.5">Confirm Terminal Sign Out</h3>
+    <p class="font-body text-xs text-slate-500 mb-5 leading-relaxed">
+      Are you sure you wish to log out of your Sanctum? You will return to Guest Preview Mode with view-only permissions.
+    </p>
+    <div class="flex items-center gap-3">
+      <button onclick="cancelSignOut()" type="button"
+        class="flex-1 py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-headline text-xs font-bold transition-all">
+        Stay Connected
+      </button>
+      <button onclick="executeSignOut()" type="button"
+        class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-headline text-xs font-bold shadow-md shadow-rose-200 transition-all flex items-center justify-center gap-1.5">
+        <span class="material-symbols-outlined text-[16px]">logout</span>
+        <span>Log Out</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ASTRAL ANNOUNCEMENT WEB OVERLAY (Requirement 5) -->
+  <div id="astralAnnouncementOverlay" class="astral-modal w-[440px] max-w-[92vw] p-6 text-center border-indigo-200 shadow-2xl">
+    <div id="astralAnnouncementIconWrap" class="w-14 h-14 mx-auto rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center mb-3 shadow-xs">
+      <span id="astralAnnouncementIcon" class="material-symbols-outlined text-[28px]">verified</span>
+    </div>
+    <span id="astralAnnouncementBadge" class="font-hud text-[9px] px-2.5 py-0.5 rounded-full bg-indigo-50 border border-indigo-200/80 text-indigo-700 font-bold uppercase tracking-wider inline-block mb-2">
+      SANCTUM ANNOUNCEMENT
+    </span>
+    <h3 id="astralAnnouncementTitle" class="font-headline text-lg font-bold text-indigo-950 mb-1.5">Sanctum Notification</h3>
+    <div id="astralAnnouncementMessage" class="font-body text-xs text-slate-600 mb-5 leading-relaxed">
+      Announcement details.
+    </div>
+    <button id="astralAnnouncementActionBtn" onclick="dismissAstralAnnouncement()" type="button"
+      class="w-full py-2.5 bg-gradient-to-r from-indigo-600 via-primary to-sky-500 hover:opacity-95 text-white font-headline text-xs font-bold rounded-xl shadow-md shadow-indigo-200 transition-all flex items-center justify-center gap-2">
+      <span class="text-xs">✦</span>
+      <span id="astralAnnouncementActionText">Continue to Sanctum</span>
+    </button>
+  </div>
+
+  <!-- GUEST RESTRICTION NOTICE MODAL (Requirement 1) -->
+  <div id="astralNoticeModal" class="astral-modal w-[430px] max-w-[92vw] p-6 text-center border-amber-200 shadow-2xl">
+    <div class="w-14 h-14 mx-auto rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center mb-3 shadow-xs">
+      <span class="material-symbols-outlined text-[28px]">lock</span>
+    </div>
+    <span class="font-hud text-[9px] px-2.5 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 font-bold uppercase tracking-wider inline-block mb-2">
+      GUEST PREVIEW MODE
+    </span>
+    <h3 id="astralNoticeTitle" class="font-headline text-lg font-bold text-indigo-950 mb-1.5">Action Restricted</h3>
+    <p id="astralNoticeMessage" class="font-body text-xs text-slate-600 mb-5 leading-relaxed">
+      You are exploring in Preview Mode. Exporting or importing data and roster modifications are reserved for verified Teachers.
+    </p>
+    <div class="flex items-center gap-2.5">
+      <button onclick="closeAllOverlays()" type="button"
+        class="flex-1 py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-headline text-xs font-bold transition-all">
+        Keep Previewing
+      </button>
+      <button onclick="closeAllOverlays(); showTab('admin-profile');" type="button"
+        class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-primary text-white font-headline text-xs font-bold shadow-md shadow-indigo-200 transition-all flex items-center justify-center gap-1.5">
+        <span class="material-symbols-outlined text-[16px]">badge</span>
+        <span>Admin Profile</span>
+      </button>
+    </div>
+  </div>
 
   <!-- 0. ASTRAL ACCESS GATEWAY & AUTHENTICATION MODAL -->
   <div id="authModal" class="astral-modal w-[450px] max-w-[94vw] max-h-[90vh] overflow-y-auto p-6">
@@ -1812,6 +2083,115 @@
       loginAsLocalTeacher('Dawam Nofal', 'dawam@classquest.edu', 'CQ-DEMO8A');
     }
 
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    let announcementTimer = null;
+    function showAstralAnnouncement({ title, message, badge = 'SANCTUM DIRECTIVE', icon = 'verified', type = 'success', duration = 4000, actionText = 'Continue to Sanctum', onAction = null }) {
+      const overlay = document.getElementById('astralAnnouncementOverlay');
+      if (!overlay) return;
+
+      if (announcementTimer) clearTimeout(announcementTimer);
+
+      document.getElementById('astralAnnouncementTitle').textContent = title;
+      document.getElementById('astralAnnouncementMessage').innerHTML = message;
+      document.getElementById('astralAnnouncementBadge').textContent = badge;
+      document.getElementById('astralAnnouncementIcon').textContent = icon;
+      document.getElementById('astralAnnouncementActionText').textContent = actionText;
+
+      const iconWrap = document.getElementById('astralAnnouncementIconWrap');
+      if (iconWrap) {
+        if (type === 'success') {
+          iconWrap.className = 'w-14 h-14 mx-auto rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center mb-3 shadow-xs';
+        } else if (type === 'info') {
+          iconWrap.className = 'w-14 h-14 mx-auto rounded-2xl bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center mb-3 shadow-xs';
+        } else if (type === 'warning') {
+          iconWrap.className = 'w-14 h-14 mx-auto rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center mb-3 shadow-xs';
+        } else if (type === 'error') {
+          iconWrap.className = 'w-14 h-14 mx-auto rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center mb-3 shadow-xs';
+        }
+      }
+
+      const btn = document.getElementById('astralAnnouncementActionBtn');
+      if (btn) {
+        btn.onclick = () => {
+          dismissAstralAnnouncement();
+          if (typeof onAction === 'function') onAction();
+        };
+      }
+
+      const drawerOverlay = document.getElementById('drawerOverlay');
+      if (drawerOverlay) drawerOverlay.style.display = 'block';
+
+      overlay.style.display = 'block';
+
+      if (duration > 0) {
+        announcementTimer = setTimeout(() => {
+          dismissAstralAnnouncement();
+        }, duration);
+      }
+    }
+
+    function dismissAstralAnnouncement() {
+      const overlay = document.getElementById('astralAnnouncementOverlay');
+      if (overlay) overlay.style.display = 'none';
+      const drawerOverlay = document.getElementById('drawerOverlay');
+      if (drawerOverlay && !document.querySelector('.astral-modal[style*="display: block"]')) {
+        drawerOverlay.style.display = 'none';
+      }
+      if (announcementTimer) {
+        clearTimeout(announcementTimer);
+        announcementTimer = null;
+      }
+    }
+
+    function confirmSignOut() {
+      const modal = document.getElementById('logoutConfirmModal');
+      const drawerOverlay = document.getElementById('drawerOverlay');
+      if (drawerOverlay) drawerOverlay.style.display = 'block';
+      if (modal) modal.style.display = 'block';
+    }
+
+    function cancelSignOut() {
+      const modal = document.getElementById('logoutConfirmModal');
+      if (modal) modal.style.display = 'none';
+      const drawerOverlay = document.getElementById('drawerOverlay');
+      if (drawerOverlay && !document.querySelector('.astral-modal[style*="display: block"]')) {
+        drawerOverlay.style.display = 'none';
+      }
+    }
+
+    async function executeSignOut() {
+      cancelSignOut();
+      if (typeof window.fbSignOut === 'function') {
+        await window.fbSignOut().catch(() => {});
+      }
+      currentAuth = { role: 'guest' };
+      localStorage.setItem('cq_current_auth', JSON.stringify(currentAuth));
+      updateAuthUI();
+      showTab('home');
+      render();
+      showAstralAnnouncement({
+        title: 'Terminal Disengaged',
+        badge: 'LOG OUT COMPLETE',
+        message: 'Signed out of Sanctum session. You have returned to Guest Preview Mode with view-only permissions.',
+        icon: 'logout',
+        type: 'info',
+        actionText: 'Understood'
+      });
+    }
+
+    function confirmExitViewerMode() {
+      confirmSignOut();
+    }
+
     function loginAsLocalTeacher(name, email, code = 'CQ-DEMO8A') {
       registerTeacherLocally(code, name, email, 'local-dawam');
       currentAuth = {
@@ -1825,7 +2205,14 @@
       closeAllOverlays();
       updateAuthUI();
       render();
-      alert(`✨ Welcome Teacher ${name}! Your student access code is ${code}. Share this with your students so they can view your class.`);
+      showAstralAnnouncement({
+        title: 'Sanctum Authenticated',
+        badge: 'LOCAL TERMINAL ONLINE',
+        message: `Welcome Teacher <strong>${escapeHtml(name)}</strong>! Your student access code is <strong>${code}</strong>. Share this code with students so they can view your class.`,
+        icon: 'verified',
+        type: 'success',
+        actionText: 'Enter Sanctum'
+      });
     }
 
     function onTeacherSuccess(user, customName = null) {
@@ -1847,7 +2234,14 @@
       closeAllOverlays();
       updateAuthUI();
       render();
-      alert(`✨ Welcome, Teacher ${name}! Sanctum authenticated. Your Student Access Code is: ${code}`);
+      showAstralAnnouncement({
+        title: 'Sanctum Authenticated',
+        badge: 'CLOUD SYNC ONLINE',
+        message: `Welcome, Teacher <strong>${escapeHtml(name)}</strong>! Sanctum authenticated. Your Student Access Code is: <strong>${code}</strong>.`,
+        icon: 'verified',
+        type: 'success',
+        actionText: 'Enter Sanctum'
+      });
     }
 
     window.handleFirebaseAuthStateChanged = async function(user) {
@@ -1925,7 +2319,15 @@
         updateAuthUI();
         showTab('display');
         render();
-        alert(`🎓 Welcome ${studentName}! Successfully connected to ${teacherName}'s Sanctum as a Viewer.`);
+        showAstralAnnouncement({
+          title: 'Connected to Sanctum',
+          badge: 'VIEWER MODE ENGAGED',
+          message: `Welcome <strong>${escapeHtml(studentName)}</strong>! Successfully connected to <strong>${escapeHtml(teacherName)}</strong>'s Sanctum as a Viewer.`,
+          icon: 'visibility',
+          type: 'info',
+          actionText: 'Explore Class Display',
+          onAction: () => showTab('display')
+        });
       } else {
         showAuthNotice('studentAuthMessage', `Teacher code "${code}" not found. Verify the code with your teacher, or click "Use Demo Code: CQ-DEMO8A" below.`);
       }
@@ -1937,86 +2339,231 @@
       handleStudentJoin();
     }
 
-    async function signOutTeacher() {
-      if (typeof window.fbSignOut === 'function') {
-        await window.fbSignOut().catch(() => {});
-      }
-      currentAuth = { role: 'guest' };
-      localStorage.setItem('cq_current_auth', JSON.stringify(currentAuth));
-      updateAuthUI();
-      showTab('home');
-      render();
-      alert('Signed out of Sanctum. Returned to Preview Mode.');
-    }
-
-    function exitViewerMode() {
-      currentAuth = { role: 'guest' };
-      localStorage.setItem('cq_current_auth', JSON.stringify(currentAuth));
-      updateAuthUI();
-      showTab('home');
-      render();
-      alert('Exited Viewer Mode. Returned to Preview Mode.');
-    }
-
     function copyTeacherCode() {
       const code = currentAuth.teacherCode || 'CQ-DEMO8A';
       navigator.clipboard.writeText(code).then(() => {
-        alert(`Teacher Access Code ${code} copied to clipboard! Share this code with students.`);
+        showAstralAnnouncement({
+          title: 'Cipher Copied',
+          badge: 'ACCESS CODE READY',
+          message: `Teacher Access Code <strong>${code}</strong> copied to clipboard! Share this code with students.`,
+          icon: 'content_copy',
+          type: 'info',
+          duration: 3500
+        });
       }).catch(() => {
         prompt("Teacher Access Code:", code);
       });
     }
 
     function requireTeacherAuth(actionLabel = 'perform this action') {
-      if (currentAuth.role === 'teacher') return true;
+      if (currentAuth && currentAuth.role === 'teacher') return true;
 
-      if (currentAuth.role === 'viewer') {
-        alert(`🔒 Viewer Mode Restricted: Only the authenticated Teacher can ${actionLabel}. Cadets have view-only access.`);
-        return false;
+      const overlay = document.getElementById('drawerOverlay');
+      if (overlay) overlay.style.display = 'block';
+
+      const noticeModal = document.getElementById('astralNoticeModal');
+      const titleEl = document.getElementById('astralNoticeTitle');
+      const msgEl = document.getElementById('astralNoticeMessage');
+
+      if (currentAuth && currentAuth.role === 'viewer') {
+        if (titleEl) titleEl.textContent = 'Viewer Mode Restricted';
+        if (msgEl) msgEl.textContent = `Only the authenticated Teacher can ${actionLabel}. Cadets have view-only access to this Sanctum.`;
+      } else {
+        if (titleEl) titleEl.textContent = 'Guest Preview Mode';
+        if (msgEl) msgEl.textContent = `You are browsing in Guest Preview Mode. You can freely explore the preview without triggering commands. Actions like ${actionLabel} require Teacher / Administrator authentication.`;
       }
 
-      alert(`🔒 Teacher Authentication Required: Please sign in as a Teacher to ${actionLabel}.`);
-      openAuthModal('teacher');
+      if (noticeModal) noticeModal.style.display = 'block';
       return false;
     }
 
+    function handleImportJsonClick() {
+      if (!requireTeacherAuth('import JSON roster backup')) return;
+      const fileInput = document.getElementById('importJsonFileInput');
+      if (fileInput) fileInput.click();
+    }
+
+    let selectedAdminAvatar = '✦';
+
+    function selectAdminAvatar(symbol) {
+      selectedAdminAvatar = symbol;
+      const avatarDisplay = document.getElementById('adminAvatarDisplay');
+      if (avatarDisplay) avatarDisplay.textContent = symbol;
+      document.querySelectorAll('.admin-avatar-btn').forEach(btn => {
+        if (btn.textContent.trim() === symbol) {
+          btn.classList.add('bg-indigo-100', 'border-indigo-400', 'text-indigo-700', 'ring-2', 'ring-indigo-300');
+          btn.classList.remove('bg-slate-50', 'bg-indigo-50', 'border-slate-200');
+        } else {
+          btn.classList.remove('bg-indigo-100', 'border-indigo-400', 'text-indigo-700', 'ring-2', 'ring-indigo-300');
+          btn.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-700');
+        }
+      });
+    }
+
+    function generateNewAccessCode() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let code = 'CQ-';
+      for (let i = 0; i < 6; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      const codeInput = document.getElementById('adminProfileCode');
+      if (codeInput) codeInput.value = code;
+      const previewCode = document.getElementById('adminPreviewCode');
+      if (previewCode) previewCode.textContent = code;
+    }
+
+    function populateAdminProfileForm() {
+      const nameInput = document.getElementById('adminProfileName');
+      const codeInput = document.getElementById('adminProfileCode');
+      const emailInput = document.getElementById('adminProfileEmail');
+      const schoolInput = document.getElementById('adminProfileSchool');
+      const subjectInput = document.getElementById('adminProfileSubject');
+      const mottoInput = document.getElementById('adminProfileMotto');
+      const lpInput = document.getElementById('adminProfileStartingLP');
+      const goldInput = document.getElementById('adminProfileStartingGold');
+
+      const isTeacher = (currentAuth && currentAuth.role === 'teacher');
+      const name = isTeacher ? (currentAuth.name || 'Dawam Nofal') : (currentAuth.name || 'Dawam Nofal');
+      const code = isTeacher ? (currentAuth.teacherCode || 'CQ-DEMO8A') : (currentAuth.teacherCode || 'CQ-DEMO8A');
+      const email = isTeacher ? (currentAuth.email || 'teacher@classquest.edu') : (currentAuth.email || 'teacher@classquest.edu');
+      const school = currentAuth.school || 'Astral Vanguard Academy';
+      const subject = currentAuth.subject || 'English Expedition & Gamified Literature';
+      const motto = currentAuth.motto || 'Guiding voyagers across astral quests with gamified pedagogy.';
+      const lp = currentAuth.startingLP || 50;
+      const gold = currentAuth.startingGold || 10;
+      const avatar = currentAuth.avatar || '✦';
+
+      if (nameInput) nameInput.value = name;
+      if (codeInput) codeInput.value = code;
+      if (emailInput) emailInput.value = email;
+      if (schoolInput) schoolInput.value = school;
+      if (subjectInput) subjectInput.value = subject;
+      if (mottoInput) mottoInput.value = motto;
+      if (lpInput) lpInput.value = lp;
+      if (goldInput) goldInput.value = gold;
+
+      // Update Preview Card
+      const previewName = document.getElementById('adminPreviewName');
+      if (previewName) previewName.textContent = name;
+      const previewSchool = document.getElementById('adminPreviewSchool');
+      if (previewSchool) previewSchool.textContent = school;
+      const previewCode = document.getElementById('adminPreviewCode');
+      if (previewCode) previewCode.textContent = code;
+      const previewRole = document.getElementById('adminPreviewRole');
+      if (previewRole) previewRole.textContent = isTeacher ? 'SANCTUM MASTER // AUTHENTICATED' : 'ADMINISTRATOR // PREVIEW MODE';
+      
+      const badgeRole = document.getElementById('adminProfileBadgeRole');
+      if (badgeRole) {
+        badgeRole.textContent = isTeacher ? 'ACTIVE TEACHER' : 'GUEST ADMINISTRATOR';
+        badgeRole.className = isTeacher 
+          ? 'font-hud text-[10px] bg-emerald-400/20 text-emerald-200 border border-emerald-300/30 px-2.5 py-0.5 rounded-full font-bold'
+          : 'font-hud text-[10px] bg-amber-400/20 text-amber-200 border border-amber-300/30 px-2.5 py-0.5 rounded-full font-bold';
+      }
+
+      // Update Telemetry stats
+      const statClasses = document.getElementById('adminStatClasses');
+      if (statClasses) statClasses.textContent = `${appData.classes ? appData.classes.length : 1} Sanctum${(appData.classes && appData.classes.length === 1) ? '' : 's'}`;
+      const statStudents = document.getElementById('adminStatStudents');
+      if (statStudents) statStudents.textContent = `${appData.students ? appData.students.length : 0} Cadet${(appData.students && appData.students.length === 1) ? '' : 's'}`;
+      const statAuth = document.getElementById('adminStatAuth');
+      if (statAuth) {
+        statAuth.textContent = isTeacher ? 'Terminal Synchronized' : 'Guest Mode (Editable)';
+        statAuth.className = isTeacher ? 'font-hud font-bold text-emerald-600' : 'font-hud font-bold text-amber-600';
+      }
+
+      selectAdminAvatar(avatar);
+    }
+
+    function resetAdminProfileFields() {
+      populateAdminProfileForm();
+    }
+
+    function saveAdministratorProfile() {
+      const name = (document.getElementById('adminProfileName')?.value || '').trim() || 'Dawam Nofal';
+      const code = (document.getElementById('adminProfileCode')?.value || '').trim().toUpperCase() || 'CQ-DEMO8A';
+      const email = (document.getElementById('adminProfileEmail')?.value || '').trim() || 'teacher@classquest.edu';
+      const school = (document.getElementById('adminProfileSchool')?.value || '').trim() || 'Astral Vanguard Academy';
+      const subject = (document.getElementById('adminProfileSubject')?.value || '').trim() || 'English Expedition & Gamified Literature';
+      const motto = (document.getElementById('adminProfileMotto')?.value || '').trim() || 'Guiding voyagers across astral quests with gamified pedagogy.';
+      const startingLP = parseInt(document.getElementById('adminProfileStartingLP')?.value) || 50;
+      const startingGold = parseInt(document.getElementById('adminProfileStartingGold')?.value) || 10;
+      const avatar = selectedAdminAvatar || '✦';
+
+      currentAuth = {
+        role: 'teacher',
+        name: name,
+        teacherCode: code,
+        email: email,
+        school: school,
+        subject: subject,
+        motto: motto,
+        avatar: avatar,
+        startingLP: startingLP,
+        startingGold: startingGold,
+        uid: currentAuth.uid || 'local-teacher'
+      };
+
+      localStorage.setItem('cq_current_auth', JSON.stringify(currentAuth));
+      registerTeacherLocally(code, name, email, currentAuth.uid, { school, subject, motto, avatar });
+      saveData();
+      updateAuthUI();
+      populateAdminProfileForm();
+
+      showAstralAnnouncement({
+        title: '✦ Administrator Profile Saved!',
+        badge: 'PROFILE SYNCHRONIZED',
+        message: `Administrator credentials for <strong>${escapeHtml(name)}</strong> have been updated. Your student access code is <strong>${code}</strong>.`,
+        icon: 'verified',
+        type: 'success',
+        actionText: 'View Class Display',
+        onAction: () => showTab('display')
+      });
+    }
+
     function updateAuthUI() {
-      // 1. Header Auth Pill
+      // 1. Header Auth Pill (Requirement 3: clicking guest name opens Administrator Profile)
       const headerPill = document.getElementById('headerAuthPill');
       if (headerPill) {
         if (currentAuth.role === 'teacher') {
           headerPill.innerHTML = `
-            <div class="flex items-center gap-2 px-3 py-1.5 bg-indigo-50/90 border border-indigo-200/80 rounded-xl shadow-2xs">
+            <div onclick="showTab('admin-profile')" title="Open Administrator Profile"
+              class="flex items-center gap-2 px-2.5 py-1.5 bg-indigo-50/90 hover:bg-indigo-100 border border-indigo-200/80 rounded-xl cursor-pointer transition-all group shadow-2xs">
               <div class="w-6 h-6 rounded-lg bg-gradient-to-tr from-indigo-600 to-sky-400 text-white flex items-center justify-center text-xs font-bold shrink-0">✦</div>
               <div class="flex flex-col text-left min-w-0">
-                <span class="font-headline text-[11px] font-bold text-indigo-950 truncate max-w-[120px]">${currentAuth.name || 'Teacher'}</span>
-                <span class="font-hud text-[9px] text-indigo-600 font-bold">${currentAuth.teacherCode || 'CQ-ADMIN'}</span>
+                <span class="font-headline text-[11px] font-bold text-indigo-950 group-hover:text-indigo-600 truncate max-w-[100px] leading-tight">${escapeHtml(currentAuth.name || 'Teacher')}</span>
+                <span class="font-hud text-[8px] text-indigo-600 font-bold leading-none">${escapeHtml(currentAuth.teacherCode || 'CQ-ADMIN')}</span>
               </div>
-              <button onclick="signOutTeacher()" title="Sign Out" class="ml-1 text-slate-400 hover:text-rose-600 transition-colors shrink-0">
+              <button onclick="event.stopPropagation(); confirmSignOut();" title="Log Out" class="ml-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 p-1 rounded-lg transition-all shrink-0">
                 <span class="material-symbols-outlined text-[16px]">logout</span>
               </button>
             </div>
           `;
         } else if (currentAuth.role === 'viewer') {
           headerPill.innerHTML = `
-            <div class="flex items-center gap-2 px-3 py-1.5 bg-sky-50/90 border border-sky-200/80 rounded-xl shadow-2xs">
+            <div class="flex items-center gap-2 px-2.5 py-1.5 bg-sky-50/90 border border-sky-200/80 rounded-xl shadow-2xs">
               <span class="material-symbols-outlined text-[16px] text-sky-600 shrink-0">visibility</span>
               <div class="flex flex-col text-left min-w-0">
-                <span class="font-headline text-[11px] font-bold text-sky-950 truncate max-w-[110px]">${currentAuth.studentName || 'Viewer'}</span>
-                <span class="font-hud text-[9px] text-sky-700 font-semibold">${currentAuth.teacherCode || ''}</span>
+                <span class="font-headline text-[11px] font-bold text-sky-950 truncate max-w-[90px] leading-tight">${escapeHtml(currentAuth.studentName || 'Viewer')}</span>
+                <span class="font-hud text-[8px] text-sky-700 font-semibold leading-none">${escapeHtml(currentAuth.teacherCode || '')}</span>
               </div>
-              <button onclick="exitViewerMode()" title="Exit Viewer Mode" class="ml-1 text-slate-400 hover:text-rose-600 transition-colors shrink-0">
+              <button onclick="event.stopPropagation(); confirmExitViewerMode();" title="Exit Viewer Mode" class="ml-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 p-1 rounded-lg transition-all shrink-0">
                 <span class="material-symbols-outlined text-[16px]">logout</span>
               </button>
             </div>
           `;
         } else {
+          // Guest Mode: Clicking opens Administrator Profile page!
           headerPill.innerHTML = `
-            <button onclick="openAuthModal('teacher')"
-              class="px-3.5 py-1.5 bg-gradient-to-r from-indigo-600 via-primary to-sky-500 hover:opacity-95 text-white font-headline text-xs font-bold rounded-xl shadow-xs transition-all flex items-center gap-1.5">
-              <span class="material-symbols-outlined text-[16px]">login</span>
-              <span>Sign In / Join</span>
-            </button>
+            <div onclick="showTab('admin-profile')" title="Open Administrator Profile"
+              class="flex items-center gap-1.5 px-2.5 py-1.5 bg-indigo-50/80 hover:bg-indigo-100 border border-indigo-200/80 rounded-xl cursor-pointer transition-all group shadow-2xs">
+              <div class="w-6 h-6 rounded-lg bg-indigo-100 group-hover:bg-indigo-200 text-indigo-700 flex items-center justify-center text-xs font-bold shrink-0 transition-colors">
+                <span class="material-symbols-outlined text-[15px]">account_circle</span>
+              </div>
+              <div class="flex flex-col text-left min-w-0">
+                <span class="font-headline text-[11px] font-bold text-indigo-950 group-hover:text-indigo-600 truncate max-w-[90px] leading-tight">Guest User</span>
+                <span class="font-hud text-[8px] text-indigo-500 font-semibold tracking-wider leading-none">ADMIN PROFILE ✦</span>
+              </div>
+            </div>
           `;
         }
       }
@@ -2026,18 +2573,18 @@
       if (drawerBox) {
         if (currentAuth.role === 'teacher') {
           drawerBox.innerHTML = `
-            <div class="p-2.5 bg-white/95 border border-indigo-100 rounded-2xl shadow-2xs flex flex-col gap-2">
+            <div onclick="showTab('admin-profile')" class="p-2.5 bg-white/95 hover:bg-indigo-50/40 border border-indigo-100 rounded-2xl shadow-2xs flex flex-col gap-2 cursor-pointer transition-all">
               <div class="flex items-center justify-between gap-2.5">
                 <div class="flex items-center gap-2.5 min-w-0 flex-1">
                   <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-sky-400 flex items-center justify-center shrink-0 shadow-sm text-white font-bold">
                     <span class="material-symbols-outlined text-[18px]">verified_user</span>
                   </div>
                   <div class="flex flex-col min-w-0 flex-1">
-                    <span class="font-headline text-[12px] font-bold text-slate-900 truncate">${currentAuth.name || 'Dawam Nofal'}</span>
+                    <span class="font-headline text-[12px] font-bold text-slate-900 truncate">${escapeHtml(currentAuth.name || 'Dawam Nofal')}</span>
                     <span class="font-hud text-[9px] text-indigo-500 font-semibold truncate">TEACHER // ADMIN</span>
                   </div>
                 </div>
-                <button onclick="signOutTeacher()" title="Sign Out" class="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-all shrink-0">
+                <button onclick="event.stopPropagation(); confirmSignOut();" title="Sign Out" class="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-all shrink-0">
                   <span class="material-symbols-outlined text-[16px]">logout</span>
                 </button>
               </div>
@@ -2045,9 +2592,9 @@
                 <div class="flex items-center gap-1.5 text-indigo-800 font-bold truncate">
                   <span class="text-indigo-500">✦</span>
                   <span>CODE:</span>
-                  <span class="font-mono text-indigo-950">${currentAuth.teacherCode || 'CQ-ADMIN'}</span>
+                  <span class="font-mono text-indigo-950">${escapeHtml(currentAuth.teacherCode || 'CQ-ADMIN')}</span>
                 </div>
-                <button onclick="copyTeacherCode()" class="text-indigo-600 hover:text-indigo-800 font-bold px-1.5 py-0.5 rounded hover:bg-indigo-100 transition-colors shrink-0">
+                <button onclick="event.stopPropagation(); copyTeacherCode();" class="text-indigo-600 hover:text-indigo-800 font-bold px-1.5 py-0.5 rounded hover:bg-indigo-100 transition-colors shrink-0">
                   COPY
                 </button>
               </div>
@@ -2061,25 +2608,25 @@
                   <span class="material-symbols-outlined text-[18px]">visibility</span>
                 </div>
                 <div class="flex flex-col min-w-0 flex-1">
-                  <span class="font-headline text-[12px] font-bold text-slate-900 truncate">${currentAuth.studentName || 'Cadet Viewer'}</span>
-                  <span class="font-hud text-[9px] text-sky-600 font-semibold truncate">VIEWING: ${currentAuth.teacherCode || ''}</span>
+                  <span class="font-headline text-[12px] font-bold text-slate-900 truncate">${escapeHtml(currentAuth.studentName || 'Cadet Viewer')}</span>
+                  <span class="font-hud text-[9px] text-sky-600 font-semibold truncate">VIEWING: ${escapeHtml(currentAuth.teacherCode || '')}</span>
                 </div>
               </div>
-              <button onclick="exitViewerMode()" title="Exit Viewer Mode" class="px-2 py-1 bg-slate-100 hover:bg-rose-50 hover:text-rose-600 text-slate-600 font-hud text-[10px] font-bold rounded-lg transition-all shrink-0">
+              <button onclick="confirmExitViewerMode()" title="Exit Viewer Mode" class="px-2 py-1 bg-slate-100 hover:bg-rose-50 hover:text-rose-600 text-slate-600 font-hud text-[10px] font-bold rounded-lg transition-all shrink-0">
                 EXIT
               </button>
             </div>
           `;
         } else {
           drawerBox.innerHTML = `
-            <div onclick="openAuthModal('teacher')" class="p-2.5 bg-white/95 hover:bg-indigo-50/50 border border-indigo-100 rounded-2xl shadow-2xs flex items-center justify-between gap-2.5 cursor-pointer transition-all group">
+            <div onclick="showTab('admin-profile')" class="p-2.5 bg-white/95 hover:bg-indigo-50/60 border border-indigo-100 rounded-2xl shadow-2xs flex items-center justify-between gap-2.5 cursor-pointer transition-all group">
               <div class="flex items-center gap-2.5 min-w-0 flex-1">
                 <div class="w-9 h-9 rounded-xl bg-slate-100 group-hover:bg-indigo-100 text-slate-500 group-hover:text-indigo-600 flex items-center justify-center shrink-0 shadow-xs transition-colors">
-                  <span class="material-symbols-outlined text-[18px]">lock_open</span>
+                  <span class="material-symbols-outlined text-[18px]">account_circle</span>
                 </div>
                 <div class="flex flex-col min-w-0 flex-1">
-                  <span class="font-headline text-[12px] font-bold text-indigo-950 group-hover:text-indigo-600 truncate transition-colors">GUEST PREVIEW</span>
-                  <span class="font-hud text-[9px] text-slate-400 font-semibold truncate">CLICK TO SIGN IN / JOIN</span>
+                  <span class="font-headline text-[12px] font-bold text-indigo-950 group-hover:text-indigo-600 truncate transition-colors">GUEST USER</span>
+                  <span class="font-hud text-[9px] text-indigo-500 font-semibold truncate">ADMINISTRATOR PROFILE ✦</span>
                 </div>
               </div>
               <span class="material-symbols-outlined text-[16px] text-slate-400 group-hover:text-indigo-600 transition-colors">chevron_right</span>
@@ -2166,34 +2713,100 @@
 
     function closeAllOverlays() {
       document.querySelectorAll('.astral-modal').forEach(m => m.style.display = 'none');
-      document.getElementById('drawerOverlay').style.display = 'none';
+      const drawerOverlay = document.getElementById('drawerOverlay');
+      if (drawerOverlay) drawerOverlay.style.display = 'none';
       toggleMobileDrawer(false);
     }
 
+    const tabBadgeDefaults = {
+      'home': { bg: 'bg-indigo-50', text: 'text-indigo-600', border: 'border-indigo-200/60', label: 'STELLAR' },
+      'display': { bg: 'bg-indigo-50', text: 'text-indigo-600', border: 'border-indigo-200/60', label: 'VOYAGERS' },
+      'teacher': { bg: 'bg-indigo-50', text: 'text-indigo-600', border: 'border-indigo-200/60', label: 'SYNAPSE' },
+      'admin-profile': { bg: 'bg-purple-50', text: 'text-purple-600', border: 'border-purple-200/60', label: 'PROFILE' },
+      'reports': { bg: 'bg-slate-100', text: 'text-slate-500', border: 'border-slate-200/60', label: 'LOGS' },
+      'cards-library': { bg: 'bg-sky-50', text: 'text-sky-600', border: 'border-sky-200/60', label: 'RELICS' },
+      'games': { bg: 'bg-rose-50', text: 'text-rose-600', border: 'border-rose-200/60', label: 'NEBULA RAID' },
+      'settings': { bg: 'bg-slate-100', text: 'text-slate-500', border: 'border-slate-200/60', label: 'VAULT' },
+      'guideline': { bg: 'bg-purple-50', text: 'text-purple-600', border: 'border-purple-200/60', label: 'GRIMOIRE' }
+    };
+
     function showTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      
+      // Reset all nav buttons in sidebar (Fixes Quest Hub and all other tabs)
       document.querySelectorAll('.nav-btn').forEach(b => {
-        b.classList.remove('active', 'bg-gradient-to-r', 'from-indigo-600', 'via-primary', 'to-indigo-500', 'text-white', 'shadow-md');
-        b.classList.add('text-slate-600');
+        const t = b.dataset.tab;
+        b.classList.remove('active', 'bg-gradient-to-r', 'from-indigo-600', 'via-primary', 'to-indigo-500', 'text-white', 'shadow-md', 'shadow-indigo-200');
+        b.classList.add('text-slate-600', 'hover:bg-indigo-50/70', 'hover:text-indigo-900');
+        
+        const icon = b.querySelector('.material-symbols-outlined');
+        if (icon) {
+          icon.className = 'material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors';
+        }
+        
         const badge = b.querySelector('.font-hud');
-        if (badge && b.dataset.tab === 'display') {
-          badge.classList.remove('bg-white/20', 'text-white', 'border-white/30');
-          badge.classList.add('bg-indigo-50', 'text-indigo-600', 'border-indigo-200/60');
+        if (badge && tabBadgeDefaults[t]) {
+          const cfg = tabBadgeDefaults[t];
+          badge.className = `font-hud text-[9px] px-2 py-0.5 ${cfg.bg} ${cfg.text} border ${cfg.border} rounded-full font-bold transition-all`;
         }
       });
 
+      // Activate target tab content
       const target = document.getElementById(`tab-${tabId}`);
       if (target) target.classList.add('active');
 
+      // Highlight active sidebar nav button
       const activeBtn = document.querySelector(`.nav-btn[data-tab="${tabId}"]`);
       if (activeBtn) {
-        activeBtn.classList.remove('text-slate-600');
-        activeBtn.classList.add('active', 'bg-gradient-to-r', 'from-indigo-600', 'via-primary', 'to-indigo-500', 'text-white', 'shadow-md');
-        const badge = activeBtn.querySelector('.font-hud');
-        if (badge && tabId === 'display') {
-          badge.classList.add('bg-white/20', 'text-white', 'border-white/30');
-          badge.classList.remove('bg-indigo-50', 'text-indigo-600', 'border-indigo-200/60');
+        activeBtn.classList.remove('text-slate-600', 'hover:bg-indigo-50/70', 'hover:text-indigo-900');
+        activeBtn.classList.add('active', 'bg-gradient-to-r', 'from-indigo-600', 'via-primary', 'to-indigo-500', 'text-white', 'shadow-md', 'shadow-indigo-200');
+        
+        const icon = activeBtn.querySelector('.material-symbols-outlined');
+        if (icon) {
+          icon.className = 'material-symbols-outlined text-[20px] text-white transition-colors';
         }
+        
+        const badge = activeBtn.querySelector('.font-hud');
+        if (badge) {
+          badge.className = 'font-hud text-[9px] px-2 py-0.5 bg-white/20 text-white border border-white/30 rounded-full font-bold transition-all';
+        }
+      }
+
+      // Update mobile bottom dock buttons
+      document.querySelectorAll('.mobile-bottom-btn').forEach(btn => {
+        const t = btn.dataset.tab;
+        if (t === tabId) {
+          btn.classList.add('text-indigo-600');
+          btn.classList.remove('text-slate-500');
+          const dot = btn.querySelector('.mobile-active-dot');
+          if (dot) dot.classList.remove('hidden');
+        } else {
+          btn.classList.remove('text-indigo-600');
+          btn.classList.add('text-slate-500');
+          const dot = btn.querySelector('.mobile-active-dot');
+          if (dot) dot.classList.add('hidden');
+        }
+      });
+
+      // Update active section breadcrumb in top header (Requirement 6)
+      const breadcrumb = document.getElementById('activeSectionBreadcrumb');
+      if (breadcrumb) {
+        const titles = {
+          'home': 'Quest Hub',
+          'display': 'Class Display',
+          'teacher': 'Teacher Control',
+          'admin-profile': 'Administrator Profile',
+          'reports': 'Students Report',
+          'cards-library': 'Cards Library',
+          'games': 'Games Hub',
+          'settings': 'Classroom Settings',
+          'guideline': 'Guideline & Manual'
+        };
+        breadcrumb.innerHTML = `<span class="text-indigo-500">✦</span> <span>${titles[tabId] || 'Quest Hub'}</span>`;
+      }
+
+      if (tabId === 'admin-profile') {
+        populateAdminProfileForm();
       }
 
       closeAllOverlays();
@@ -2274,9 +2887,16 @@
     }
 
     function applyQuickReport(reason, changeVal, type = 'lp') {
+      if (!requireTeacherAuth('apply directives reports')) return;
       const student = appData.students.find(s => s.id === selectedStudentId);
       if (!student) {
-        alert('Please select a cadet from the Class Display or Roster first!');
+        showAstralAnnouncement({
+          title: 'Select Cadet',
+          badge: 'TARGET REQUIRED',
+          message: 'Please select a cadet from the Class Display or Roster first.',
+          icon: 'touch_app',
+          type: 'warning'
+        });
         return;
       }
 
@@ -2309,9 +2929,16 @@
     }
 
     function openCustomPromptReport(reasonTitle, type = 'lp') {
+      if (!requireTeacherAuth('submit custom directives')) return;
       const student = appData.students.find(s => s.id === selectedStudentId);
       if (!student) {
-        alert('Please select a cadet first!');
+        showAstralAnnouncement({
+          title: 'Select Cadet',
+          badge: 'TARGET REQUIRED',
+          message: 'Please select a cadet from the Class Display or Roster first.',
+          icon: 'touch_app',
+          type: 'warning'
+        });
         return;
       }
 
@@ -2652,11 +3279,30 @@
     }
 
     function awardBatchGold() {
+      if (!requireTeacherAuth('distribute batch gold')) return;
       const checkboxes = document.querySelectorAll('#teacherStudentList input[type="checkbox"]:checked');
-      if (checkboxes.length === 0) return alert('No cadets selected in the roster.');
+      if (checkboxes.length === 0) {
+        showAstralAnnouncement({
+          title: 'No Cadets Selected',
+          badge: 'BATCH REWARD',
+          message: 'Please check at least one cadet in the roster list to distribute gold.',
+          icon: 'checklist',
+          type: 'warning'
+        });
+        return;
+      }
 
       const goldVal = parseInt(document.getElementById('batchGoldInput').value) || 0;
-      if (goldVal <= 0) return alert('Please enter a valid gold amount.');
+      if (goldVal <= 0) {
+        showAstralAnnouncement({
+          title: 'Invalid Gold Amount',
+          badge: 'BATCH REWARD',
+          message: 'Please enter a valid gold amount greater than 0.',
+          icon: 'monetization_on',
+          type: 'warning'
+        });
+        return;
+      }
 
       const meetingNum = appData.currentMeeting || 1;
       checkboxes.forEach(cb => {
@@ -2681,7 +3327,14 @@
       });
 
       saveData();
-      alert(`Awarded +${goldVal} Gold to ${checkboxes.length} cadet(s)!`);
+      showAstralAnnouncement({
+        title: 'Gold Distributed',
+        badge: 'BATCH REWARD',
+        message: `Awarded +${goldVal} Gold to ${checkboxes.length} cadet(s)!`,
+        icon: 'stars',
+        type: 'success',
+        duration: 3000
+      });
     }
 
     /* RENDER STUDENTS REPORT ACCORDION */
@@ -2795,8 +3448,18 @@
     }
 
     function exportReportsToCSV() {
+      if (!requireTeacherAuth('export Class CSV reports')) return;
       const classLogs = appData.reports.filter(r => r.className === appData.currentClass);
-      if (classLogs.length === 0) return alert(`No report logs found for Class ${appData.currentClass}.`);
+      if (classLogs.length === 0) {
+        showAstralAnnouncement({
+          title: 'No Logs Found',
+          badge: 'CSV EXPORT NOTICE',
+          message: `No directive or report logs found for Class <strong>${escapeHtml(appData.currentClass)}</strong>.`,
+          icon: 'info',
+          type: 'warning'
+        });
+        return;
+      }
 
       let csv = "Meeting #,Timestamp,Student Name,Class,Type,Action / Reason,Adjustment\n";
       classLogs.forEach(r => {
@@ -2810,9 +3473,19 @@
       link.download = `Class_${appData.currentClass}_Report_${new Date().toISOString().slice(0, 10)}.csv`;
       link.click();
       URL.revokeObjectURL(url);
+
+      showAstralAnnouncement({
+        title: 'CSV Report Exported',
+        badge: 'DATA EXPORTED',
+        message: `Activity reports for Sanctum <strong>Class ${escapeHtml(appData.currentClass)}</strong> exported as CSV file.`,
+        icon: 'download_done',
+        type: 'success',
+        duration: 3500
+      });
     }
 
     function exportDataToJSON() {
+      if (!requireTeacherAuth('export JSON roster data')) return;
       const blob = new Blob([JSON.stringify(appData, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -2820,9 +3493,22 @@
       link.download = `Class_Quest_Journal_${new Date().toISOString().slice(0, 10)}.json`;
       link.click();
       URL.revokeObjectURL(url);
+
+      showAstralAnnouncement({
+        title: 'JSON Backup Exported',
+        badge: 'SANCTUM BACKUP',
+        message: 'All classes, cadets, cards, and activity logs exported successfully to JSON.',
+        icon: 'save',
+        type: 'success',
+        duration: 3500
+      });
     }
 
     function importDataFromJSON(event) {
+      if (!requireTeacherAuth('import JSON roster backup')) {
+        if (event && event.target) event.target.value = '';
+        return;
+      }
       const file = event.target.files[0];
       if (!file) return;
       const reader = new FileReader();
@@ -2835,10 +3521,22 @@
             if (!Array.isArray(appData.reports)) appData.reports = [];
             selectedStudentId = null;
             saveData();
-            alert('Roster data successfully restored!');
+            showAstralAnnouncement({
+              title: 'Sanctum Restored!',
+              badge: 'RESTORE SUCCESS',
+              message: 'Roster data and classroom state successfully restored from JSON backup.',
+              icon: 'verified',
+              type: 'success'
+            });
           }
         } catch (err) {
-          alert('Error parsing JSON backup file.');
+          showAstralAnnouncement({
+            title: 'Import Failed',
+            badge: 'PARSING ERROR',
+            message: 'Unable to parse JSON backup file. Please verify the file structure.',
+            icon: 'error',
+            type: 'error'
+          });
         }
       };
       reader.readAsText(file);
@@ -2982,7 +3680,16 @@
     }
 
     function openShop() {
-      if (!selectedStudentId) return alert('Please select a cadet from the Class Display or Roster first!');
+      if (!selectedStudentId) {
+        showAstralAnnouncement({
+          title: 'Select Cadet',
+          badge: 'CADET REQUIRED',
+          message: 'Please select a cadet from the Class Display or Roster first before visiting the Relic Shop.',
+          icon: 'storefront',
+          type: 'warning'
+        });
+        return;
+      }
       document.getElementById('shopModal').style.display = 'block';
       document.getElementById('shopCardsContainer').innerHTML = '';
       updateShopHeader();
@@ -2996,7 +3703,16 @@
 
     function generateShopOffers() {
       const remaining = CLASS_DECK_LIMIT - getClassCardsCount(appData.currentClass);
-      if (remaining <= 0) return alert('Class deck limit reached (60/60 cards held)!');
+      if (remaining <= 0) {
+        showAstralAnnouncement({
+          title: 'Deck Limit Reached',
+          badge: 'RELIC VAULT FULL',
+          message: 'Class deck limit reached (60/60 cards held). Play or exchange cards first.',
+          icon: 'style',
+          type: 'warning'
+        });
+        return;
+      }
 
       const keys = Object.keys(CARD_LIBRARY);
       currentShopOffers = [
@@ -3031,10 +3747,29 @@
     }
 
     function buyCardChoice(cardName) {
+      if (!requireTeacherAuth('purchase relic cards')) return;
       const student = appData.students.find(s => s.id === selectedStudentId);
       const c = CARD_LIBRARY[cardName];
-      if (getClassCardsCount(appData.currentClass) >= CLASS_DECK_LIMIT) return alert('60-card limit reached!');
-      if (student.gold < c.price) return alert('Insufficient Gold for this cadet.');
+      if (getClassCardsCount(appData.currentClass) >= CLASS_DECK_LIMIT) {
+        showAstralAnnouncement({
+          title: 'Deck Limit Exceeded',
+          badge: 'INVENTORY FULL',
+          message: '60-card class limit reached!',
+          icon: 'warning',
+          type: 'warning'
+        });
+        return;
+      }
+      if (student.gold < c.price) {
+        showAstralAnnouncement({
+          title: 'Insufficient Gold',
+          badge: 'STOREHOUSE',
+          message: `Cadet <strong>${escapeHtml(student.nick)}</strong> does not have enough Gold for ${cardName} (Requires ${c.price} GP).`,
+          icon: 'monetization_on',
+          type: 'warning'
+        });
+        return;
+      }
 
       student.gold -= c.price;
       if (!Array.isArray(student.cards)) student.cards = [];
@@ -3042,9 +3777,18 @@
       student.totalCardsEarned = (student.totalCardsEarned || 0) + 1;
       saveData();
       closeAllOverlays();
+      showAstralAnnouncement({
+        title: 'Relic Acquired',
+        badge: 'CARD EQUIPPED',
+        message: `Cadet <strong>${escapeHtml(student.nick)}</strong> purchased <strong>${cardName}</strong>!`,
+        icon: 'stars',
+        type: 'success',
+        duration: 3000
+      });
     }
 
     function useCard(studentId, cardIndex) {
+      if (!requireTeacherAuth('activate relic cards')) return;
       const student = appData.students.find(s => s.id === studentId);
       if (!student || !student.cards || !student.cards[cardIndex]) return;
 
@@ -3117,6 +3861,7 @@
 
     /* STUDENT & CLASS MANAGEMENT */
     function addClass() {
+      if (!requireTeacherAuth('add a new Sanctum class')) return;
       const input = document.getElementById('newClassNameInput');
       const name = input.value.trim();
       if (name && !appData.classes.includes(name)) {
@@ -3124,21 +3869,47 @@
         appData.currentClass = name;
         input.value = '';
         saveData();
+        showAstralAnnouncement({
+          title: 'Sanctum Created',
+          badge: 'CLASS ENROLLED',
+          message: `Class <strong>${escapeHtml(name)}</strong> has been added to the Sanctum registry.`,
+          icon: 'domain_add',
+          type: 'success',
+          duration: 3000
+        });
       }
     }
 
     function deleteSelectedClass() {
+      if (!requireTeacherAuth('delete a Sanctum class')) return;
       const target = document.getElementById('deleteClassSelect').value;
-      if (!target) return alert('Please select a class to delete.');
+      if (!target) {
+        showAstralAnnouncement({
+          title: 'Select Class',
+          badge: 'SANCTUM SELECTION',
+          message: 'Please choose a class from the dropdown to delete.',
+          icon: 'warning',
+          type: 'warning'
+        });
+        return;
+      }
       if (confirm(`Erase entire Sanctum ${target} and its student records?`)) {
         appData.classes = appData.classes.filter(c => c !== target);
         appData.students = appData.students.filter(s => s.class !== target);
         appData.currentClass = appData.classes[0] || '';
         saveData();
+        showAstralAnnouncement({
+          title: 'Sanctum Removed',
+          badge: 'CLASS DELETED',
+          message: `Class <strong>${escapeHtml(target)}</strong> and its student records have been removed.`,
+          icon: 'delete_sweep',
+          type: 'info'
+        });
       }
     }
 
     function addStudent() {
+      if (!requireTeacherAuth('enlist a new cadet')) return;
       const cls = document.getElementById('addStudentClassSelect').value;
       const nameInput = document.getElementById('studentNameInput');
       const nickInput = document.getElementById('studentNickInput');
@@ -3163,10 +3934,19 @@
         nickInput.value = '';
         saveData();
         nameInput.focus();
+        showAstralAnnouncement({
+          title: 'Cadet Enlisted',
+          badge: 'ROSTER UPDATED',
+          message: `Cadet <strong>${escapeHtml(name)} (${escapeHtml(nick)})</strong> has been admitted to Sanctum Class ${escapeHtml(cls)}.`,
+          icon: 'person_add',
+          type: 'success',
+          duration: 3000
+        });
       }
     }
 
     function removeStudent(id) {
+      if (!requireTeacherAuth('remove a cadet')) return;
       if (confirm('Remove this cadet from the roster?')) {
         appData.students = appData.students.filter(s => s.id !== id);
         if (selectedStudentId === id) selectedStudentId = null;
@@ -3175,6 +3955,7 @@
     }
 
     function modifyGold(studentId, amount) {
+      if (!requireTeacherAuth('modify cadet gold')) return;
       const student = appData.students.find(s => s.id === studentId);
       if (student) {
         student.gold += amount;
@@ -3184,6 +3965,7 @@
     }
 
     function openEditStudent(id) {
+      if (!requireTeacherAuth('edit cadet profile')) return;
       const student = appData.students.find(s => s.id === id);
       if (!student) return;
       editingStudentId = id;
@@ -3193,6 +3975,7 @@
     }
 
     function saveEditedStudent() {
+      if (!requireTeacherAuth('save cadet edits')) return;
       if (!editingStudentId) return;
       const student = appData.students.find(s => s.id === editingStudentId);
       if (student) {
@@ -3208,6 +3991,7 @@
     }
 
     function resetLP() {
+      if (!requireTeacherAuth('reset Class Life Points')) return;
       if (confirm(`Reset Life Points to 50 for all cadets in Class ${appData.currentClass}?`)) {
         const meetingNum = appData.currentMeeting || 1;
         const timestampStr = new Date().toLocaleString();
@@ -3231,15 +4015,28 @@
         });
 
         saveData();
-        alert(`LP reset to 50 for Class ${appData.currentClass} and logged to Student Reports!`);
+        showAstralAnnouncement({
+          title: 'Sanctum LP Restored',
+          badge: 'VITALITY RESET',
+          message: `Life Points reset to 50 for all cadets in Class <strong>${escapeHtml(appData.currentClass)}</strong>.`,
+          icon: 'healing',
+          type: 'success'
+        });
       }
     }
 
     function saveWebhookUrl() {
+      if (!requireTeacherAuth('configure Google Sheets webhook')) return;
       const url = document.getElementById('webhookUrlInput').value.trim();
       appData.webhookUrl = url;
       saveData();
-      alert('Google Apps Script Webhook URL saved successfully!');
+      showAstralAnnouncement({
+        title: 'Webhook Connected',
+        badge: 'CLOUD SYNC',
+        message: 'Google Apps Script Webhook URL has been saved and configured for automated sheet reports.',
+        icon: 'cloud_done',
+        type: 'success'
+      });
     }
 
     function goToManageGames() {
@@ -3388,6 +4185,44 @@
     updateAuthUI();
     render();
   </script>
+
+  <!-- MOBILE BOTTOM NAVIGATION DOCK (Requirement 2 & 6) -->
+  <nav class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-indigo-100/90 shadow-[0_-4px_24px_rgba(99,102,241,0.12)] px-2 py-1.5 flex items-center justify-around safe-bottom">
+    <button onclick="showTab('home')" class="mobile-bottom-btn flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-indigo-600 transition-all active:scale-95 group" data-tab="home">
+      <div class="relative flex items-center justify-center">
+        <span class="material-symbols-outlined text-[22px]">auto_awesome</span>
+        <span class="mobile-active-dot w-1.5 h-1.5 rounded-full bg-indigo-600 absolute -bottom-1"></span>
+      </div>
+      <span class="font-headline text-[10px] font-bold">Quest Hub</span>
+    </button>
+    <button onclick="showTab('display')" class="mobile-bottom-btn flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-500 hover:text-indigo-600 transition-all active:scale-95 group" data-tab="display">
+      <div class="relative flex items-center justify-center">
+        <span class="material-symbols-outlined text-[22px]">grid_view</span>
+        <span class="mobile-active-dot hidden w-1.5 h-1.5 rounded-full bg-indigo-600 absolute -bottom-1"></span>
+      </div>
+      <span class="font-headline text-[10px] font-medium">Display</span>
+    </button>
+    <button onclick="showTab('teacher')" class="mobile-bottom-btn flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-500 hover:text-indigo-600 transition-all active:scale-95 group" data-tab="teacher">
+      <div class="relative flex items-center justify-center">
+        <span class="material-symbols-outlined text-[22px]">tune</span>
+        <span class="mobile-active-dot hidden w-1.5 h-1.5 rounded-full bg-indigo-600 absolute -bottom-1"></span>
+      </div>
+      <span class="font-headline text-[10px] font-medium">Teacher</span>
+    </button>
+    <button onclick="showTab('admin-profile')" class="mobile-bottom-btn flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-500 hover:text-indigo-600 transition-all active:scale-95 group" data-tab="admin-profile">
+      <div class="relative flex items-center justify-center">
+        <span class="material-symbols-outlined text-[22px]">badge</span>
+        <span class="mobile-active-dot hidden w-1.5 h-1.5 rounded-full bg-indigo-600 absolute -bottom-1"></span>
+      </div>
+      <span class="font-headline text-[10px] font-medium">Admin</span>
+    </button>
+    <button onclick="toggleMobileDrawer(true)" class="flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-500 hover:text-indigo-600 transition-all active:scale-95 group">
+      <div class="relative flex items-center justify-center">
+        <span class="material-symbols-outlined text-[22px]">menu</span>
+      </div>
+      <span class="font-headline text-[10px] font-medium">More</span>
+    </button>
+  </nav>
 </body>
 
 </html>
