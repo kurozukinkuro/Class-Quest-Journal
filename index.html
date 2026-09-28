@@ -633,14 +633,16 @@
         <div id="tab-display" class="tab-content">
           <!-- Req 7: Subtab Controls moved inside Class Display tab -->
           <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <div class="flex items-center gap-1.5 p-1 bg-indigo-50/70 rounded-xl border border-indigo-100/80 shadow-2xs">
+            <div
+              class="flex items-center gap-1.5 p-1 bg-indigo-50/70 rounded-xl border border-indigo-100/80 shadow-2xs">
               <button id="subtab-overview-btn" onclick="switchDisplaySubtab('grid')"
                 class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-indigo-600 via-primary to-indigo-500 text-white font-headline text-xs font-bold tracking-wide shadow-2xs flex items-center gap-1.5 transition-all">
                 <span class="text-xs">✦</span><span>CADET HUD OVERVIEW</span>
               </button>
               <button id="subtab-ranking-btn" onclick="switchDisplaySubtab('ranking')"
                 class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-indigo-900 hover:bg-white font-headline text-xs font-semibold transition-all flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-[16px] text-slate-400">leaderboard</span><span>SANCTUM RANKING</span>
+                <span class="material-symbols-outlined text-[16px] text-slate-400">leaderboard</span><span>SANCTUM
+                  RANKING</span>
               </button>
             </div>
             <div class="flex items-center gap-3">
@@ -649,8 +651,8 @@
                 <span>INTERFACE MODE // TACTICAL VIEW</span>
               </div>
               <span id="telemetrySelectedStudent"
-                class="font-hud text-[10px] text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-100 font-bold hidden sm:inline">TARGET: NONE</span>
-              <span id="currentSanctumLabel" class="font-headline text-[11px] font-semibold text-slate-600 truncate hidden md:inline">SANCTUM 8A // CELESTIAL VANGUARD</span>
+                class="font-hud text-[10px] text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-100 font-bold hidden sm:inline">TARGET:
+                NONE</span>
             </div>
           </div>
 
@@ -1153,12 +1155,17 @@
         </div>
 
         <!-- ========================================== -->
+        <!-- ========================================== -->
         <!-- TAB 3: STUDENTS REPORT                     -->
         <!-- ========================================== -->
         <div id="tab-reports" class="tab-content">
           <div class="bg-white/95 rounded-2xl p-5 border border-indigo-100 shadow-sm flex flex-col gap-4">
             <div class="flex flex-wrap items-center justify-between gap-3 border-b border-indigo-50 pb-4">
-              <div class="flex items-center gap-2">
+              <div class="flex flex-wrap items-center gap-2">
+                <button id="reports-subtab-all-btn" onclick="switchReportsSubtab('all')"
+                  class="subtab-btn px-3.5 py-1.5 rounded-xl bg-white text-slate-600 font-headline text-xs font-semibold border border-indigo-100 hover:bg-indigo-50">
+                  ✦ All Events
+                </button>
                 <button id="reports-subtab-lp-btn" onclick="switchReportsSubtab('lp')"
                   class="subtab-btn active px-3.5 py-1.5 rounded-xl bg-primary text-white font-headline text-xs font-bold shadow-2xs">
                   🛡️ LP Conduct History
@@ -1167,18 +1174,65 @@
                   class="subtab-btn px-3.5 py-1.5 rounded-xl bg-white text-slate-600 font-headline text-xs font-semibold border border-indigo-100 hover:bg-indigo-50">
                   🪙 Gold Ledger
                 </button>
+                <button id="reports-subtab-card-btn" onclick="switchReportsSubtab('card')"
+                  class="subtab-btn px-3.5 py-1.5 rounded-xl bg-white text-slate-600 font-headline text-xs font-semibold border border-indigo-100 hover:bg-indigo-50">
+                  🃏 Relic Logs
+                </button>
               </div>
-              <button onclick="exportReportsToCSV()"
-                class="px-4 py-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-headline text-xs font-bold rounded-xl shadow-2xs flex items-center gap-1.5 transition-all">
-                <span class="material-symbols-outlined text-[16px]">download</span> Export Class CSV Data
-              </button>
+              <div class="flex flex-wrap items-center gap-2">
+                <button onclick="toggleAllReportDrawers(true)"
+                  class="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-headline text-xs font-bold rounded-xl border border-indigo-200/60 transition-all">
+                  Expand All
+                </button>
+                <button onclick="toggleAllReportDrawers(false)"
+                  class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-headline text-xs font-bold rounded-xl border border-slate-200/60 transition-all">
+                  Collapse All
+                </button>
+                <button onclick="exportReportsToCSV()"
+                  class="px-4 py-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-headline text-xs font-bold rounded-xl shadow-2xs flex items-center gap-1.5 transition-all">
+                  <span class="material-symbols-outlined text-[16px]">download</span> Export Class CSV
+                </button>
+              </div>
             </div>
 
-            <div>
-              <h2 id="reportsTabHeading" class="font-headline text-xl font-bold text-indigo-950">📝 Students LP Conduct
-                History</h2>
-              <p class="font-body text-xs text-slate-500 mt-0.5">Click any cadet row below to reveal their full
-                chronological logs.</p>
+            <!-- Summary Telemetry Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div class="p-3 bg-indigo-50/60 rounded-xl border border-indigo-100 flex items-center justify-between">
+                <div>
+                  <span class="font-hud text-[10px] text-indigo-600 font-bold uppercase block">TOTAL LOGGED EVENTS</span>
+                  <span id="reportStatTotalEvents" class="font-headline text-xl font-bold text-indigo-950">0</span>
+                </div>
+                <span class="material-symbols-outlined text-indigo-400 text-2xl">receipt_long</span>
+              </div>
+              <div class="p-3 bg-sky-50/60 rounded-xl border border-sky-100 flex items-center justify-between">
+                <div>
+                  <span class="font-hud text-[10px] text-sky-600 font-bold uppercase block">LP CONDUCT LOGS</span>
+                  <span id="reportStatLPCount" class="font-headline text-xl font-bold text-sky-950">0</span>
+                </div>
+                <span class="material-symbols-outlined text-sky-400 text-2xl">favorite</span>
+              </div>
+              <div class="p-3 bg-amber-50/60 rounded-xl border border-amber-100 flex items-center justify-between">
+                <div>
+                  <span class="font-hud text-[10px] text-amber-700 font-bold uppercase block">STARDUST GOLD LOGS</span>
+                  <span id="reportStatGoldCount" class="font-headline text-xl font-bold text-amber-950">0</span>
+                </div>
+                <span class="material-symbols-outlined text-amber-500 text-2xl">toll</span>
+              </div>
+            </div>
+
+            <!-- Search & Filter Controls -->
+            <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+              <div class="flex items-center gap-2 flex-1 min-w-[240px]">
+                <div class="relative flex-1">
+                  <span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-[18px]">search</span>
+                  <input id="reportSearchInput" type="text" placeholder="Search cadet report by name..."
+                    oninput="renderReportsTab()"
+                    class="w-full pl-9 pr-3.5 py-2 text-xs bg-indigo-50/50 border border-indigo-200/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                </div>
+              </div>
+              <div>
+                <h2 id="reportsTabHeading" class="font-headline text-lg font-bold text-indigo-950">📝 Students LP Conduct History</h2>
+              </div>
             </div>
 
             <div id="reportsAccordionContainer" class="flex flex-col gap-3 mt-2 overflow-y-auto max-h-[700px]"></div>
@@ -1847,9 +1901,11 @@
       <div>
         <label class="font-headline font-semibold text-slate-700 block mb-1">Profile Photo (optional):</label>
         <div class="flex items-center gap-3">
-          <img id="editAvatarPreview" src="" alt="Preview" class="w-12 h-12 rounded-xl object-cover bg-indigo-50 border border-indigo-200 hidden">
+          <img id="editAvatarPreview" src="" alt="Preview"
+            class="w-12 h-12 rounded-xl object-cover bg-indigo-50 border border-indigo-200 hidden">
           <div class="flex-1">
-            <input id="editAvatarInput" type="file" accept="image/*" class="hidden" onchange="handleEditAvatarUpload(event)">
+            <input id="editAvatarInput" type="file" accept="image/*" class="hidden"
+              onchange="handleEditAvatarUpload(event)">
             <button type="button" onclick="document.getElementById('editAvatarInput').click()"
               class="w-full px-3 py-2 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 border-dashed rounded-xl text-indigo-600 font-headline text-[11px] font-bold transition-all flex items-center justify-center gap-1.5">
               <span class="material-symbols-outlined text-[16px]">upload</span> Upload Photo
@@ -1900,6 +1956,39 @@
       <button onclick="saveGameModal()"
         class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-headline text-xs font-bold rounded-xl flex-1">Save
         Game</button>
+    </div>
+  </div>
+
+  <!-- 8. CARD PREVIEW MODAL -->
+  <div id="cardPreviewModal" class="astral-modal w-[420px] p-6">
+    <div class="flex items-center justify-between pb-3 border-b border-indigo-50 mb-4">
+      <div class="flex items-center gap-2">
+        <span class="font-hud text-[10px] text-indigo-500 font-bold uppercase tracking-wider">✦ RELIC ARTIFACT PREVIEW</span>
+      </div>
+      <button onclick="closeAllOverlays()" class="text-slate-400 hover:text-rose-600 text-lg font-bold">✕</button>
+    </div>
+    
+    <div class="p-5 bg-gradient-to-b from-white via-indigo-50/30 to-purple-50/40 border border-indigo-200/90 rounded-2xl shadow-md flex flex-col items-center text-center relative overflow-hidden mb-5">
+      <div id="cardPreviewTypeBadge" class="font-hud text-[9px] px-3 py-1 rounded-full uppercase font-bold tracking-wider mb-3 bg-indigo-100 text-indigo-700 border border-indigo-200">
+        DEFENSIVE RELIC
+      </div>
+      <div id="cardPreviewIcon" class="text-5xl my-2 transform hover:scale-110 transition-transform">⏳</div>
+      <h3 id="cardPreviewTitle" class="font-headline text-xl font-extrabold text-indigo-950 mt-1">Time Warp</h3>
+      <div id="cardPreviewCost" class="font-hud text-xs font-bold text-amber-700 bg-amber-100/80 px-3 py-1 rounded-lg border border-amber-200/80 mt-2 mb-3">
+        COST: 8 GP
+      </div>
+      <p id="cardPreviewDesc" class="font-body text-xs text-slate-600 leading-relaxed bg-white/80 p-3 rounded-xl border border-indigo-100/70 w-full text-center">
+        Cancel LP damage (up to 3 LP), but prevents receiving gold.
+      </p>
+    </div>
+
+    <div class="flex justify-between gap-3">
+      <button onclick="closeAllOverlays()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline text-xs font-bold rounded-xl flex-1 transition-colors">
+        Close Preview
+      </button>
+      <button id="cardPreviewActionBtn" onclick="buyCardChoiceFromPreview()" class="px-4 py-2.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-headline text-xs font-bold rounded-xl shadow-xs flex-1 transition-all hidden">
+        Buy Relic Card
+      </button>
     </div>
   </div>
 
@@ -2907,7 +2996,13 @@
     function changeClassFilter(className) {
       if (!className) return;
       appData.currentClass = className;
-      selectedStudentId = null;
+      const classStudents = appData.students.filter(s => s.class === className);
+      if (classStudents.length > 0) {
+        selectedStudentId = classStudents[0].id;
+      } else {
+        selectedStudentId = null;
+      }
+      updateSelectedStudentLabels();
       saveData();
     }
 
@@ -3046,6 +3141,11 @@
       grid.innerHTML = '';
 
       const filteredByClass = appData.students.filter(s => s.class === appData.currentClass);
+
+      if (filteredByClass.length > 0 && (!selectedStudentId || !filteredByClass.some(s => s.id === selectedStudentId))) {
+        selectedStudentId = filteredByClass[0].id;
+        updateSelectedStudentLabels();
+      }
 
       // Search & Status filters
       const displayedStudents = filteredByClass.filter(s => {
@@ -3239,6 +3339,11 @@
       list.innerHTML = '';
       const filtered = appData.students.filter(s => s.class === appData.currentClass);
 
+      if (filtered.length > 0 && (!selectedStudentId || !filtered.some(s => s.id === selectedStudentId))) {
+        selectedStudentId = filtered[0].id;
+        updateSelectedStudentLabels();
+      }
+
       filtered.forEach((s, index) => {
         const row = document.createElement('div');
         row.className = `student-row p-3 bg-white border border-indigo-100 rounded-xl shadow-2xs flex items-center justify-between transition-all select-none ${s.id === selectedStudentId ? 'ring-2 ring-indigo-400 bg-indigo-50/30' : ''}`;
@@ -3406,15 +3511,33 @@
     /* RENDER STUDENTS REPORT ACCORDION */
     function switchReportsSubtab(type) {
       currentReportsSubtab = type;
-      document.getElementById('reports-subtab-lp-btn').classList.toggle('active', type === 'lp');
-      document.getElementById('reports-subtab-lp-btn').classList.toggle('bg-primary', type === 'lp');
-      document.getElementById('reports-subtab-lp-btn').classList.toggle('text-white', type === 'lp');
+      ['all', 'lp', 'gold', 'card'].forEach(t => {
+        const btn = document.getElementById(`reports-subtab-${t}-btn`);
+        if (btn) {
+          if (t === type) {
+            btn.className = 'subtab-btn active px-3.5 py-1.5 rounded-xl bg-primary text-white font-headline text-xs font-bold shadow-2xs';
+          } else {
+            btn.className = 'subtab-btn px-3.5 py-1.5 rounded-xl bg-white text-slate-600 font-headline text-xs font-semibold border border-indigo-100 hover:bg-indigo-50';
+          }
+        }
+      });
 
-      document.getElementById('reports-subtab-gold-btn').classList.toggle('active', type === 'gold');
-      document.getElementById('reports-subtab-gold-btn').classList.toggle('bg-primary', type === 'gold');
-      document.getElementById('reports-subtab-gold-btn').classList.toggle('text-white', type === 'gold');
+      const headings = {
+        'all': '✦ All Directives & Activity Logs',
+        'lp': '📝 Students LP Conduct History',
+        'gold': '🪙 Students Gold Ledger',
+        'card': '🃏 Relic Cards Activation History'
+      };
+      const headingEl = document.getElementById('reportsTabHeading');
+      if (headingEl) headingEl.textContent = headings[type] || headings['lp'];
 
-      document.getElementById('reportsTabHeading').textContent = type === 'lp' ? '📝 Students LP Conduct History' : '🪙 Students Gold Ledger';
+      renderReportsTab();
+    }
+
+    let expandAllReportsState = false;
+    function toggleAllReportDrawers(expand) {
+      expandAllReportsState = expand;
+      if (!expand) openedReportStudentId = null;
       renderReportsTab();
     }
 
@@ -3424,6 +3547,7 @@
     }
 
     function deleteReportEntry(reportIndex) {
+      if (!requireTeacherAuth('delete a report entry')) return;
       if (confirm('Delete this report entry permanently?')) {
         appData.reports.splice(reportIndex, 1);
         saveData();
@@ -3436,16 +3560,45 @@
       container.innerHTML = '';
 
       const studentsInClass = appData.students.filter(s => s.class === appData.currentClass);
+      
+      const classLogs = appData.reports.filter(r => 
+        r.className === appData.currentClass || 
+        studentsInClass.some(s => s.id === r.studentId || s.name === r.studentName)
+      );
+      
+      const elTotal = document.getElementById('reportStatTotalEvents');
+      if (elTotal) elTotal.textContent = classLogs.length;
+      
+      const elLP = document.getElementById('reportStatLPCount');
+      if (elLP) elLP.textContent = classLogs.filter(r => (r.type || 'lp') === 'lp').length;
+      
+      const elGold = document.getElementById('reportStatGoldCount');
+      if (elGold) elGold.textContent = classLogs.filter(r => r.type === 'gold').length;
+
       if (studentsInClass.length === 0) {
-        container.innerHTML = `<div class="p-8 text-center text-slate-400 bg-indigo-50/30 rounded-xl border border-indigo-100">No registered cadets in Sanctum ${appData.currentClass}.</div>`;
+        container.innerHTML = `<div class="p-8 text-center text-slate-400 bg-indigo-50/30 rounded-xl border border-indigo-100">No registered cadets in Sanctum ${escapeHtml(appData.currentClass)}.</div>`;
         return;
       }
 
-      studentsInClass.forEach(s => {
-        const isOpen = (openedReportStudentId === s.id);
+      const searchVal = (document.getElementById('reportSearchInput')?.value || '').trim().toLowerCase();
+      const filteredStudents = studentsInClass.filter(s => 
+        s.name.toLowerCase().includes(searchVal) || s.nick.toLowerCase().includes(searchVal)
+      );
+
+      if (filteredStudents.length === 0) {
+        container.innerHTML = `<div class="p-8 text-center text-slate-400 bg-indigo-50/30 rounded-xl border border-indigo-100">No cadets match "${escapeHtml(searchVal)}".</div>`;
+        return;
+      }
+
+      if (openedReportStudentId === null && selectedStudentId && studentsInClass.some(s => s.id === selectedStudentId)) {
+        openedReportStudentId = selectedStudentId;
+      }
+
+      filteredStudents.forEach(s => {
+        const isOpen = expandAllReportsState || (openedReportStudentId === s.id);
         const logs = appData.reports.filter(r =>
-          (r.studentId ? r.studentId === s.id : (r.studentName === s.name && r.className === s.class)) &&
-          ((r.type || 'lp') === currentReportsSubtab)
+          (r.studentId ? r.studentId === s.id : (r.studentName === s.name && (r.className ? r.className === s.class : true))) &&
+          (currentReportsSubtab === 'all' || (r.type || 'lp') === currentReportsSubtab)
         );
 
         const card = document.createElement('div');
@@ -3453,44 +3606,51 @@
 
         let logsHTML = '';
         if (logs.length === 0) {
-          logsHTML = `<div class="text-xs text-slate-400 py-3 text-center">No ${currentReportsSubtab.toUpperCase()} events logged for ${s.nick} yet.</div>`;
+          logsHTML = `<div class="text-xs text-slate-400 py-3 text-center">No ${currentReportsSubtab.toUpperCase()} events logged for ${escapeHtml(s.nick)} yet.</div>`;
         } else {
           logsHTML = `
-            <table class="w-full text-xs text-left border-collapse mt-2">
-              <thead>
-                <tr class="bg-indigo-50/70 text-indigo-900 border-b border-indigo-100">
-                  <th class="p-2 font-hud">Meeting #</th>
-                  <th class="p-2">Timestamp</th>
-                  <th class="p-2">Directive / Reason</th>
-                  <th class="p-2 font-hud">${currentReportsSubtab === 'lp' ? 'LP Change' : 'Gold Change'}</th>
-                  <th class="p-2 text-center">Action</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-indigo-50">
-                ${logs.map(l => {
-            const globalIdx = appData.reports.indexOf(l);
-            return `
-                    <tr class="hover:bg-indigo-50/30">
-                      <td class="p-2 font-hud font-bold text-amber-600">${l.meeting || 'Meeting #1'}</td>
-                      <td class="p-2 font-hud text-[10px] text-slate-400">${l.timestamp}</td>
-                      <td class="p-2 font-body">${l.action}</td>
-                      <td class="p-2 font-hud font-bold ${l.change && l.change.includes('-') ? 'text-rose-600' : 'text-emerald-600'}">${l.change}</td>
-                      <td class="p-2 text-center">
-                        <button onclick="deleteReportEntry(${globalIdx})" class="text-rose-500 hover:text-rose-700 text-xs font-bold">🗑️</button>
-                      </td>
-                    </tr>
-                  `;
-          }).join('')}
-              </tbody>
-            </table>
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-left border-collapse mt-2">
+                <thead>
+                  <tr class="bg-indigo-50/70 text-indigo-900 border-b border-indigo-100">
+                    <th class="p-2 font-hud">Meeting #</th>
+                    <th class="p-2">Timestamp</th>
+                    <th class="p-2">Directive / Reason</th>
+                    <th class="p-2 font-hud">Adjustment</th>
+                    <th class="p-2 text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-indigo-50">
+                  ${logs.map(l => {
+                    const globalIdx = appData.reports.indexOf(l);
+                    let changeColor = 'text-emerald-600';
+                    if (l.change && l.change.includes('-')) changeColor = 'text-rose-600';
+                    else if (l.type === 'card') changeColor = 'text-indigo-600';
+
+                    return `
+                      <tr class="hover:bg-indigo-50/30">
+                        <td class="p-2 font-hud font-bold text-amber-600">${escapeHtml(l.meeting || 'Meeting #1')}</td>
+                        <td class="p-2 font-hud text-[10px] text-slate-400">${escapeHtml(l.timestamp || '')}</td>
+                        <td class="p-2 font-body font-medium text-indigo-950">${escapeHtml(l.action || '')}</td>
+                        <td class="p-2 font-hud font-bold ${changeColor}">${escapeHtml(l.change || '')}</td>
+                        <td class="p-2 text-center">
+                          <button onclick="deleteReportEntry(${globalIdx})" title="Delete entry" class="text-rose-500 hover:text-rose-700 text-xs font-bold p-1 rounded hover:bg-rose-50">🗑️</button>
+                        </td>
+                      </tr>
+                    `;
+                  }).join('')}
+                </tbody>
+              </table>
+            </div>
           `;
         }
 
         card.innerHTML = `
           <div onclick="toggleReportStudentDrawer(${s.id})" class="p-3.5 flex items-center justify-between cursor-pointer hover:bg-indigo-50/40 select-none">
             <div class="flex items-center gap-2">
-              <strong class="font-headline text-sm font-bold text-indigo-950">${s.name}</strong>
-              <span class="font-hud text-xs text-slate-400">(${s.nick})</span>
+              <strong class="font-headline text-sm font-bold text-indigo-950">${escapeHtml(s.name)}</strong>
+              <span class="font-hud text-xs text-slate-400">(${escapeHtml(s.nick)})</span>
+              <span class="font-hud text-[10px] bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full font-bold border border-indigo-100">${logs.length} Log${logs.length === 1 ? '' : 's'}</span>
             </div>
             <div class="flex items-center gap-4">
               <span class="font-hud text-xs font-bold text-indigo-600">${s.lp} LP</span>
@@ -3501,7 +3661,7 @@
           ${isOpen ? `
             <div class="p-4 bg-slate-50/50 border-t border-indigo-100">
               <div class="flex items-center justify-between pb-2 mb-2 border-b border-indigo-100">
-                <span class="font-hud text-xs text-slate-500">Sanctum: Class ${s.class} | Inventory: ${s.cards ? s.cards.length : 0} Relics | Lifetime Stardust: ${s.totalGoldEarned || s.gold} GP</span>
+                <span class="font-hud text-xs text-slate-500">Sanctum: Class ${escapeHtml(s.class)} | Inventory: ${s.cards ? s.cards.length : 0} Relics | Lifetime Stardust: ${s.totalGoldEarned || s.gold} GP</span>
                 <button onclick="toggleReportStudentDrawer(${s.id})" class="text-xs text-slate-400 hover:text-slate-600">Close</button>
               </div>
               ${logsHTML}
@@ -3609,7 +3769,57 @@
       event.target.value = '';
     }
 
-    /* RENDER CARDS LIBRARY */
+    /* RENDER CARDS LIBRARY & PREVIEW */
+    let previewingCardName = null;
+
+    function openCardPreviewModal(cardName, showBuyBtn = false) {
+      const c = CARD_LIBRARY[cardName];
+      if (!c) return;
+
+      previewingCardName = cardName;
+      document.getElementById('cardPreviewTitle').textContent = cardName;
+      document.getElementById('cardPreviewIcon').textContent = c.icon || '🃏';
+      document.getElementById('cardPreviewCost').textContent = `COST: ${c.price} GP`;
+      document.getElementById('cardPreviewDesc').textContent = c.desc;
+
+      const typeBadge = document.getElementById('cardPreviewTypeBadge');
+      if (typeBadge) {
+        const typeStr = (c.type || 'relic').toUpperCase();
+        typeBadge.textContent = `${typeStr} RELIC`;
+        if (c.type === 'defensive') {
+          typeBadge.className = 'font-hud text-[9px] px-3 py-1 rounded-full uppercase font-bold tracking-wider mb-3 bg-sky-100 text-sky-800 border border-sky-200';
+        } else if (c.type === 'targeted') {
+          typeBadge.className = 'font-hud text-[9px] px-3 py-1 rounded-full uppercase font-bold tracking-wider mb-3 bg-purple-100 text-purple-800 border border-purple-200';
+        } else if (c.type === 'instant') {
+          typeBadge.className = 'font-hud text-[9px] px-3 py-1 rounded-full uppercase font-bold tracking-wider mb-3 bg-emerald-100 text-emerald-800 border border-emerald-200';
+        } else if (c.type === 'buff') {
+          typeBadge.className = 'font-hud text-[9px] px-3 py-1 rounded-full uppercase font-bold tracking-wider mb-3 bg-amber-100 text-amber-800 border border-amber-200';
+        } else {
+          typeBadge.className = 'font-hud text-[9px] px-3 py-1 rounded-full uppercase font-bold tracking-wider mb-3 bg-indigo-100 text-indigo-800 border border-indigo-200';
+        }
+      }
+
+      const actionBtn = document.getElementById('cardPreviewActionBtn');
+      if (actionBtn) {
+        if (showBuyBtn && selectedStudentId) {
+          actionBtn.classList.remove('hidden');
+        } else {
+          actionBtn.classList.add('hidden');
+        }
+      }
+
+      const overlay = document.getElementById('drawerOverlay');
+      if (overlay) overlay.style.display = 'block';
+      const modal = document.getElementById('cardPreviewModal');
+      if (modal) modal.style.display = 'block';
+    }
+
+    function buyCardChoiceFromPreview() {
+      if (previewingCardName) {
+        buyCardChoice(previewingCardName);
+      }
+    }
+
     function renderCardsLibrary() {
       const container = document.getElementById('cardsLibraryContainer');
       if (!container) return;
@@ -3618,17 +3828,30 @@
       Object.keys(CARD_LIBRARY).forEach(cardName => {
         const c = CARD_LIBRARY[cardName];
         const card = document.createElement('div');
-        card.className = 'relic-card';
+        card.className = 'relic-card cursor-pointer hover:scale-[1.02] transition-transform shadow-xs hover:shadow-md';
+        card.onclick = () => openCardPreviewModal(cardName);
+
+        let typeBadgeClass = 'bg-indigo-50 text-indigo-700 border-indigo-200';
+        if (c.type === 'defensive') typeBadgeClass = 'bg-sky-50 text-sky-700 border-sky-200';
+        else if (c.type === 'targeted') typeBadgeClass = 'bg-purple-50 text-purple-700 border-purple-200';
+        else if (c.type === 'instant') typeBadgeClass = 'bg-emerald-50 text-emerald-700 border-emerald-200';
+        else if (c.type === 'buff') typeBadgeClass = 'bg-amber-50 text-amber-700 border-amber-200';
+
         card.innerHTML = `
-          <div class="flex items-center justify-between font-hud text-xs text-indigo-400">
-            <span>ASTRAL RELIC</span>
-            <span>✦</span>
+          <div class="flex items-center justify-between font-hud text-[10px] mb-1">
+            <span class="px-2 py-0.5 rounded-full font-bold uppercase border ${typeBadgeClass}">${c.type || 'Relic'}</span>
+            <span class="text-indigo-400">✦</span>
           </div>
-          <div class="text-center my-3 text-4xl">${c.icon}</div>
+          <div class="text-center my-3 text-4xl transform hover:scale-110 transition-transform">${c.icon}</div>
           <div class="text-center font-headline font-bold text-base text-indigo-950">${cardName}</div>
           <p class="text-center font-body text-xs text-slate-500 my-2 leading-relaxed flex-1 flex items-center justify-center">${c.desc}</p>
-          <div class="text-center font-hud text-xs font-bold text-amber-600 bg-amber-50 py-1 rounded-lg border border-amber-200">
-            Cost: ${c.price} GP
+          <div class="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-indigo-50">
+            <span class="font-hud text-xs font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">
+              Cost: ${c.price} GP
+            </span>
+            <button onclick="event.stopPropagation(); openCardPreviewModal('${cardName}')" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-headline text-[11px] font-bold rounded-lg border border-indigo-200 transition-all flex items-center gap-1">
+              <span>🔍 Preview</span>
+            </button>
           </div>
         `;
         container.appendChild(card);
@@ -3841,6 +4064,19 @@
       if (!Array.isArray(student.cards)) student.cards = [];
       student.cards.push(cardName);
       student.totalCardsEarned = (student.totalCardsEarned || 0) + 1;
+
+      const meetingNum = appData.currentMeeting || 1;
+      appData.reports.unshift({
+        meeting: `Meeting #${meetingNum}`,
+        timestamp: new Date().toLocaleString(),
+        studentName: student.name,
+        studentId: student.id,
+        className: student.class,
+        action: `Relic Purchased: ${cardName}`,
+        type: 'gold',
+        change: `-${c.price} G`
+      });
+
       saveData();
       closeAllOverlays();
       showAstralAnnouncement({
@@ -3859,10 +4095,21 @@
       if (!student || !student.cards || !student.cards[cardIndex]) return;
 
       const cardName = student.cards[cardIndex];
+      const meetingNum = appData.currentMeeting || 1;
 
       if (cardName === 'Health Potion') {
         if (confirm(`Play "Health Potion"? Restores +2 LP to ${student.nick}.`)) {
           student.lp = Math.min(50, student.lp + 2);
+          appData.reports.unshift({
+            meeting: `Meeting #${meetingNum}`,
+            timestamp: new Date().toLocaleString(),
+            studentName: student.name,
+            studentId: student.id,
+            className: student.class,
+            action: `Relic Played: Health Potion`,
+            type: 'card',
+            change: `+2 LP`
+          });
           removeCardIndexFromStudent(student, cardIndex);
         }
       } else if (cardName === 'Master Thief') {
@@ -3874,6 +4121,16 @@
           const earned = Math.floor(totalStolen / 2);
           student.gold += earned;
           student.totalGoldEarned = (student.totalGoldEarned || 0) + earned;
+          appData.reports.unshift({
+            meeting: `Meeting #${meetingNum}`,
+            timestamp: new Date().toLocaleString(),
+            studentName: student.name,
+            studentId: student.id,
+            className: student.class,
+            action: `Relic Played: Master Thief`,
+            type: 'card',
+            change: `+${earned} G`
+          });
           removeCardIndexFromStudent(student, cardIndex);
         }
       } else if (cardName === 'LP Donor') {
@@ -3884,11 +4141,31 @@
           target.lp = Math.min(50, target.lp + donorAmount);
           student.gold += donorAmount * 2;
           student.totalGoldEarned = (student.totalGoldEarned || 0) + (donorAmount * 2);
+          appData.reports.unshift({
+            meeting: `Meeting #${meetingNum}`,
+            timestamp: new Date().toLocaleString(),
+            studentName: student.name,
+            studentId: student.id,
+            className: student.class,
+            action: `Relic Played: LP Donor (to ${target.nick})`,
+            type: 'card',
+            change: `-${donorAmount} LP / +${donorAmount * 2} G`
+          });
           removeCardIndexFromStudent(student, cardIndex);
         });
       } else if (['Gold Rush', 'Shield', 'Time Warp', 'Voodoo'].includes(cardName)) {
         if (confirm(`Activate tactical buff "${cardName}"?`)) {
           if (!student.effects.includes(cardName)) student.effects.push(cardName);
+          appData.reports.unshift({
+            meeting: `Meeting #${meetingNum}`,
+            timestamp: new Date().toLocaleString(),
+            studentName: student.name,
+            studentId: student.id,
+            className: student.class,
+            action: `Relic Buff Activated: ${cardName}`,
+            type: 'card',
+            change: `Buff Active`
+          });
           removeCardIndexFromStudent(student, cardIndex);
         }
       }
@@ -4026,6 +4303,19 @@
       if (student) {
         student.gold += amount;
         if (amount > 0) student.totalGoldEarned = (student.totalGoldEarned || 0) + amount;
+
+        const meetingNum = appData.currentMeeting || 1;
+        appData.reports.unshift({
+          meeting: `Meeting #${meetingNum}`,
+          timestamp: new Date().toLocaleString(),
+          studentName: student.name,
+          studentId: student.id,
+          className: student.class,
+          action: amount > 0 ? 'Teacher Gold Award' : 'Teacher Gold Adjustment',
+          type: 'gold',
+          change: amount > 0 ? `+${amount} G` : `${amount} G`
+        });
+
         saveData();
       }
     }
@@ -4037,7 +4327,7 @@
       const file = event.target.files[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = function (e) {
         pendingAvatarBase64 = e.target.result;
         const preview = document.getElementById('editAvatarPreview');
         if (preview) {
@@ -4329,7 +4619,7 @@
     }
 
     // Override drawerOverlay click to also close command drawer
-    document.getElementById('drawerOverlay').addEventListener('click', function() {
+    document.getElementById('drawerOverlay').addEventListener('click', function () {
       toggleCommandDrawer(false);
       toggleMobileDrawer(false);
     });
@@ -4419,7 +4709,8 @@
   <aside id="commandDrawer"
     class="fixed right-0 top-0 h-full w-72 overflow-y-auto bg-white/97 backdrop-blur-xl flex flex-col border-l border-indigo-100/70 shadow-lg transition-transform duration-300 translate-x-full"
     style="z-index: 200;">
-    <div class="h-16 px-5 flex items-center justify-between border-b border-indigo-50/80 bg-gradient-to-r from-sky-50/40 via-purple-50/30 to-indigo-50/60">
+    <div
+      class="h-16 px-5 flex items-center justify-between border-b border-indigo-50/80 bg-gradient-to-r from-sky-50/40 via-purple-50/30 to-indigo-50/60">
       <div class="flex items-center gap-2">
         <span class="material-symbols-outlined text-indigo-600 text-[20px]">keyboard_command_key</span>
         <span class="font-headline text-[14px] font-bold tracking-tight text-indigo-950">COMMAND PANEL</span>
@@ -4433,7 +4724,8 @@
     <div class="flex-1 px-4 py-5 space-y-5 overflow-y-auto">
       <!-- Sanctum Selector -->
       <div>
-        <label class="font-hud text-[10px] text-indigo-500 font-bold tracking-wider uppercase block mb-2">SANCTUM CLASS</label>
+        <label class="font-hud text-[10px] text-indigo-500 font-bold tracking-wider uppercase block mb-2">SANCTUM
+          CLASS</label>
         <div class="flex items-center bg-indigo-50/70 border border-indigo-100 rounded-xl px-3 py-2 shadow-2xs">
           <span class="font-hud text-[10px] text-indigo-500 font-bold mr-2">SANCTUM:</span>
           <select id="commandDrawerClassFilter" onchange="changeClassFilter(this.value); populateCommandDrawerSync();"
@@ -4442,7 +4734,8 @@
       </div>
       <!-- Meeting Cycle -->
       <div>
-        <label class="font-hud text-[10px] text-indigo-500 font-bold tracking-wider uppercase block mb-2">MEETING CYCLE</label>
+        <label class="font-hud text-[10px] text-indigo-500 font-bold tracking-wider uppercase block mb-2">MEETING
+          CYCLE</label>
         <div class="flex items-center bg-indigo-50/70 border border-indigo-100 rounded-xl px-3 py-2 shadow-2xs">
           <span class="font-hud text-[10px] text-indigo-500 font-bold mr-2">CYCLE:</span>
           <input id="commandDrawerMeetingInput" type="number" min="1" max="100" value="1"
@@ -4452,18 +4745,23 @@
       </div>
       <!-- Quick Nav Buttons -->
       <div>
-        <label class="font-hud text-[10px] text-indigo-500 font-bold tracking-wider uppercase block mb-2">QUICK NAVIGATE</label>
+        <label class="font-hud text-[10px] text-indigo-500 font-bold tracking-wider uppercase block mb-2">QUICK
+          NAVIGATE</label>
         <div class="space-y-2">
-          <button onclick="showTab('display'); toggleCommandDrawer(false);" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-headline text-xs font-semibold transition-all">
+          <button onclick="showTab('display'); toggleCommandDrawer(false);"
+            class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-headline text-xs font-semibold transition-all">
             <span class="material-symbols-outlined text-[18px]">grid_view</span> Class Display
           </button>
-          <button onclick="showTab('teacher'); toggleCommandDrawer(false);" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 font-headline text-xs font-semibold transition-all">
+          <button onclick="showTab('teacher'); toggleCommandDrawer(false);"
+            class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 font-headline text-xs font-semibold transition-all">
             <span class="material-symbols-outlined text-[18px]">tune</span> Teacher Control
           </button>
-          <button onclick="toggleQuickReportOverlay(); toggleCommandDrawer(false);" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-headline text-xs font-semibold transition-all">
+          <button onclick="toggleQuickReportOverlay(); toggleCommandDrawer(false);"
+            class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-headline text-xs font-semibold transition-all">
             <span class="material-symbols-outlined text-[18px]">bolt</span> Quick Report
           </button>
-          <button onclick="openTutorialModal(); toggleCommandDrawer(false);" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 font-headline text-xs font-semibold transition-all">
+          <button onclick="openTutorialModal(); toggleCommandDrawer(false);"
+            class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 font-headline text-xs font-semibold transition-all">
             <span class="material-symbols-outlined text-[18px]">auto_stories</span> Start Guide
           </button>
         </div>
@@ -4476,10 +4774,13 @@
 
   <!-- TUTORIAL OVERLAY MODAL (Req 5) -->
   <div id="tutorialModal" class="astral-modal w-[460px] max-w-[92vw] p-6 text-center border-indigo-200 shadow-2xl">
-    <div class="w-14 h-14 mx-auto rounded-2xl bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center mb-3 shadow-xs">
+    <div
+      class="w-14 h-14 mx-auto rounded-2xl bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center mb-3 shadow-xs">
       <span id="tutorialStepIcon" class="material-symbols-outlined text-[28px]">auto_awesome</span>
     </div>
-    <span class="font-hud text-[9px] px-2.5 py-0.5 rounded-full bg-indigo-50 border border-indigo-200/80 text-indigo-700 font-bold uppercase tracking-wider inline-block mb-2">START GUIDE</span>
+    <span
+      class="font-hud text-[9px] px-2.5 py-0.5 rounded-full bg-indigo-50 border border-indigo-200/80 text-indigo-700 font-bold uppercase tracking-wider inline-block mb-2">START
+      GUIDE</span>
     <h3 id="tutorialStepTitle" class="font-headline text-base font-bold text-indigo-950 mb-2 mt-1">Welcome</h3>
     <p id="tutorialStepBody" class="font-body text-xs text-slate-600 leading-relaxed mb-5"></p>
     <div class="flex items-center justify-between gap-3">
@@ -4488,9 +4789,12 @@
         disabled>← Back</button>
       <span id="tutorialStepCounter" class="font-hud text-[10px] text-indigo-500 font-bold">1 / 6</span>
       <button id="tutorialNextBtn" onclick="tutorialNext()"
-        class="px-4 py-2 bg-gradient-to-r from-indigo-600 via-primary to-sky-500 text-white font-headline text-xs font-bold rounded-xl flex-1 transition-all">Next →</button>
+        class="px-4 py-2 bg-gradient-to-r from-indigo-600 via-primary to-sky-500 text-white font-headline text-xs font-bold rounded-xl flex-1 transition-all">Next
+        →</button>
     </div>
-    <button onclick="closeAllOverlays()" class="mt-3 text-slate-400 hover:text-slate-600 font-hud text-[10px] font-bold uppercase tracking-wider transition-colors">Skip Guide</button>
+    <button onclick="closeAllOverlays()"
+      class="mt-3 text-slate-400 hover:text-slate-600 font-hud text-[10px] font-bold uppercase tracking-wider transition-colors">Skip
+      Guide</button>
   </div>
 
   <!-- MOBILE BOTTOM NAVIGATION DOCK (Requirement 2 & 6) -->
