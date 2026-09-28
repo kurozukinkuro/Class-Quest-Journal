@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Castle Command: Imperative Quest</title>
+  <style>
+    :root {
+      --clr-green: #A5E090;
+      --clr-navy: #334D84;
+      --clr-teal: #24CBD6;
+      --clr-blue: #6AB6EC;
+      --clr-bg: #EBF8FF;
+      --clr-white: #FFFFFF;
+      --clr-red: #FF5D5D;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Fredoka', 'Comic Sans MS', 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background-color: var(--clr-bg);
+      color: var(--clr-navy);
+      margin: 0;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .header-banner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .header-banner svg {
+      width: 42px;
+      height: 42px;
+      fill: var(--clr-navy);
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--clr-navy);
+      font-size: 2.2rem;
+      text-shadow: 2px 2px 0px var(--clr-blue);
+      text-transform: uppercase;
+    }
+
+    /* HP Scoreboard at Top */
+    .hp-tracker {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+
+    .team-card {
+      background: var(--clr-white);
+      border: 3px solid var(--clr-blue);
+      border-radius: 16px;
+      padding: 10px 15px;
+      min-width: 130px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 0px var(--clr-blue);
+      position: relative;
+    }
+
+    .team-card.active {
+      border-color: var(--clr-navy);
+      background-color: var(--clr-green);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 0px var(--clr-navy);
+    }
+
+    .team-card .active-badge {
+      display: none;
+      font-size: 0.75rem;
+      font-weight: bold;
+      background: var(--clr-navy);
+      color: var(--clr-white);
+      padding: 2px 6px;
+      border-radius: 8px;
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .team-card.active .active-badge {
+      display: block;
+    }
+
+    .team-name {
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--clr-navy);
+    }
+
+    .team-hp {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--clr-navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .main-card {
+      background: var(--clr-white);
+      border: 4px solid var(--clr-navy);
+      border-radius: 24px;
+      padding: 25px;
+      width: 100%;
+      max-width: 900px;
+      box-shadow: 0 8px 0px var(--clr-teal);
+      position: relative;
+    }
+
+    /* Rules Screen */
+    .rules-screen {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .rules-list {
+      background: var(--clr-bg);
+      border: 2px dashed var(--clr-teal);
+      border-radius: 16px;
+      padding: 15px 20px;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .team-select-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .select-btn {
+      padding: 8px 12px;
+      border: 2px solid var(--clr-navy);
+      border-radius: 10px;
+      background: var(--clr-white);
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .select-btn.selected {
+      background: var(--clr-teal);
+      color: var(--clr-white);
+    }
+
+    /* Game Screen */
+    .game-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .quiz-box {
+      background: var(--clr-bg);
+      border: 3px solid var(--clr-blue);
+      border-radius: 20px;
+      padding: 20px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .quiz-clues {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--clr-navy);
+      margin: 10px 0;
+    }
+
+    .input-box {
+      width: 100%;
+      max-width: 500px;
+      padding: 12px 18px;
+      font-size: 1.3rem;
+      border: 3px solid var(--clr-navy);
+      border-radius: 12px;
+      text-align: center;
+      font-weight: bold;
+      outline: none;
+    }
+
+    .input-box:focus {
+      border-color: var(--clr-teal);
+      box-shadow: 0 0 0 4px var(--clr-blue);
+    }
+
+    .action-panel {
+      display: none;
+      gap: 15px;
+      margin-top: 10px;
+      width: 100%;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background: var(--clr-green);
+      color: var(--clr-navy);
+      border: 3px solid var(--clr-navy);
+      padding: 12px 24px;
+      border-radius: 14px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 0px var(--clr-navy);
+      transition: transform 0.1s;
+    }
+
+    .btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0px var(--clr-navy);
+    }
+
+    .btn-attack {
+      background: var(--clr-red);
+      color: var(--clr-white);
+    }
+
+    .btn-next {
+      background: var(--clr-teal);
+      color: var(--clr-white);
+    }
+
+    .attack-select-box {
+      display: none;
+      gap: 8px;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .feedback {
+      font-size: 1.3rem;
+      font-weight: 800;
+      min-height: 30px;
+      text-align: center;
+    }
+
+    .svg-icon {
+      width: 24px;
+      height: 24px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-banner">
+    <!-- Castle SVG -->
+    <svg viewBox="0 0 24 24"><path d="M2 22h20v-2h-1v-6h1v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2H9v-2H7v2H5v-2H3v2h1v6H3v2zm4-6h2v4H6v-4zm10 0h2v4h-2v-4zm-5-3h2v7h-2v-7zM2 9h4V4H5v2H4V4H3v2H2V4zm7 0h2V4h-1v2h-1V4H9v2H8V4zm7 0h2V4h-1v2h-1V4h-1v2h-1V4z"/></svg>
+    <h1>Castle Command</h1>
+  </div>
+
+  <!-- Top HP Tracker -->
+  <div class="hp-tracker" id="hpTracker"></div>
+
+  <div class="main-card">
+    <!-- Rules Screen -->
+    <div class="rules-screen" id="rulesScreen">
+      <h2>🏰 Guidelines & Battle Rules</h2>
+      <div class="rules-list">
+        <ul>
+          <li><strong>Gameplay:</strong> Teams take turns completing the imperative prompt.</li>
+          <li><strong>LP Conversion:</strong> HP lost will be converted into LP lost divided by 2.</li>
+          <li><strong>Typing Rules:</strong> Capitalization, extra spaces, and basic punctuation (like <code>!</code> or <code>.</code>) are ignored. <strong>Exact spelling is required!</strong></li>
+          <li><strong>Wrong Answer:</strong> Penalizes the active team by <strong>-1 HP</strong>.</li>
+          <li><strong>Correct Answer:</strong> Gives your team a choice:
+            <ul>
+              <li>🛠️ <strong>Repair:</strong> Restore <strong>+1 HP</strong> (Uncapped).</li>
+              <li>⚔️ <strong>Attack:</strong> Deduct <strong>-2 HP</strong> from any rival team.</li>
+            </ul>
+          </li>
+          <li>Clicking <strong>"Next Question"</strong> automatically rotates turns to the next team. You can also click any team's card at the top to set their turn manually.</li>
+        </ul>
+      </div>
+
+      <div class="team-select-box">
+        <span>Select Number of Teams:</span>
+        <button class="select-btn" onclick="setTeamCount(3)">3 Teams</button>
+        <button class="select-btn selected" onclick="setTeamCount(4)">4 Teams</button>
+        <button class="select-btn" onclick="setTeamCount(5)">5 Teams</button>
+      </div>
+
+      <button class="btn" style="margin-top: 15px; font-size: 1.3rem;" onclick="startGame()">🏰 Start Battle!</button>
+    </div>
+
+    <!-- Game Screen -->
+    <div class="game-screen" id="gameScreen">
+      <div class="quiz-box">
+        <span style="font-weight:bold; color:var(--clr-navy);" id="quizNumber">Question 1/20</span>
+        <div class="quiz-clues" id="quizClues"></div>
+        <p style="margin: 5px 0 15px 0; font-size:0.95rem; opacity:0.8;">Type the complete imperative sentence below:</p>
+        <input type="text" id="answerInput" class="input-box" placeholder="Type answer here..." autocomplete="off">
+      </div>
+
+      <div class="feedback" id="feedbackText"></div>
+
+      <!-- Action Panel for Correct Answers -->
+      <div class="action-panel" id="actionPanel">
+        <button class="btn" onclick="applyRepair()">🛠️ Repair (+1 HP)</button>
+        <button class="btn btn-attack" onclick="showAttackOptions()">⚔️ Attack (-2 HP)</button>
+      </div>
+
+      <!-- Target Selection for Attack -->
+      <div class="attack-select-box" id="attackSelectBox">
+        <span>Select target:</span>
+        <div id="attackTargetsGroup" style="display:flex; gap:6px;"></div>
+      </div>
+
+      <div style="width:100%; display:flex; justify-content:space-between; margin-top:15px;">
+        <button class="btn" style="background:var(--clr-bg);" onclick="submitAnswer()">Check Answer</button>
+        <button class="btn btn-next" onclick="nextTurn()">Next Question ➡️</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 20 Auto-generated Imperative Quizzes
+    const quizData = [
+      { verb: "OPEN", emoji: "🚪", negative: false, target: "Open the door" },
+      { verb: "CLOSE", emoji: "📖", negative: false, target: "Close the book" },
+      { verb: "EAT", emoji: "🍕", negative: true, target: "Don't eat the pizza" },
+      { verb: "DRINK", emoji: "🥛", negative: false, target: "Drink the milk" },
+      { verb: "TOUCH", emoji: "🔥", negative: true, target: "Don't touch the fire" },
+      { verb: "LISTEN TO", emoji: "🎧", negative: false, target: "Listen to the music" },
+      { verb: "RUN IN", emoji: "🏫", negative: true, target: "Don't run in the hallway" },
+      { verb: "TURN ON", emoji: "💡", negative: false, target: "Turn on the light" },
+      { verb: "SHOUT IN", emoji: "📚", negative: true, target: "Don't shout in the library" },
+      { verb: "WASH", emoji: "🧼", negative: false, target: "Wash your hands" },
+      { verb: "FEED", emoji: "🐕", negative: false, target: "Feed the dog" },
+      { verb: "LITTER ON", emoji: "🚯", negative: true, target: "Don't litter on the floor" },
+      { verb: "CLEAN", emoji: "🧹", negative: false, target: "Clean your room" },
+      { verb: "PARK", emoji: "🚗", negative: true, target: "Don't park the car" },
+      { verb: "WRITE ON", emoji: "🧱", negative: true, target: "Don't write on the wall" },
+      { verb: "SIT ON", emoji: "🪑", negative: false, target: "Sit on the chair" },
+      { verb: "TALK DURING", emoji: "🤫", negative: true, target: "Don't talk during the test" },
+      { verb: "RAISE", emoji: "✋", negative: false, target: "Raise your hand" },
+      { verb: "FORGET", emoji: "🎒", negative: true, target: "Don't forget your bag" },
+      { verb: "TAKE", emoji: "📸", negative: false, target: "Take a photo" }
+    ];
+
+    let teamCount = 4;
+    let teams = [];
+    let currentTeamIdx = 0;
+    let currentQuizIdx = 0;
+    let actionTaken = false;
+
+    function setTeamCount(count) {
+      teamCount = count;
+      document.querySelectorAll('.select-btn').forEach((btn, idx) => {
+        btn.classList.toggle('selected', idx + 3 === count);
+      });
+    }
+
+    function startGame() {
+      teams = [];
+      for (let i = 1; i <= teamCount; i++) {
+        teams.push({ id: i - 1, name: `Team ${i}`, hp: 20 });
+      }
+
+      document.getElementById('rulesScreen').style.display = 'none';
+      document.getElementById('gameScreen').style.display = 'flex';
+      
+      renderTracker();
+      loadQuiz();
+    }
+
+    function renderTracker() {
+      const tracker = document.getElementById('hpTracker');
+      tracker.innerHTML = '';
+
+      teams.forEach((team, idx) => {
+        const card = document.createElement('div');
+        card.className = `team-card ${idx === currentTeamIdx ? 'active' : ''}`;
+        card.onclick = () => selectTurn(idx);
+
+        card.innerHTML = `
+          <div class="active-badge">ACTIVE</div>
+          <div class="team-name">${team.name}</div>
+          <div class="team-hp">❤️ ${team.hp}</div>
+        `;
+        tracker.appendChild(card);
+      });
+    }
+
+    function selectTurn(idx) {
+      currentTeamIdx = idx;
+      actionTaken = false;
+      document.getElementById('actionPanel').style.display = 'none';
+      document.getElementById('attackSelectBox').style.display = 'none';
+      document.getElementById('feedbackText').innerText = '';
+      renderTracker();
+    }
+
+    function loadQuiz() {
+      const quiz = quizData[currentQuizIdx];
+      document.getElementById('quizNumber').innerText = `Question ${currentQuizIdx + 1}/${quizData.length}`;
+      
+      const cluesBox = document.getElementById('quizClues');
+      cluesBox.innerHTML = `
+        <span>${quiz.verb}</span>
+        <span style="font-size:3rem;">${quiz.emoji}</span>
+        ${quiz.negative ? '<span style="font-size:2.5rem;">🚫</span>' : ''}
+      `;
+
+      const input = document.getElementById('answerInput');
+      input.value = '';
+      input.disabled = false;
+      document.getElementById('feedbackText').innerText = '';
+      document.getElementById('actionPanel').style.display = 'none';
+      document.getElementById('attackSelectBox').style.display = 'none';
+      actionTaken = false;
+    }
+
+    function cleanString(str) {
+      return str.toLowerCase().replace(/[^a-z0-9]/g, '');
+    }
+
+    function submitAnswer() {
+      if (actionTaken) return;
+
+      const inputVal = document.getElementById('answerInput').value;
+      const targetVal = quizData[currentQuizIdx].target;
+
+      if (cleanString(inputVal) === cleanString(targetVal)) {
+        document.getElementById('feedbackText').innerHTML = `🎯 <span style="color:var(--clr-green);">CORRECT! Choose an action:</span>`;
+        document.getElementById('actionPanel').style.display = 'flex';
+        document.getElementById('answerInput').disabled = true;
+      } else {
+        teams[currentTeamIdx].hp = Math.max(0, teams[currentTeamIdx].hp - 1);
+        document.getElementById('feedbackText').innerHTML = `❌ <span style="color:var(--clr-red);">INCORRECT (-1 HP)! Correct: "${targetVal}"</span>`;
+        renderTracker();
+      }
+    }
+
+    function applyRepair() {
+      if (actionTaken) return;
+      teams[currentTeamIdx].hp += 1;
+      actionTaken = true;
+      document.getElementById('feedbackText').innerHTML = `🛠️ <span style="color:var(--clr-green);">${teams[currentTeamIdx].name} repaired +1 HP!</span>`;
+      document.getElementById('actionPanel').style.display = 'none';
+      renderTracker();
+    }
+
+    function showAttackOptions() {
+      const box = document.getElementById('attackSelectBox');
+      const group = document.getElementById('attackTargetsGroup');
+      group.innerHTML = '';
+
+      teams.forEach((t, idx) => {
+        if (idx !== currentTeamIdx) {
+          const btn = document.createElement('button');
+          btn.className = 'select-btn';
+          btn.style.background = 'var(--clr-red)';
+          btn.style.color = '#fff';
+          btn.innerText = t.name;
+          btn.onclick = () => executeAttack(idx);
+          group.appendChild(btn);
+        }
+      });
+
+      box.style.display = 'flex';
+    }
+
+    function executeAttack(targetIdx) {
+      if (actionTaken) return;
+      teams[targetIdx].hp = Math.max(0, teams[targetIdx].hp - 2);
+      actionTaken = true;
+      document.getElementById('feedbackText').innerHTML = `⚔️ <span style="color:var(--clr-red);">${teams[currentTeamIdx].name} attacked ${teams[targetIdx].name} (-2 HP)!</span>`;
+      document.getElementById('actionPanel').style.display = 'none';
+      document.getElementById('attackSelectBox').style.display = 'none';
+      renderTracker();
+    }
+
+    function nextTurn() {
+      currentQuizIdx = (currentQuizIdx + 1) % quizData.length;
+      currentTeamIdx = (currentTeamIdx + 1) % teams.length;
+      renderTracker();
+      loadQuiz();
+    }
+
+    // Allow Enter key to submit
+    document.getElementById('answerInput').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        submitAnswer();
+      }
+    });
+  </script>
+</body>
+</html>

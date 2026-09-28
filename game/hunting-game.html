@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Future Tense Hunting Game</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --accent: #38bdf8;
+      --text: #f8fafc;
+      --danger: #ef4444;
+      --gold: #f59e0b;
+      --success: #22c55e;
+      --border: #334155;
+    }
+
+    * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+
+    body {
+      margin: 0;
+      padding: 15px;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Top Status Bar */
+    .status-bar {
+      background: #020617;
+      border: 1px solid var(--border);
+      padding: 10px 16px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .player-tag { color: var(--gold); font-weight: bold; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+
+    .timer-badge {
+      background: var(--card-bg);
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    .timer-badge.warning { border-color: var(--danger); color: var(--danger); animation: pulse 0.8s infinite; }
+
+    /* Main Container Grid */
+    .game-layout {
+      display: flex;
+      gap: 15px;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Left: 40 Question Slots Grid */
+    .slots-panel {
+      width: 280px;
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .slots-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .slot-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.85rem;
+      aspect-ratio: 1;
+      color: #94a3b8;
+    }
+
+    .slot-box.active { border: 2px solid var(--accent); color: var(--accent); background: #1e293b; }
+    .slot-box.perfect { background: #14532d; color: #4ade80; border-color: var(--success); }
+    .slot-box.half-loss { background: #713f12; color: #fde047; border-color: var(--gold); }
+    .slot-box.full-loss { background: #7f1d1d; color: #fca5a5; border-color: var(--danger); }
+
+    /* Right: Question Workbench */
+    .quiz-panel {
+      flex: 1;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      overflow-y: auto;
+    }
+
+    .question-block {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 15px;
+    }
+
+    .question-title {
+      font-size: 0.85rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .option-btn {
+      background: #1e293b;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: left;
+      font-size: 0.9rem;
+      transition: all 0.15s;
+    }
+
+    .option-btn:hover { border-color: var(--accent); background: #334155; }
+    .option-btn.selected { border-color: var(--gold); background: #451a03; color: var(--gold); }
+
+    .action-bar {
+      margin-top: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+    .btn-main { background: var(--accent); color: #000; }
+    .btn-early { background: var(--gold); color: #000; }
+
+    /* End Screen Overlay */
+    .summary-screen {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.95);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      text-align: center;
+      z-index: 10;
+    }
+
+    .summary-list {
+      max-height: 250px;
+      overflow-y: auto;
+      width: 100%;
+      max-width: 500px;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      margin: 15px 0;
+      text-align: left;
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 10px;
+      border-bottom: 1px solid #1e293b;
+      font-size: 0.9rem;
+    }
+
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+  </style>
+</head>
+<body>
+
+  <!-- Top Status Bar -->
+  <div class="status-bar">
+    <div class="player-tag">
+      🎯 Target #<span id="targetNumber">1</span>: 
+      <span id="displayStudentName">Loading...</span>
+    </div>
+    <div id="timerDisplay" class="timer-badge">⏱️ 45s</div>
+    <div>Question <span id="currentPairNum" style="color:var(--accent);">1</span> / 40</div>
+  </div>
+
+  <div class="game-layout">
+    <!-- Left: 40 Question Slots Tracker -->
+    <div class="slots-panel">
+      <div style="font-weight:bold; font-size:0.9rem; color:#94a3b8;">Target List (40 Slots)</div>
+      <div id="slotsGrid" class="slots-grid"></div>
+      <div style="font-size:0.75rem; color:#64748b; display:flex; gap:6px; flex-wrap:wrap; margin-top:5px;">
+        <span style="color:#4ade80;">■ Safe (0 LP)</span>
+        <span style="color:#fde047;">■ -1 LP</span>
+        <span style="color:#fca5a5;">■ -2 LP</span>
+      </div>
+    </div>
+
+    <!-- Right: Questions Panel -->
+    <div class="quiz-panel">
+      <!-- Part 1: Clue Deduction -->
+      <div class="question-block">
+        <div class="question-title">Part 1: Clue Deduction</div>
+        <div id="clueText" style="font-size:1.05rem; margin-bottom:10px;">Loading clues...</div>
+        <div id="clueOptions" class="options-grid"></div>
+      </div>
+
+      <!-- Part 2: Valid/Invalid Check -->
+      <div class="question-block">
+        <div class="question-title">Part 2: Structure Validation</div>
+        <div id="validText" style="font-size:1.05rem; margin-bottom:10px;">Loading structure...</div>
+        <div id="validOptions" class="options-grid"></div>
+      </div>
+
+      <div class="action-bar">
+        <button class="btn btn-early" onclick="finishEarly()">Finish Game Early</button>
+        <div id="feedbackText" style="font-weight:bold; color:var(--gold);">Select answers for both questions.</div>
+        <button id="nextBtn" class="btn btn-main" onclick="submitPair()">Submit Pair</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- End Game Modal -->
+  <div id="summaryModal" class="summary-screen">
+    <h1 style="color:var(--accent); margin-bottom:5px;">Hunt Complete!</h1>
+    <h3 style="color:var(--gold); margin-top:0;">Target Results Summary</h3>
+    
+    <div class="summary-list" id="summaryList"></div>
+
+    <div style="background:#1e293b; padding:15px; border-radius:12px; border:1px solid #334155; margin-bottom:15px; width:100%; max-width:500px;">
+      <p style="margin:5px 0;">Total Questions Processed: <strong id="summaryProcessed">0</strong> / 40</p>
+      <p style="margin:5px 0;">Gold Earned (Perfect Answers): <strong id="summaryGold" style="color:var(--gold);">+0 Gold</strong></p>
+    </div>
+
+    <button class="btn btn-main" onclick="finishAndSync()">Apply Rewards/Losses & Return to Hub</button>
+  </div>
+
+  <script>
+    // 40 QUESTION PAIRS
+    const QUESTION_PAIRS = [
+      { clue: "Clues: Dark clouds ☁️ | Sudden thunder 🌩️", clueOpts: ["It will rain soon.", "It rained yesterday.", "It is going to rain soon.", "It rains every day."], clueAns: 2, valid: "Sentence: 'Look at those clouds! It will to rain.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 1 },
+      { clue: "Clues: Flight ticket booked ✈️ | Monday departure", clueOpts: ["They will fly on Monday.", "They are going to fly on Monday.", "They fly tomorrow.", "They flew on Monday."], clueAns: 1, valid: "Sentence: 'She is going to visit her grandmother tomorrow.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 0 },
+      { clue: "Clues: Phone ringing 🔔 | Run to answer", clueOpts: ["I am going to answer it.", "I will answer it.", "I answered it.", "I answer it."], clueAns: 1, valid: "Sentence: 'He will goes to the store later.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 1 },
+      { clue: "Clues: Packed luggage 🧳 | Hotel reservation confirmed", clueOpts: ["We will travel next week.", "We are going to travel next week.", "We traveled last week.", "We travel now."], clueAns: 1, valid: "Sentence: 'They are going play soccer after school.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 1 },
+      { clue: "Clues: Knock on door 🚪 | Instant offer", clueOpts: ["I will open it.", "I am going to open it.", "I opened it.", "I open it."], clueAns: 0, valid: "Sentence: 'I will help you with your homework.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 0 },
+      { clue: "Clues: Heavy studying 📚 | Exam scheduled tomorrow", clueOpts: ["She is going to take an exam.", "She will take an exam.", "She took an exam.", "She takes an exam."], clueAns: 0, valid: "Sentence: 'Will you coming to the party tonight?'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 1 },
+      { clue: "Clues: Dropped pencil ✏️ | Immediate help offer", clueOpts: ["I am going to pick it up for you.", "I will pick it up for you.", "I picked it up.", "I pick it up."], clueAns: 1, valid: "Sentence: 'We will be late if we don't hurry.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 0 },
+      { clue: "Clues: Doctor appointment card 🩺 | Scheduled 3 PM", clueOpts: ["He will see the doctor at 3 PM.", "He sees the doctor at 3 PM.", "He saw the doctor.", "He is going to see the doctor at 3 PM."], clueAns: 3, valid: "Sentence: 'She is go to start piano lessons.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 1 },
+      { clue: "Clues: Empty fridge 🛒 | Decision made right now", clueOpts: ["I will buy some milk.", "I am going to buy some milk.", "I bought some milk.", "I buy some milk."], clueAns: 0, valid: "Sentence: 'They won't attend the meeting tomorrow.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 0 },
+      { clue: "Clues: Birthday party invitation design 🎈 | Date: Saturday", clueOpts: ["She will throw a party on Saturday.", "She is going to throw a party on Saturday.", "She threw a party.", "She throws a party."], clueAns: 1, valid: "Sentence: 'I think it will raining later.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 1 },
+      { clue: "Clues: Heavy rain 🌧️ | Puddles everywhere", clueOpts: ["He will get wet without an umbrella.", "He is going to get wet without an umbrella.", "He got wet.", "He gets wet."], clueAns: 1, valid: "Sentence: 'What are you going to do this weekend?'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 0 },
+      { clue: "Clues: Waiter taking order 🍽️ | Immediate choice", clueOpts: ["I am going to have the soup.", "I will have the soup.", "I had the soup.", "I have the soup."], clueAns: 1, valid: "Sentence: 'He is going to not play football.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 1 },
+      { clue: "Clues: Marathon runner training daily 🏃 | Race on Sunday", clueOpts: ["He will run the race.", "He is going to run the race.", "He ran the race.", "He runs the race."], clueAns: 1, valid: "Sentence: 'We will visit our grandparents next month.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 0 },
+      { clue: "Clues: Heavy box dropped 📦 | Friend steps in", clueOpts: ["I am going to carry that for you.", "I will carry that for you.", "I carried that.", "I carry that."], clueAns: 1, valid: "Sentence: 'Are they going to buying a new car?'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 1 },
+      { clue: "Clues: Recipe opened on table 🥣 | Ingredients ready", clueOpts: ["She is going to bake a cake.", "She will bake a cake.", "She baked a cake.", "She bakes a cake."], clueAns: 0, valid: "Sentence: 'I won't be able to come tomorrow.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 0 },
+      { clue: "Clues: Yawning student 😴 | Clock shows 11 PM", clueOpts: ["He will go to sleep.", "He is going to go to sleep.", "He went to sleep.", "He goes to sleep."], clueAns: 1, valid: "Sentence: 'Will she is going to come later?'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 1 },
+      { clue: "Clues: Flat tire on road 🚗 | Driver pulls out tools", clueOpts: ["He will change the tire.", "He is going to change the tire.", "He changed the tire.", "He changes the tire."], clueAns: 1, valid: "Sentence: 'I will call you when I arrive.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 0 },
+      { clue: "Clues: Someone drops books 📚 | Quick reaction", clueOpts: ["I am going to pick them up.", "I will pick them up.", "I picked them up.", "I pick them up."], clueAns: 1, valid: "Sentence: 'They are going to building a new school.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 1 },
+      { clue: "Clues: Concert ticket purchased 🎟️ | Venue ready", clueOpts: ["They will watch the concert.", "They watched the concert.", "They watch the concert.", "They are going to watch the concert."], clueAns: 3, valid: "Sentence: 'It is going to be a sunny day tomorrow.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 0 },
+      { clue: "Clues: Forgot wallet at home 💳 | Friend offers money", clueOpts: ["I am going to lend you 10 dollars.", "I lent you 10 dollars.", "I will lend you 10 dollars.", "I lend you 10 dollars."], clueAns: 2, valid: "Sentence: 'She will not going to eat fast food.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 1 },
+      { clue: "Clues: Alarm set for 6 AM ⏰ | Night time", clueOpts: ["She will wake up early tomorrow.", "She is going to wake up early tomorrow.", "She woke up early.", "She wakes up early."], clueAns: 1, valid: "Sentence: 'We are going to have lunch at 1 PM.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 0 },
+      { clue: "Clues: Teacher asks for a volunteer ✋ | Raised hand", clueOpts: ["I am going to do it.", "I will do it.", "I did it.", "I do it."], clueAns: 1, valid: "Sentence: 'He will writes an email tonight.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 1 },
+      { clue: "Clues: Paint bucket mixed 🎨 | Brushes washed", clueOpts: ["They will paint the wall.", "They are going to paint the wall.", "They painted the wall.", "They paint the wall."], clueAns: 1, valid: "Sentence: 'They aren't going to join us.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 0 },
+      { clue: "Clues: Sneeze sound heard 🤧 | Quick response", clueOpts: ["I am going to get you a tissue.", "I got you a tissue.", "I will get you a tissue.", "I get you a tissue."], clueAns: 2, valid: "Sentence: 'Is he going to clean his room?'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 0 },
+      { clue: "Clues: Cinema seat selected 🍿 | Movie starting", clueOpts: ["We will watch the film.", "We are going to watch the film.", "We watched the film.", "We watch the film."], clueAns: 1, valid: "Sentence: 'She will can help you tomorrow.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 1 },
+      { clue: "Clues: Crying child 😭 | Parent stepping in", clueOpts: ["I will comfort him.", "I am going to comfort him.", "I comforted him.", "I comfort him."], clueAns: 0, valid: "Sentence: 'I'll promise to arrive on time.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 0 },
+      { clue: "Clues: Car key in hand 🔑 | Walking to garage", clueOpts: ["He will drive to work.", "He is going to drive to work.", "He drove to work.", "He drives to work."], clueAns: 1, valid: "Sentence: 'Where will you going after class?'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 1 },
+      { clue: "Clues: Cold wind blowing 🌬️ | Immediate reaction", clueOpts: ["I am going to close the window.", "I will close the window.", "I closed the window.", "I close the window."], clueAns: 1, valid: "Sentence: 'We are going to study together.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 0 },
+      { clue: "Clues: Plant seeds planted 🌱 | Watering schedule", clueOpts: ["They will grow into flowers.", "They are going to grow into flowers.", "They grew.", "They grow."], clueAns: 1, valid: "Sentence: 'He won't to come to the lesson.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 1 },
+      { clue: "Clues: Order confirmed online 📦 | Delivery date set", clueOpts: ["The package will arrive tomorrow.", "The package is going to arrive tomorrow.", "The package arrived.", "The package arrives."], clueAns: 1, valid: "Sentence: 'Are you going to eat that sandwich?'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 0 },
+      { clue: "Clues: Heavy rain starting 🌧️ | Walking home", clueOpts: ["I am going to take a taxi.", "I will take a taxi.", "I took a taxi.", "I take a taxi."], clueAns: 1, valid: "Sentence: 'She is going finish her project tonight.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 1 },
+      { clue: "Clues: Uniform prepared 👕 | Alarm set for school", clueOpts: ["He will attend school tomorrow.", "He is going to attend school tomorrow.", "He attended school.", "He attends school."], clueAns: 1, valid: "Sentence: 'I will write to you every day.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 0 },
+      { clue: "Clues: Friend carries too many books 📚 | Quick offer", clueOpts: ["I am going to take half for you.", "I will take half for you.", "I took half.", "I take half."], clueAns: 1, valid: "Sentence: 'They will going to win the game.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 1 },
+      { clue: "Clues: Exam schedule posted 🗓️ | Final exam date", clueOpts: ["We will finish the semester next month.", "We are going to finish the semester next month.", "We finished.", "We finish."], clueAns: 1, valid: "Sentence: 'It isn't going to rain today.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 0 },
+      { clue: "Clues: Bell rings for recess 🔔 | Students stand up", clueOpts: ["They will play outside.", "They are going to play outside.", "They played outside.", "They play outside."], clueAns: 1, valid: "Sentence: 'Will they to visit the museum?'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 1 },
+      { clue: "Clues: Restaurant menu opened 🍽️ | Customer ready", clueOpts: ["I am going to order the pizza.", "I will order the pizza.", "I ordered the pizza.", "I order the pizza."], clueAns: 1, valid: "Sentence: 'I am going to learn Spanish next year.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 0 },
+      { clue: "Clues: Laptop charger plugged in 🔌 | Battery low", clueOpts: ["The laptop will charge now.", "The laptop is going to charge now.", "The laptop charged.", "The laptop charges."], clueAns: 1, valid: "Sentence: 'He is going to plays basketball.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 1 },
+      { clue: "Clues: Ticket counter queue 🎟️ | Next in line", clueOpts: ["She is going to buy a ticket.", "She will buy a ticket.", "She bought a ticket.", "She buys a ticket."], clueAns: 0, valid: "Sentence: 'They won't forget your help.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 0 },
+      { clue: "Clues: Sunset horizon 🌅 | Temperature dropping", clueOpts: ["It will get dark soon.", "It is going to get dark soon.", "It got dark.", "It gets dark."], clueAns: 1, valid: "Sentence: 'We will to meet at 5 PM.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 1 },
+      { clue: "Clues: Graduation cap fitted 🎓 | Final year student", clueOpts: ["She will graduate in June.", "She is going to graduate in June.", "She graduated.", "She graduates."], clueAns: 1, valid: "Sentence: 'I am going to meet my teacher tomorrow.'", validOpts: ["Valid Structure", "Invalid Structure"], validAns: 0 }
+    ];
+
+    // State Variables
+    let availableStudents = [];
+    let currentIndex = 0;
+    let selectedClue = null;
+    let selectedValid = null;
+    let timerInterval = null;
+    let timeLeft = 45;
+    let slotResults = new Array(40).fill(null);
+
+    window.onload = function() {
+      fetchStudentList();
+      renderSlotsGrid();
+      loadPair(0);
+    };
+
+    // Fetch and populate students list from parent hub
+    function fetchStudentList() {
+      try {
+        if (window.parent && window.parent.appData) {
+          const hubData = window.parent.appData;
+          const currentClass = hubData.currentClass || hubData.selectedClass;
+          const rawStudents = hubData.students ? hubData.students.filter(s => !currentClass || s.class === currentClass) : [];
+          if (rawStudents.length > 0) {
+            availableStudents = rawStudents;
+          }
+        }
+      } catch(e) {
+        console.warn("Using fallback/mock student list.");
+      }
+
+      // Fallback if no parent list is accessible: generate dummy students 1-40
+      if (availableStudents.length === 0) {
+        for (let i = 1; i <= 40; i++) {
+          availableStudents.push({ id: i, name: `Student ${i}`, nick: `Student ${i}` });
+        }
+      }
+    }
+
+    // Map question slot index directly to student in list (wraps around if under 40 students)
+    function getStudentForSlot(index) {
+      if (availableStudents.length === 0) return { id: index + 1, name: `Student ${index + 1}` };
+      return availableStudents[index % availableStudents.length];
+    }
+
+    // Render 40 slots grid
+    function renderSlotsGrid() {
+      const grid = document.getElementById('slotsGrid');
+      grid.innerHTML = '';
+      for (let i = 0; i < 40; i++) {
+        const box = document.createElement('div');
+        box.id = `slot-${i}`;
+        box.className = 'slot-box';
+        box.textContent = i + 1;
+        grid.appendChild(box);
+      }
+    }
+
+    // Load pair into UI
+    function loadPair(index) {
+      if (index >= 40) {
+        endGame();
+        return;
+      }
+
+      currentIndex = index;
+      selectedClue = null;
+      selectedValid = null;
+
+      const targetStudent = getStudentForSlot(index);
+      document.getElementById('targetNumber').textContent = index + 1;
+      document.getElementById('displayStudentName').textContent = targetStudent.nick || targetStudent.name;
+      document.getElementById('currentPairNum').textContent = index + 1;
+
+      // Update Active Slot Grid Highlight
+      for (let i = 0; i < 40; i++) {
+        const box = document.getElementById(`slot-${i}`);
+        if (box) {
+          if (i === index) box.classList.add('active');
+          else box.classList.remove('active');
+        }
+      }
+
+      const pair = QUESTION_PAIRS[index];
+
+      // Part 1
+      document.getElementById('clueText').textContent = pair.clue;
+      const clueBox = document.getElementById('clueOptions');
+      clueBox.innerHTML = '';
+      pair.clueOpts.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = opt;
+        btn.onclick = () => selectClueOption(idx, btn);
+        clueBox.appendChild(btn);
+      });
+
+      // Part 2
+      document.getElementById('validText').textContent = pair.valid;
+      const validBox = document.getElementById('validOptions');
+      validBox.innerHTML = '';
+      pair.validOpts.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = opt;
+        btn.onclick = () => selectValidOption(idx, btn);
+        validBox.appendChild(btn);
+      });
+
+      document.getElementById('feedbackText').textContent = "Select answers for both questions.";
+      document.getElementById('feedbackText').style.color = "var(--gold)";
+
+      startTimer();
+    }
+
+    function selectClueOption(idx, btnEl) {
+      selectedClue = idx;
+      document.querySelectorAll('#clueOptions .option-btn').forEach(b => b.classList.remove('selected'));
+      btnEl.classList.add('selected');
+    }
+
+    function selectValidOption(idx, btnEl) {
+      selectedValid = idx;
+      document.querySelectorAll('#validOptions .option-btn').forEach(b => b.classList.remove('selected'));
+      btnEl.classList.add('selected');
+    }
+
+    // 45 Second Timer per Pair
+    function startTimer() {
+      clearInterval(timerInterval);
+      timeLeft = 45;
+      updateTimerUI();
+
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerUI();
+
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          handleTimeOut();
+        }
+      }, 1000);
+    }
+
+    function updateTimerUI() {
+      const display = document.getElementById('timerDisplay');
+      display.textContent = `⏱️ ${timeLeft}s`;
+      if (timeLeft <= 10) display.classList.add('warning');
+      else display.classList.remove('warning');
+    }
+
+    function handleTimeOut() {
+      document.getElementById('feedbackText').textContent = "⏰ Time's up! Unanswered questions count as incorrect.";
+      document.getElementById('feedbackText').style.color = "var(--danger)";
+      evaluateAndAdvance();
+    }
+
+    function submitPair() {
+      if (selectedClue === null || selectedValid === null) {
+        alert("Please select an option for both questions before submitting!");
+        return;
+      }
+      clearInterval(timerInterval);
+      evaluateAndAdvance();
+    }
+
+    function evaluateAndAdvance() {
+      const pair = QUESTION_PAIRS[currentIndex];
+      let errors = 0;
+
+      if (selectedClue !== pair.clueAns) errors++;
+      if (selectedValid !== pair.validAns) errors++;
+
+      let status = 'perfect';
+      if (errors === 1) status = 'half-loss';
+      if (errors === 2) status = 'full-loss';
+
+      slotResults[currentIndex] = status;
+
+      // Update Slot Board Color
+      const slotBox = document.getElementById(`slot-${currentIndex}`);
+      if (slotBox) {
+        slotBox.classList.remove('active');
+        slotBox.classList.add(status);
+      }
+
+      setTimeout(() => {
+        loadPair(currentIndex + 1);
+      }, 400);
+    }
+
+    // Early termination option
+    function finishEarly() {
+      if (confirm("Are you sure you want to finish early? Processed questions will award gold/deduct LP immediately.")) {
+        // Evaluate current active question if player selected options
+        if (selectedClue !== null && selectedValid !== null) {
+          const pair = QUESTION_PAIRS[currentIndex];
+          let errors = 0;
+          if (selectedClue !== pair.clueAns) errors++;
+          if (selectedValid !== pair.validAns) errors++;
+          slotResults[currentIndex] = errors === 0 ? 'perfect' : (errors === 1 ? 'half-loss' : 'full-loss');
+        }
+        endGame();
+      }
+    }
+
+    // End Game Summary
+    function endGame() {
+      clearInterval(timerInterval);
+
+      const summaryList = document.getElementById('summaryList');
+      summaryList.innerHTML = '';
+
+      let processedCount = 0;
+      let totalGoldGained = 0;
+
+      // Generate per-student outcome calculations
+      slotResults.forEach((res, index) => {
+        if (!res) return; // Skip unreached questions if finished early
+
+        processedCount++;
+        const targetStudent = getStudentForSlot(index);
+        const stName = targetStudent.nick || targetStudent.name;
+
+        let lpDeduction = 0;
+        let outcomeLabel = '';
+        let colorStyle = '';
+
+        if (res === 'perfect') {
+          outcomeLabel = 'Safe (0 LP loss) + 5 Gold';
+          colorStyle = '#4ade80';
+          totalGoldGained += 5;
+        } else if (res === 'half-loss') {
+          outcomeLabel = '-1 LP';
+          colorStyle = '#fde047';
+          lpDeduction = 1;
+        } else if (res === 'full-loss') {
+          outcomeLabel = '-2 LP';
+          colorStyle = '#fca5a5';
+          lpDeduction = 2;
+        }
+
+        const item = document.createElement('div');
+        item.className = 'summary-item';
+        item.innerHTML = `
+          <span>#${index + 1} ${stName}</span>
+          <strong style="color:${colorStyle};">${outcomeLabel}</strong>
+        `;
+        summaryList.appendChild(item);
+      });
+
+      document.getElementById('summaryProcessed').textContent = processedCount;
+      document.getElementById('summaryGold').textContent = `+${totalGoldGained} Gold`;
+      document.getElementById('summaryModal').style.display = 'flex';
+    }
+
+    // Sync LP deductions and Gold awards to parent appData
+    function finishAndSync() {
+      let studentUpdates = {}; // { studentId: { lpDelta: 0, goldDelta: 0 } }
+
+      slotResults.forEach((res, index) => {
+        if (!res) return;
+
+        const targetStudent = getStudentForSlot(index);
+        const stId = targetStudent.id;
+
+        if (!studentUpdates[stId]) {
+          studentUpdates[stId] = { lpDelta: 0, goldDelta: 0 };
+        }
+
+        if (res === 'perfect') {
+          studentUpdates[stId].goldDelta += 5;
+        } else if (res === 'half-loss') {
+          studentUpdates[stId].lpDelta -= 1;
+        } else if (res === 'full-loss') {
+          studentUpdates[stId].lpDelta -= 2;
+        }
+      });
+
+      // Send to Parent Dashboard
+      try {
+        if (window.parent && window.parent.appData) {
+          const allStudents = window.parent.appData.students || [];
+
+          Object.keys(studentUpdates).forEach(id => {
+            const update = studentUpdates[id];
+            const target = allStudents.find(s => s.id == id);
+            if (target) {
+              if (update.lpDelta !== 0) {
+                target.lp = Math.max(0, (target.lp || 0) + update.lpDelta);
+              }
+              if (update.goldDelta !== 0) {
+                target.gold = (target.gold || 0) + update.goldDelta;
+              }
+            }
+          });
+
+          // Trigger hub UI refresh if helper functions exist
+          if (typeof window.parent.saveData === 'function') window.parent.saveData();
+          if (typeof window.parent.renderStudents === 'function') window.parent.renderStudents();
+        }
+      } catch(e) {
+        console.warn("Direct hub sync failed. Trying window message fallback.");
+      }
+
+      // PostMessage Fallback
+      try {
+        window.parent.postMessage({
+          type: 'GAME_BATCH_SYNC',
+          updates: studentUpdates
+        }, '*');
+      } catch(e) {}
+
+      alert("All LP deductions and Gold rewards have been applied!");
+
+      // Return to Hub
+      try {
+        if (window.parent && typeof window.parent.closeGame === 'function') {
+          window.parent.closeGame();
+        } else if (window.parent && typeof window.parent.closeModal === 'function') {
+          window.parent.closeModal();
+        } else {
+          window.location.reload();
+        }
+      } catch(e) {
+        window.location.reload();
+      }
+    }
+  </script>
+</body>
+</html>

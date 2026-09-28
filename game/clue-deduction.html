@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pronouns Clue Deduction Game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700;800&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --accent: #38bdf8;
+      --text: #f8fafc;
+      --danger: #ef4444;
+      --gold: #f59e0b;
+      --success: #22c55e;
+      --font-header: 'Bebas Neue', sans-serif;
+      --font-nav: 'Montserrat', sans-serif;
+      --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* HEADER */
+    header {
+      background: #020617;
+      padding: 6px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #334155;
+      height: 55px;
+      flex-shrink: 0;
+      width: 100%;
+    }
+
+    .game-title {
+      font-family: var(--font-header);
+      font-size: 2rem;
+      color: var(--accent);
+      letter-spacing: 1.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-header {
+      font-family: var(--font-header);
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+      padding: 5px 14px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.1s, opacity 0.2s;
+    }
+    .btn-header:hover { opacity: 0.9; transform: scale(1.02); }
+    .btn-gold { background: var(--gold); color: #000; }
+    .btn-main { background: var(--accent); color: #000; }
+    .btn-danger { background: var(--danger); color: #fff; }
+
+    /* SETUP SCREEN & RULES OVERLAY */
+    #setupScreen {
+      position: absolute;
+      inset: 0;
+      background: #020617;
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .setup-card {
+      background: var(--card-bg);
+      border: 2px solid var(--accent);
+      border-radius: 16px;
+      padding: 20px 26px;
+      width: 600px;
+      max-width: 95vw;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      text-align: center;
+    }
+
+    .setup-card h2 {
+      font-family: var(--font-header);
+      font-size: 2.5rem;
+      color: var(--accent);
+      margin: 0 0 8px 0;
+      letter-spacing: 1.5px;
+    }
+
+    .rules-box {
+      background: #020617;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 14px;
+      text-align: left;
+      margin: 12px 0;
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .rules-box h3 {
+      font-family: var(--font-header);
+      color: var(--gold);
+      margin: 0 0 6px 0;
+      font-size: 1.4rem;
+      letter-spacing: 1px;
+    }
+
+    .rules-list {
+      margin: 0;
+      padding-left: 18px;
+      color: #cbd5e1;
+    }
+
+    .rules-list li {
+      margin-bottom: 5px;
+    }
+
+    .team-select-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 12px 0;
+    }
+
+    .team-select-group label {
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .team-select-group select {
+      font-family: var(--font-header);
+      font-size: 1.3rem;
+      padding: 3px 12px;
+      background: #0f172a;
+      color: var(--gold);
+      border: 2px solid var(--gold);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* FULL WIDTH FLEX WORKSPACE */
+    .game-workspace {
+      flex: 1;
+      display: flex;
+      width: 100%;
+      height: calc(100vh - 55px);
+      overflow: hidden;
+    }
+
+    /* RESIZED LEFT TEAMS PANEL (3/4 SIZE: ~18% WIDTH) */
+    .teams-panel {
+      width: 18%;
+      min-width: 200px;
+      max-width: 240px;
+      background: #020617;
+      border-right: 2px solid #334155;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow-y: auto;
+    }
+
+    .panel-header {
+      font-family: var(--font-header);
+      font-size: 1.4rem;
+      color: var(--accent);
+      letter-spacing: 1px;
+      margin: 0 0 2px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .team-card {
+      background: var(--card-bg);
+      border: 2px solid #334155;
+      border-radius: 10px;
+      padding: 8px 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .team-card.active-turn {
+      border-color: var(--accent);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+      background: #1e293b;
+    }
+
+    .team-card.active-turn::before {
+      content: "▶ TURN";
+      position: absolute;
+      top: -8px;
+      right: 8px;
+      background: var(--accent);
+      color: #000;
+      font-family: var(--font-header);
+      font-size: 0.75rem;
+      padding: 1px 6px;
+      border-radius: 3px;
+      letter-spacing: 0.8px;
+    }
+
+    .team-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .team-name-input {
+      font-family: var(--font-nav);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      background: transparent;
+      border: none;
+      border-bottom: 1px dashed #64748b;
+      width: 95px;
+      padding: 1px 2px;
+    }
+    .team-name-input:focus {
+      outline: none;
+      border-bottom-color: var(--accent);
+      background: #0f172a;
+    }
+
+    .team-score-num {
+      font-family: var(--font-header);
+      font-size: 1.25rem;
+      color: var(--gold);
+      letter-spacing: 0.8px;
+    }
+
+    /* HORIZONTAL BATTERY (10 BOXES WITH PENALTY RED SUPPORT) */
+    .battery-container {
+      width: 100%;
+      height: 20px;
+      background: #0f172a;
+      border: 1.5px solid #475569;
+      border-radius: 4px;
+      padding: 2px;
+      display: flex;
+      gap: 2px;
+      position: relative;
+    }
+
+    .battery-container::after {
+      content: "";
+      position: absolute;
+      right: -6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 9px;
+      background: #475569;
+      border-radius: 0 2px 2px 0;
+    }
+
+    .battery-box {
+      flex: 1;
+      height: 100%;
+      background: #334155;
+      border-radius: 2px;
+      transition: background 0.2s;
+    }
+
+    .battery-box.filled {
+      background: var(--success);
+      box-shadow: 0 0 5px rgba(34, 197, 94, 0.4);
+    }
+
+    .battery-box.penalty {
+      background: var(--danger) !important;
+      box-shadow: 0 0 5px rgba(239, 68, 68, 0.5);
+    }
+
+    .team-controls {
+      display: flex;
+      gap: 4px;
+      margin-top: 5px;
+    }
+
+    .btn-score {
+      font-family: var(--font-nav);
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 2px 5px;
+      border-radius: 3px;
+      border: none;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    /* RIGHT QUIZ CANVAS */
+    .quiz-workspace {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 14px 20px;
+      overflow-y: auto;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .quiz-progress-bar-container {
+      width: 100%;
+      background: #020617;
+      border: 1px solid #334155;
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .quiz-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      width: 2%;
+      transition: width 0.3s ease;
+    }
+
+    .question-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .question-counter {
+      font-family: var(--font-header);
+      font-size: 1.6rem;
+      color: var(--accent);
+      letter-spacing: 1px;
+    }
+
+    .target-pronoun-tag {
+      background: #1e293b;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 3px 10px;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* VISUAL CLUES CANVAS (UPSCALED IMAGES) */
+    .clue-canvas {
+      background: #020617;
+      border: 2px solid #334155;
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      min-height: 350px;
+      flex-shrink: 0;
+      width: 100%;
+    }
+
+    /* Single clue image display (320px x 320px) */
+    .clue-img-single {
+      width: 320px;
+      height: 320px;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 16px;
+      border: 4px solid var(--accent);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+      background: #1e293b;
+    }
+
+    /* Multi-part clue image display (UPSCALED TO 250px) */
+    .clue-img-multi {
+      width: 250px;
+      height: 250px;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 3.5px solid var(--accent);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+      background: #1e293b;
+    }
+
+    .clue-icon {
+      font-size: 5.5rem;
+      line-height: 1;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+    }
+
+    .clue-verb {
+      font-family: var(--font-header);
+      font-size: 3.2rem;
+      color: var(--gold);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: #1e293b;
+      padding: 6px 18px;
+      border-radius: 10px;
+      border: 2px dashed var(--gold);
+    }
+
+    .clue-plus-sign {
+      font-family: var(--font-header);
+      font-size: 3.8rem;
+      color: #64748b;
+    }
+
+    /* MULTIPLE CHOICE OPTIONS GRID */
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    .option-btn {
+      font-family: var(--font-nav);
+      font-size: 1.35rem;
+      font-weight: 700;
+      padding: 14px 18px;
+      background: var(--card-bg);
+      color: #f8fafc;
+      border: 2px solid #334155;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--accent);
+      background: #0f172a;
+      transform: translateY(-2px);
+    }
+
+    .option-btn.correct {
+      background: #15803d !important;
+      border-color: var(--success) !important;
+      color: #fff !important;
+    }
+
+    .option-btn.incorrect {
+      background: #991b1b !important;
+      border-color: var(--danger) !important;
+      color: #fff !important;
+      opacity: 0.7;
+    }
+
+    .option-badge {
+      font-family: var(--font-header);
+      background: #020617;
+      color: var(--accent);
+      font-size: 1.2rem;
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #334155;
+    }
+
+    /* FOOTER / FEEDBACK */
+    .quiz-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 35px;
+      margin-top: auto;
+    }
+
+    .feedback-text {
+      font-family: var(--font-header);
+      font-size: 1.6rem;
+      letter-spacing: 1px;
+    }
+    .feedback-text.success { color: var(--success); }
+    .feedback-text.error { color: var(--danger); }
+
+    /* END GAME MODAL */
+    .modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.92);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .end-card {
+      background: var(--card-bg);
+      border: 3px solid var(--gold);
+      border-radius: 20px;
+      padding: 30px 40px;
+      width: 520px;
+      max-width: 90vw;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.9);
+    }
+
+    .end-card h2 {
+      font-family: var(--font-header);
+      font-size: 3rem;
+      color: var(--gold);
+      margin: 0 0 10px 0;
+      letter-spacing: 2px;
+    }
+
+    .winner-box {
+      background: #020617;
+      border: 2px solid var(--accent);
+      border-radius: 12px;
+      padding: 16px;
+      margin: 20px 0;
+    }
+
+    .winner-team-name {
+      font-family: var(--font-header);
+      font-size: 2.2rem;
+      color: var(--accent);
+    }
+
+    .winner-score {
+      font-size: 1.2rem;
+      color: var(--gold);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SETUP OVERLAY SCREEN & GAME GUIDE -->
+  <div id="setupScreen">
+    <div class="setup-card">
+      <h2>🔍 PRONOUNS CLUE DEDUCTION</h2>
+      
+      <div class="rules-box">
+        <h3>📖 How to Play & Pronoun Key Rules</h3>
+        <ul class="rules-list">
+          <li>📸 <strong>Pic + Icon</strong> &rightarrow; <em>Pronoun + Item</em> (e.g., <code>"Her backpack"</code>)</li>
+          <li>🎒 + <strong>Pic</strong> &rightarrow; <em>Item + Pronoun</em> (e.g., <code>"The backpack is hers"</code>)</li>
+          <li>🗣️ <strong>[VERB] + Icon + Pic</strong> &rightarrow; <em>Action + Object Pronoun</em> (e.g., <code>"Give her"</code>)</li>
+          <li>📸 <strong>Solo / Multi Pic</strong> &rightarrow; <em>Subject Pronoun</em> (e.g., <code>"He"</code>, <code>"She"</code>, <code>"They"</code>)</li>
+          <li>⚡ <strong>Scoring:</strong> Correct answer = <strong>+1 Green Battery Box</strong>. Wrong answer = <strong>Red Penalty Segment</strong>.</li>
+          <li>🔄 <strong>Turn Cycling:</strong> Turns rotate automatically to the next team after each question.</li>
+        </ul>
+      </div>
+
+      <div class="team-select-group">
+        <label for="teamCountSelect">Select Teams:</label>
+        <select id="teamCountSelect">
+          <option value="2">2 Teams</option>
+          <option value="3">3 Teams</option>
+          <option value="4" selected>4 Teams</option>
+          <option value="5">5 Teams</option>
+          <option value="6">6 Teams</option>
+        </select>
+      </div>
+
+      <button class="btn-header btn-gold" style="font-size: 1.4rem; width: 100%; padding: 10px;" onclick="startGame()">
+        🚀 START GAME
+      </button>
+    </div>
+  </div>
+
+  <!-- GAME HEADER -->
+  <header>
+    <div class="game-title">
+      <span>🔍 PRONOUNS DEDUCTION</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn-header btn-danger" onclick="endGameEarly()">⏹️ END GAME</button>
+      <button id="nextBtn" class="btn-header btn-gold" onclick="nextQuestion()" disabled>
+        NEXT QUESTION ▶
+      </button>
+    </div>
+  </header>
+
+  <!-- DYNAMIC WORKSPACE -->
+  <div class="game-workspace">
+    
+    <!-- RESIZED LEFT TEAMS PANEL (~18% WIDTH) -->
+    <div class="teams-panel">
+      <div class="panel-header">
+        <span>TEAMS</span>
+        <small style="font-size: 0.75rem; color: #64748b; font-family: var(--font-body);">10-BOX BATTERY</small>
+      </div>
+      <div id="teamsList" style="display: flex; flex-direction: column; gap: 8px;"></div>
+    </div>
+
+    <!-- RIGHT: QUIZ CANVAS -->
+    <div class="quiz-workspace">
+      
+      <!-- PROGRESS BAR -->
+      <div class="quiz-progress-bar-container">
+        <div id="quizProgressFill" class="quiz-progress-fill"></div>
+      </div>
+
+      <div class="question-header-row">
+        <div id="questionCounter" class="question-counter">QUESTION 1 / 50</div>
+        <div id="pronounCategoryTag" class="target-pronoun-tag">SUBJECT PRONOUN</div>
+      </div>
+
+      <!-- VISUAL CLUES CANVAS -->
+      <div id="clueCanvas" class="clue-canvas"></div>
+
+      <!-- MULTIPLE CHOICE OPTIONS GRID -->
+      <div id="optionsGrid" class="options-grid"></div>
+
+      <!-- FOOTER / FEEDBACK -->
+      <div class="quiz-footer">
+        <div id="feedbackText" class="feedback-text"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- END GAME MODAL -->
+  <div id="endGameModal" class="modal-overlay">
+    <div class="end-card">
+      <h2>🏆 GAME OVER!</h2>
+      <div id="winnnerDisplay" class="winner-box"></div>
+      <button class="btn-header btn-main" style="font-size: 1.4rem; padding: 10px 24px;" onclick="location.reload()">
+        🔄 PLAY AGAIN
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // RELATIVE IMAGE PATH
+    const IMG_PATH = "../Pronouns Pic/";
+    
+    // Image filenames matching your directory structure
+    const PICS = {
+      He: "He.jpg",
+      I: "I.jpg",
+      It_sheep: "It_sheep.jpg",
+      They: "They.jpg",
+      You: "You.jpg",
+      He_alt: "He_wowoks.png",
+      She: "She.png",
+      We: "We.png"
+    };
+
+    // 50-QUIZ DECK WITH DISTRACTOR TRAP OPTIONS (ESL Case/Form Confusions)
+    const RAW_QUIZ_DECK = [
+      // --- Subject Pronouns (1-12) ---
+      { category: "Subject Pronoun", clues: [{ type: "img", src: PICS.He_alt }], answer: "He", options: ["He", "Him", "His", "Himself"] },
+      { category: "Subject Pronoun", clues: [{ type: "img", src: PICS.She }], answer: "She", options: ["She", "Her", "Hers", "Herself"] },
+      { category: "Subject Pronoun", clues: [{ type: "img", src: PICS.It_sheep }], answer: "It", options: ["It", "Its", "Itself", "They"] },
+      { category: "Subject Pronoun", clues: [{ type: "img", src: PICS.They }], answer: "They", options: ["They", "Them", "Their", "Themselves"] },
+      { category: "Subject Pronoun", clues: [{ type: "img", src: PICS.I }], answer: "I", options: ["I", "Me", "My", "Myself"] },
+      { category: "Subject Pronoun", clues: [{ type: "img", src: PICS.You }], answer: "You", options: ["You", "Your", "Yours", "Yourself"] },
+      { category: "Subject Pronoun", clues: [{ type: "img", src: PICS.We }], answer: "We", options: ["We", "Us", "Our", "Ourselves"] },
+      { category: "Subject Pronoun", clues: [{ type: "img", src: PICS.He_alt }, { type: "plus" }, { type: "img", src: PICS.She }], answer: "They", options: ["They", "Them", "Their", "Theirself"] },
+      { category: "Subject Pronoun", clues: [{ type: "img", src: PICS.I }, { type: "plus" }, { type: "img", src: PICS.She }], answer: "We", options: ["We", "Us", "Our", "Ours"] },
+      { category: "Subject Pronoun", clues: [{ type: "img", src: PICS.I }, { type: "plus" }, { type: "img", src: PICS.He_alt }], answer: "We", options: ["We", "Us", "Ourselves", "They"] },
+      { category: "Subject Pronoun", clues: [{ type: "img", src: PICS.He }, { type: "plus" }, { type: "img", src: PICS.He_alt }], answer: "They", options: ["They", "Them", "Themselves", "He"] },
+      { category: "Subject Pronoun", clues: [{ type: "img", src: PICS.It_sheep }, { type: "plus" }, { type: "img", src: PICS.It_sheep }], answer: "They", options: ["They", "It", "Its", "Them"] },
+
+      // --- Possessive Adjectives (13-25) ---
+      { category: "Possessive Adj.", clues: [{ type: "img", src: PICS.She }, { type: "plus" }, { type: "icon", val: "🎒" }], answer: "Her backpack", options: ["Her backpack", "Hers backpack", "She backpack", "Herself backpack"] },
+      { category: "Possessive Adj.", clues: [{ type: "img", src: PICS.He_alt }, { type: "plus" }, { type: "icon", val: "🚀" }], answer: "His toy rocket", options: ["His toy rocket", "Him toy rocket", "He toy rocket", "Himself toy rocket"] },
+      { category: "Possessive Adj.", clues: [{ type: "img", src: PICS.They }, { type: "plus" }, { type: "icon", val: "🏠" }], answer: "Their house", options: ["Their house", "Theirs house", "Them house", "They house"] },
+      { category: "Possessive Adj.", clues: [{ type: "img", src: PICS.It_sheep }, { type: "plus" }, { type: "icon", val: "🧶" }], answer: "Its wool ball", options: ["Its wool ball", "It wool ball", "Itself wool ball", "Their wool ball"] },
+      { category: "Possessive Adj.", clues: [{ type: "img", src: PICS.We }, { type: "plus" }, { type: "icon", val: "🏆" }], answer: "Our trophy", options: ["Our trophy", "Ours trophy", "Us trophy", "We trophy"] },
+      { category: "Possessive Adj.", clues: [{ type: "img", src: PICS.I }, { type: "plus" }, { type: "icon", val: "🐶" }], answer: "My puppy", options: ["My puppy", "Mine puppy", "Me puppy", "I puppy"] },
+      { category: "Possessive Adj.", clues: [{ type: "img", src: PICS.You }, { type: "plus" }, { type: "icon", val: "✏️" }], answer: "Your pencil", options: ["Your pencil", "Yours pencil", "You pencil", "Yourself pencil"] },
+      { category: "Possessive Adj.", clues: [{ type: "img", src: PICS.She }, { type: "plus" }, { type: "icon", val: "🚲" }], answer: "Her bicycle", options: ["Her bicycle", "Hers bicycle", "She bicycle", "Herself bicycle"] },
+      { category: "Possessive Adj.", clues: [{ type: "img", src: PICS.He }, { type: "plus" }, { type: "icon", val: "⚽" }], answer: "His soccer ball", options: ["His soccer ball", "Him soccer ball", "He soccer ball", "Hiself soccer ball"] },
+      { category: "Possessive Adj.", clues: [{ type: "img", src: PICS.They }, { type: "plus" }, { type: "icon", val: "🚗" }], answer: "Their car", options: ["Their car", "Theirs car", "Them car", "They car"] },
+      { category: "Possessive Adj.", clues: [{ type: "img", src: PICS.We }, { type: "plus" }, { type: "icon", val: "🏫" }], answer: "Our school", options: ["Our school", "Ours school", "Us school", "We school"] },
+      { category: "Possessive Adj.", clues: [{ type: "img", src: PICS.I }, { type: "plus" }, { type: "icon", val: "🎸" }], answer: "My guitar", options: ["My guitar", "Mine guitar", "Me guitar", "Myself guitar"] },
+      { category: "Possessive Adj.", clues: [{ type: "img", src: PICS.It_sheep }, { type: "plus" }, { type: "icon", val: "🔔" }], answer: "Its bell", options: ["Its bell", "It bell", "Itself bell", "His bell"] },
+
+      // --- Possessive Pronouns (26-38) ---
+      { category: "Possessive Pronoun", clues: [{ type: "icon", val: "💻" }, { type: "plus" }, { type: "img", src: PICS.He }], answer: "The laptop is his", options: ["The laptop is his", "The laptop is him", "The laptop is he", "The laptop is himself"] },
+      { category: "Possessive Pronoun", clues: [{ type: "icon", val: "🎨" }, { type: "plus" }, { type: "img", src: PICS.She }], answer: "The painting is hers", options: ["The painting is hers", "The painting is her", "The painting is she", "The painting is herself"] },
+      { category: "Possessive Pronoun", clues: [{ type: "icon", val: "🚲" }, { type: "plus" }, { type: "img", src: PICS.They }], answer: "The bicycles are theirs", options: ["The bicycles are theirs", "The bicycles are their", "The bicycles are them", "The bicycles are they"] },
+      { category: "Possessive Pronoun", clues: [{ type: "icon", val: "🐱" }, { type: "plus" }, { type: "img", src: PICS.I }], answer: "The kitten is mine", options: ["The kitten is mine", "The kitten is my", "The kitten is me", "The kitten is I"] },
+      { category: "Possessive Pronoun", clues: [{ type: "icon", val: "📚" }, { type: "plus" }, { type: "img", src: PICS.We }], answer: "The books are ours", options: ["The books are ours", "The books are our", "The books are us", "The books are we"] },
+      { category: "Possessive Pronoun", clues: [{ type: "icon", val: "🎮" }, { type: "plus" }, { type: "img", src: PICS.You }], answer: "The console is yours", options: ["The console is yours", "The console is your", "The console is you", "The console is yourself"] },
+      { category: "Possessive Pronoun", clues: [{ type: "icon", val: "📱" }, { type: "plus" }, { type: "img", src: PICS.He_alt }], answer: "The phone is his", options: ["The phone is his", "The phone is him", "The phone is he", "The phone is himself"] },
+      { category: "Possessive Pronoun", clues: [{ type: "icon", val: "💍" }, { type: "plus" }, { type: "img", src: PICS.She }], answer: "The ring is hers", options: ["The ring is hers", "The ring is her", "The ring is she", "The ring is herself"] },
+      { category: "Possessive Pronoun", clues: [{ type: "icon", val: "🗝️" }, { type: "plus" }, { type: "img", src: PICS.They }], answer: "The key is theirs", options: ["The key is theirs", "The key is their", "The key is them", "The key is they"] },
+      { category: "Possessive Pronoun", clues: [{ type: "icon", val: "🎧" }, { type: "plus" }, { type: "img", src: PICS.I }], answer: "The headset is mine", options: ["The headset is mine", "The headset is my", "The headset is me", "The headset is I"] },
+      { category: "Possessive Pronoun", clues: [{ type: "icon", val: "⛵" }, { type: "plus" }, { type: "img", src: PICS.We }], answer: "The boat is ours", options: ["The boat is ours", "The boat is our", "The boat is us", "The boat is we"] },
+      { category: "Possessive Pronoun", clues: [{ type: "icon", val: "📷" }, { type: "plus" }, { type: "img", src: PICS.You }], answer: "The camera is yours", options: ["The camera is yours", "The camera is your", "The camera is you", "The camera is yourself"] },
+      { category: "Possessive Pronoun", clues: [{ type: "icon", val: "🧢" }, { type: "plus" }, { type: "img", src: PICS.He }], answer: "The cap is his", options: ["The cap is his", "The cap is him", "The cap is he", "The cap is himself"] },
+
+      // --- Object Pronouns (39-50) ---
+      { category: "Object Pronoun", clues: [{ type: "verb", val: "GIVE" }, { type: "icon", val: "🎁" }, { type: "plus" }, { type: "img", src: PICS.She }], answer: "Give her", options: ["Give her", "Give hers", "Give she", "Give herself"] },
+      { category: "Object Pronoun", clues: [{ type: "verb", val: "CALL" }, { type: "icon", val: "📞" }, { type: "plus" }, { type: "img", src: PICS.He_alt }], answer: "Call him", options: ["Call him", "Call his", "Call he", "Call himself"] },
+      { category: "Object Pronoun", clues: [{ type: "verb", val: "HELP" }, { type: "icon", val: "🤝" }, { type: "plus" }, { type: "img", src: PICS.They }], answer: "Help them", options: ["Help them", "Help their", "Help theirs", "Help they"] },
+      { category: "Object Pronoun", clues: [{ type: "verb", val: "SHOW" }, { type: "icon", val: "🗺️" }, { type: "plus" }, { type: "img", src: PICS.We }], answer: "Show us", options: ["Show us", "Show our", "Show ours", "Show we"] },
+      { category: "Object Pronoun", clues: [{ type: "verb", val: "LISTEN" }, { type: "icon", val: "🎧" }, { type: "plus" }, { type: "img", src: PICS.You }], answer: "Listen to you", options: ["Listen to you", "Listen to your", "Listen to yours", "Listen to yourself"] },
+      { category: "Object Pronoun", clues: [{ type: "verb", val: "FEED" }, { type: "icon", val: "🍎" }, { type: "plus" }, { type: "img", src: PICS.It_sheep }], answer: "Feed it", options: ["Feed it", "Feed its", "Feed itself", "Feed them"] },
+      { category: "Object Pronoun", clues: [{ type: "verb", val: "TEACH" }, { type: "icon", val: "📖" }, { type: "plus" }, { type: "img", src: PICS.I }], answer: "Teach me", options: ["Teach me", "Teach my", "Teach mine", "Teach I"] },
+      { category: "Object Pronoun", clues: [{ type: "verb", val: "INVITE" }, { type: "icon", val: "💌" }, { type: "plus" }, { type: "img", src: PICS.They }], answer: "Invite them", options: ["Invite them", "Invite their", "Invite theirs", "Invite they"] },
+      { category: "Object Pronoun", clues: [{ type: "verb", val: "TRUST" }, { type: "icon", val: "🛡️" }, { type: "plus" }, { type: "img", src: PICS.We }], answer: "Trust us", options: ["Trust us", "Trust our", "Trust ours", "Trust we"] },
+      { category: "Object Pronoun", clues: [{ type: "verb", val: "ASK" }, { type: "icon", val: "❓" }, { type: "plus" }, { type: "img", src: PICS.He }], answer: "Ask him", options: ["Ask him", "Ask his", "Ask he", "Ask himself"] },
+      { category: "Object Pronoun", clues: [{ type: "verb", val: "THANK" }, { type: "icon", val: "🙏" }, { type: "plus" }, { type: "img", src: PICS.She }], answer: "Thank her", options: ["Thank her", "Thank hers", "Thank she", "Thank herself"] },
+      { category: "Object Pronoun", clues: [{ type: "verb", val: "FOLLOW" }, { type: "icon", val: "🐾" }, { type: "plus" }, { type: "img", src: PICS.It_sheep }], answer: "Follow it", options: ["Follow it", "Follow its", "Follow itself", "Follow them"] }
+    ];
+
+    // GAME STATE
+    let teams = [];
+    let activeTeamIndex = 0;
+    let currentQuizIndex = 0;
+    let isQuestionAnswered = false;
+    let gameQuizDeck = [];
+
+    // FISHER-YATES SHUFFLE ALGORITHM FOR DECK & OPTIONS
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // START GAME INITIALIZATION
+    function startGame() {
+      const teamCount = parseInt(document.getElementById('teamCountSelect').value);
+      teams = [];
+      for (let i = 1; i <= teamCount; i++) {
+        teams.push({
+          name: `Team ${i}`,
+          score: 0,
+          penalties: 0 // Penalty tracker for red battery segments
+        });
+      }
+
+      // Randomize questions order
+      gameQuizDeck = shuffleArray(RAW_QUIZ_DECK);
+
+      document.getElementById('setupScreen').style.display = 'none';
+      renderTeams();
+      loadQuestion(0);
+    }
+
+    // RENDER RESIZED LEFT TEAMS PANEL
+    function renderTeams() {
+      const container = document.getElementById('teamsList');
+      container.innerHTML = '';
+
+      teams.forEach((team, index) => {
+        const card = document.createElement('div');
+        card.className = `team-card ${index === activeTeamIndex ? 'active-turn' : ''}`;
+        card.onclick = () => selectTurn(index);
+
+        // Render 10 Battery Boxes with Green Fill & Red Penalty Support
+        let batteryHTML = '';
+        for (let b = 0; b < 10; b++) {
+          if (b < team.score) {
+            batteryHTML += `<div class="battery-box filled"></div>`;
+          } else if (b >= 10 - team.penalties) {
+            batteryHTML += `<div class="battery-box penalty"></div>`;
+          } else {
+            batteryHTML += `<div class="battery-box"></div>`;
+          }
+        }
+
+        card.innerHTML = `
+          <div class="team-title-row" onclick="event.stopPropagation()">
+            <input type="text" class="team-name-input" value="${team.name}" onchange="updateTeamName(${index}, this.value)" />
+            <span class="team-score-num">${team.score} / 10</span>
+          </div>
+          <div class="battery-container">
+            ${batteryHTML}
+          </div>
+          <div class="team-controls" onclick="event.stopPropagation()">
+            <button class="btn-score btn-header btn-gold" onclick="adjustScore(${index}, 1)">+ Pt</button>
+            <button class="btn-score btn-header btn-danger" onclick="adjustScore(${index}, -1)">- Pt</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function selectTurn(index) {
+      activeTeamIndex = index;
+      renderTeams();
+    }
+
+    function updateTeamName(index, val) {
+      if (val.trim()) {
+        teams[index].name = val.trim();
+      }
+    }
+
+    function adjustScore(index, delta) {
+      if (delta > 0) {
+        teams[index].score = Math.min(10 - teams[index].penalties, teams[index].score + 1);
+      } else {
+        teams[index].score = Math.max(0, teams[index].score - 1);
+      }
+      renderTeams();
+    }
+
+    // LOAD CURRENT QUIZ
+    function loadQuestion(index) {
+      currentQuizIndex = index;
+      isQuestionAnswered = false;
+
+      const quiz = gameQuizDeck[index];
+
+      // Header & Progress Updates
+      document.getElementById('questionCounter').textContent = `QUESTION ${index + 1} / 50`;
+      document.getElementById('pronounCategoryTag').textContent = quiz.category.toUpperCase();
+      document.getElementById('quizProgressFill').style.width = `${((index + 1) / 50) * 100}%`;
+      
+      document.getElementById('nextBtn').disabled = true;
+      document.getElementById('feedbackText').textContent = '';
+      document.getElementById('feedbackText').className = 'feedback-text';
+
+      // Render Visual Clues Canvas
+      const canvas = document.getElementById('clueCanvas');
+      canvas.innerHTML = '';
+
+      const isSingleImage = quiz.clues.length === 1 && quiz.clues[0].type === 'img';
+
+      quiz.clues.forEach(clue => {
+        if (clue.type === 'img') {
+          const img = document.createElement('img');
+          img.className = isSingleImage ? 'clue-img-single' : 'clue-img-multi';
+          img.src = IMG_PATH + clue.src;
+          img.alt = 'Clue Image';
+          img.onerror = function() {
+            this.style.display = 'none';
+            const fallback = document.createElement('div');
+            fallback.className = 'clue-icon';
+            fallback.textContent = '👤';
+            canvas.appendChild(fallback);
+          };
+          canvas.appendChild(img);
+        } else if (clue.type === 'icon') {
+          const iconDiv = document.createElement('div');
+          iconDiv.className = 'clue-icon';
+          iconDiv.textContent = clue.val;
+          canvas.appendChild(iconDiv);
+        } else if (clue.type === 'verb') {
+          const verbDiv = document.createElement('div');
+          verbDiv.className = 'clue-verb';
+          verbDiv.textContent = clue.val;
+          canvas.appendChild(verbDiv);
+        } else if (clue.type === 'plus') {
+          const plusDiv = document.createElement('div');
+          plusDiv.className = 'clue-plus-sign';
+          plusDiv.textContent = '+';
+          canvas.appendChild(plusDiv);
+        }
+      });
+
+      // Render Multiple Choice Options (Shuffled Randomly)
+      const optionsGrid = document.getElementById('optionsGrid');
+      optionsGrid.innerHTML = '';
+
+      const shuffledOptions = shuffleArray(quiz.options);
+      const labels = ['A', 'B', 'C', 'D'];
+
+      shuffledOptions.forEach((opt, optIdx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.onclick = () => handleAnswer(opt, btn);
+        btn.innerHTML = `<span class="option-badge">${labels[optIdx]}</span> <span>${opt}</span>`;
+        optionsGrid.appendChild(btn);
+      });
+    }
+
+    // ANSWER HANDLING
+    function handleAnswer(selectedOpt, btnElement) {
+      if (isQuestionAnswered) return;
+      isQuestionAnswered = true;
+
+      const quiz = gameQuizDeck[currentQuizIndex];
+      const buttons = document.querySelectorAll('.option-btn');
+      const feedback = document.getElementById('feedbackText');
+
+      if (selectedOpt === quiz.answer) {
+        // Correct Answer -> Fill 1 Green Battery Box
+        btnElement.classList.add('correct');
+        feedback.textContent = `🎯 CORRECT! (${teams[activeTeamIndex].name} +1 Battery Point)`;
+        feedback.className = 'feedback-text success';
+
+        teams[activeTeamIndex].score = Math.min(10 - teams[activeTeamIndex].penalties, teams[activeTeamIndex].score + 1);
+        renderTeams();
+      } else {
+        // Incorrect Answer -> Separate Red Penalty Segment
+        btnElement.classList.add('incorrect');
+        feedback.textContent = `❌ INCORRECT! The answer was "${quiz.answer}".`;
+        feedback.className = 'feedback-text error';
+
+        // Add 1 Red Penalty Box segment
+        teams[activeTeamIndex].penalties = Math.min(10, teams[activeTeamIndex].penalties + 1);
+        if (teams[activeTeamIndex].score > 10 - teams[activeTeamIndex].penalties) {
+          teams[activeTeamIndex].score = Math.max(0, 10 - teams[activeTeamIndex].penalties);
+        }
+        renderTeams();
+
+        // Highlight correct option button
+        buttons.forEach(b => {
+          if (b.textContent.includes(quiz.answer)) {
+            b.classList.add('correct');
+          }
+        });
+      }
+
+      // Disable all option buttons
+      buttons.forEach(b => b.disabled = true);
+      document.getElementById('nextBtn').disabled = false;
+    }
+
+    // NEXT QUESTION & AUTOMATIC TURN ROTATION
+    function nextQuestion() {
+      if (currentQuizIndex + 1 < gameQuizDeck.length) {
+        // Automatically cycle turn to next team
+        activeTeamIndex = (activeTeamIndex + 1) % teams.length;
+        renderTeams();
+        loadQuestion(currentQuizIndex + 1);
+      } else {
+        showEndGameModal();
+      }
+    }
+
+    function endGameEarly() {
+      if (confirm('Are you sure you want to end the game early?')) {
+        showEndGameModal();
+      }
+    }
+
+    // END GAME SUMMARY
+    function showEndGameModal() {
+      const modal = document.getElementById('endGameModal');
+      const display = document.getElementById('winnnerDisplay');
+
+      // Sort teams by highest battery score
+      const sorted = [...teams].sort((a, b) => b.score - a.score);
+      const winner = sorted[0];
+
+      display.innerHTML = `
+        <div style="font-size: 1.1rem; color: #94a3b8; margin-bottom: 5px;">TOP TEAM</div>
+        <div class="winner-team-name">🥇 ${winner.name}</div>
+        <div class="winner-score">${winner.score} / 10 Battery Points</div>
+      `;
+
+      modal.style.display = 'flex';
+    }
+  </script>
+</body>
+</html>

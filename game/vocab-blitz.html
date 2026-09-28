@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocab Blitz Arena</title>
+    <style>
+        :root {
+            --red: #e21b3c;
+            --blue: #1368ce;
+            --yellow: #ffa602;
+            --green: #26890c;
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            min-height: 550px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: #38bdf8;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Screen States */
+        .screen {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* Theme Selector Grid */
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .theme-card {
+            background: #334155;
+            border: 2px solid #475569;
+            border-radius: 12px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .theme-card:hover {
+            transform: translateY(-3px);
+            border-color: #38bdf8;
+            background: #475569;
+        }
+
+        .theme-card h3 {
+            font-size: 1.1rem;
+            color: #f1f5f9;
+        }
+
+        .theme-card p {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        /* Game Screen */
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            background: #0f172a;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+        }
+
+        .hud-item {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .timer-bar-container {
+            width: 100%;
+            height: 10px;
+            background: #334155;
+            border-radius: 5px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .timer-bar {
+            height: 100%;
+            width: 100%;
+            background: #38bdf8;
+            transition: width 0.1s linear;
+        }
+
+        .question-box {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .target-word {
+            font-size: 2.2rem;
+            color: #facc15;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .option-btn {
+            border: none;
+            border-radius: 12px;
+            padding: 1.2rem;
+            font-size: 1.05rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-align: left;
+            transition: transform 0.1s ease, filter 0.2s ease;
+        }
+
+        .option-btn:hover {
+            filter: brightness(1.15);
+            transform: scale(1.01);
+        }
+
+        .option-btn:active {
+            transform: scale(0.98);
+        }
+
+        .shape-icon {
+            font-size: 1.5rem;
+            display: inline-block;
+            width: 30px;
+            text-align: center;
+        }
+
+        .btn-red { background-color: var(--red); }
+        .btn-blue { background-color: var(--blue); }
+        .btn-yellow { background-color: var(--yellow); }
+        .btn-green { background-color: var(--green); }
+
+        /* End Screen */
+        .results-box {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .final-score {
+            font-size: 4rem;
+            color: #facc15;
+            margin: 1rem 0;
+            font-weight: 800;
+        }
+
+        .stats-list {
+            list-style: none;
+            margin: 1.5rem 0;
+            font-size: 1.2rem;
+            line-height: 2rem;
+        }
+
+        .restart-btn {
+            background: #38bdf8;
+            color: #0f172a;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .restart-btn:hover {
+            background: #7dd3fc;
+        }
+
+        @media (max-width: 600px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+            .target-word {
+                font-size: 1.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <header>
+        <h1>Vocab Blitz</h1>
+    </header>
+
+    <!-- 1. THEME SELECTION SCREEN -->
+    <div id="selection-screen" class="screen active">
+        <h2 style="text-align: center; margin-bottom: 0.5rem;">Choose Today's Mission Theme</h2>
+        <p style="text-align: center; color: #94a3b8;">10 Questions | 10 Seconds Per Word</p>
+        <div class="theme-grid" id="theme-grid"></div>
+    </div>
+
+    <!-- 2. GAMEPLAY SCREEN -->
+    <div id="game-screen" class="screen">
+        <div class="game-header">
+            <div class="hud-item" id="theme-title">Theme</div>
+            <div class="hud-item" id="question-tracker">1 / 10</div>
+            <div class="hud-item" id="score-tracker">Score: 0</div>
+        </div>
+
+        <div class="timer-bar-container">
+            <div class="timer-bar" id="timer-bar"></div>
+        </div>
+
+        <div class="question-box">
+            <div class="target-word" id="target-word">WORD</div>
+            <p style="color: #94a3b8;">Select the correct definition:</p>
+        </div>
+
+        <div class="options-grid">
+            <button class="option-btn btn-red" onclick="submitAnswer(0)">
+                <span class="shape-icon">▲</span>
+                <span class="opt-text" id="opt0">Option 1</span>
+            </button>
+            <button class="option-btn btn-blue" onclick="submitAnswer(1)">
+                <span class="shape-icon">◆</span>
+                <span class="opt-text" id="opt1">Option 2</span>
+            </button>
+            <button class="option-btn btn-yellow" onclick="submitAnswer(2)">
+                <span class="shape-icon">●</span>
+                <span class="opt-text" id="opt2">Option 3</span>
+            </button>
+            <button class="option-btn btn-green" onclick="submitAnswer(3)">
+                <span class="shape-icon">■</span>
+                <span class="opt-text" id="opt3">Option 4</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 3. FINAL RESULTS SCREEN -->
+    <div id="results-screen" class="screen">
+        <div class="results-box">
+            <h2>Mission Complete!</h2>
+            <div class="final-score" id="final-score">0</div>
+            <p id="performance-rank" style="font-size: 1.4rem; color: #38bdf8;"></p>
+            
+            <ul class="stats-list">
+                <li>Correct Answers: <strong id="correct-count">0</strong> / 10</li>
+                <li>Accuracy: <strong id="accuracy-percent">0%</strong></li>
+            </ul>
+
+            <button class="restart-btn" onclick="showSelectionScreen()">Play Another Theme</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Simplified Middle-School Vocabulary Dataset
+const vocabularyData = {
+    1: {
+        name: "Detectives & Mystery",
+        desc: "Clues, evidence, and solving cases",
+        words: [
+            { word: "Clue", correct: "Something that helps solve a mystery or puzzle", distractors: ["A rule in a game", "A heavy lock", "A loud noise"] },
+            { word: "Detail", correct: "A small part or item of information", distractors: ["A large building", "A entire story", "A sudden mistake"] },
+            { word: "Evidence", correct: "Facts or signs that help show something is true", distractors: ["A secret wish", "A guess about the future", "A scary story"] },
+            { word: "Hint", correct: "A helpful suggestion or clue", distractors: ["A trick to confuse someone", "A direct order", "A loud scream"] },
+            { word: "Notice", correct: "To see or pay attention to something", distractors: ["To ignore completely", "To hide away", "To forget quickly"] },
+            { word: "Reason", correct: "An explanation for why something happened", distractors: ["A physical tool", "A random event", "A secret passage"] },
+            { word: "Secret", correct: "Something kept hidden from others", distractors: ["A public announcement", "A newspaper article", "A bright sign"] },
+            { word: "Solve", correct: "To find the answer to a problem or riddle", distractors: ["To make something harder", "To give up trying", "To hide an object"] },
+            { word: "Trace", correct: "A mark or sign left behind by a person or thing", distractors: ["A whole new path", "A loud sound", "A complete surprise"] },
+            { word: "Witness", correct: "A person who sees an event happen", distractors: ["A judge in court", "A suspect on trial", "A police officer on duty"] }
+        ]
+    },
+    2: {
+        name: "Sci-Fi & Tech",
+        desc: "Computers, future inventions, and devices",
+        words: [
+            { word: "Code", correct: "A system of words or symbols used for computer instructions", distractors: ["A physical machine", "A paper manual", "A type of battery"] },
+            { word: "Create", correct: "To make or bring something new into existence", distractors: ["To break into pieces", "To copy an old idea", "To throw away"] },
+            { word: "Data", correct: "Facts, numbers, or information collected together", distractors: ["A computer screen", "A metal wire", "A wild guess"] },
+            { word: "Device", correct: "A piece of equipment or tool made for a special purpose", distractors: ["A piece of paper", "A simple stone", "A software rule"] },
+            { word: "Future", correct: "The time that is still to come", distractors: ["Yesterday", "The current moment", "An old memory"] },
+            { word: "Future-Tech", correct: "Advanced tools or machines used in futuristic settings", distractors: ["Ancient tools", "Hand-drawn maps", "Wooden wheels"] },
+            { word: "Invent", correct: "To design or create something that did not exist before", distractors: ["To break a machine", "To buy from a store", "To forget how something works"] },
+            { word: "Network", correct: "A group of connected computers or people", distractors: ["A single wire", "An isolated island", "A locked door"] },
+            { word: "Program", correct: "A set of instructions given to a computer", distractors: ["A hardware chip", "A power cable", "A computer monitor"] },
+            { word: "Signal", correct: "An action, sound, or light used to send a message", distractors: ["A silent block", "A hidden secret", "A broken wire"] }
+        ]
+    },
+    3: {
+        name: "Wilderness Survival",
+        desc: "Safety, exploration, and the outdoors",
+        words: [
+            { word: "Danger", correct: "Something that can cause harm or injury", distractors: ["A safe place", "A comfortable bed", "A fun game"] },
+            { word: "Explore", correct: "To travel through a new area to learn about it", distractors: ["To stay home", "To sleep all day", "To close your eyes"] },
+            { word: "Guard", correct: "To protect or watch over something carefully", distractors: ["To ignore danger", "To run away", "To leave open"] },
+            { word: "Hazard", correct: "A source of danger or risk", distractors: ["A safe pathway", "A protective helmet", "A warm blanket"] },
+            { word: "Path", correct: "A track made for walking or travelling", distractors: ["A steep cliff", "A deep lake", "A thick wall"] },
+            { word: "Protect", correct: "To keep someone or something safe from harm", distractors: ["To leave in danger", "To break on purpose", "To attack"] },
+            { word: "Route", correct: "The way or direction taken to get to a destination", distractors: ["A complete dead end", "A heavy backpack", "A rest stop"] },
+            { word: "Shelter", correct: "A structure that gives protection from bad weather or danger", distractors: ["An open field", "A rainstorm", "A cold wind"] },
+            { word: "Supply", correct: "An amount of something kept to be used when needed", distractors: ["Trash to throw out", "A broken tool", "A wild animal"] },
+            { word: "Survive", correct: "To stay alive through a difficult or dangerous situation", distractors: ["To give up early", "To get lost forever", "To stop trying"] }
+        ]
+    },
+    4: {
+        name: "Courtroom & Debate",
+        desc: "Rules, opinions, and fair arguments",
+        words: [
+            { word: "Agree", correct: "To have the same opinion as someone else", distractors: ["To start a fight", "To argue against", "To stay silent"] },
+            { word: "Argue", correct: "To give reasons for or against an opinion", distractors: ["To agree quietly", "To listen without speaking", "To sign a paper"] },
+            { word: "Claim", correct: "A statement that something is true", distractors: ["A proven scientific law", "A question asked", "A silent thought"] },
+            { word: "Decide", correct: "To make a final choice about something", distractors: ["To wait forever", "To ask someone else", "To change your mind constantly"] },
+            { word: "Defend", correct: "To speak or act in support of something or someone", distractors: ["To accuse of cheating", "To blame others", "To walk away"] },
+            { word: "Fair", correct: "Treating everyone equally and following the rules", distractors: ["Picking favorites", "Changing rules mid-game", "Cheating to win"] },
+            { word: "Honest", correct: "Telling the truth and not hiding facts", distractors: ["Lying to stay out of trouble", "Cheating on a test", "Making up stories"] },
+            { word: "Judge", correct: "A person who makes decisions in a court or contest", distractors: ["A player in a game", "A witness watching", "A police officer"] },
+            { word: "Proof", correct: "Facts or information that show something is true", distractors: ["A wild rumor", "A lucky guess", "A made-up story"] },
+            { word: "Rule", correct: "An official instruction about what is allowed", distractors: ["A suggestion you can ignore", "A guess", "A random choice"] }
+        ]
+    },
+    5: {
+        name: "Mythology & Legends",
+        desc: "Heroes, story tales, and magic",
+        words: [
+            { word: "Hero", correct: "A person admired for bravery or great deeds", distractors: ["A villainous character", "A side character", "A cowardly person"] },
+            { word: "Legend", correct: "An old story passed down that may or may not be fully true", distractors: ["A brand new news report", "A math textbook", "A science fact"] },
+            { word: "Magic", correct: "A power that seems to make impossible things happen", distractors: ["Everyday science", "A mechanical engine", "A simple trick"] },
+            { word: "Monster", correct: "A large, scary, or dangerous imaginary creature", distractors: ["A small pet", "A friendly neighbor", "A brave knight"] },
+            { word: "Myth", correct: "A traditional story usually explaining nature or human behavior", distractors: ["A factual biography", "A dictionary definition", "A news article"] },
+            { word: "Power", correct: "The ability or strength to do something", distractors: ["Weakness", "Fear", "Slowness"] },
+            { word: "Shield", correct: "A broad piece of metal or wood used for protection in battle", distractors: ["A sharp sword", "A flying arrow", "A heavy helmet"] },
+            { word: "Tale", correct: "A story, especially one that might be made up", distractors: ["A scientific formula", "A phone book", "A shopping list"] },
+            { word: "Valor", correct: "Great bravery and courage", distractors: ["Fearfulness", "Laziness", "Greed"] },
+            { word: "Victory", correct: "Winning a game, battle, or competition", distractors: ["Losing a match", "A tie game", "A forfeit"] }
+        ]
+    },
+    6: {
+        name: "Sports & Tactics",
+        desc: "Teams, skill, and winning plans",
+        words: [
+            { word: "Aim", correct: "To point or direct an effort toward a target", distractors: ["To throw randomly", "To look away", "To drop the ball"] },
+            { word: "Coach", correct: "A person who trains a sports team or athlete", distractors: ["A fan in the stands", "A referee", "A team mascot"] },
+            { word: "Defend", correct: "To stop the opposing team from scoring", distractors: ["To score a point", "To pass to a teammate", "To celebrate"] },
+            { word: "Goal", correct: "The point or purpose of an action in a game", distractors: ["A penalty call", "A timeout break", "A mistake"] },
+            { word: "Leader", correct: "A person who guides or directs a team", distractors: ["A quiet spectator", "A bench player", "An opponent"] },
+            { word: "Match", correct: "A game or contest between two teams or players", distractors: ["A practice drill", "A single play", "A sports gear item"] },
+            { word: "Score", correct: "The total points earned in a game", distractors: ["The game clock time", "The player jersey number", "The field size"] },
+            { word: "Skill", correct: "The ability to do something well", distractors: ["Pure luck", "A mistake made", "A rule broken"] },
+            { word: "Strategy", correct: "A plan of action used to achieve a goal", distractors: ["A random movement", "A lucky guess", "A sudden stop"] },
+            { word: "Teamwork", correct: "Working together with a group to get something done", distractors: ["Playing all by yourself", "Arguing with teammates", "Quitting early"] }
+        ]
+    },
+    7: {
+        name: "Character Traits",
+        desc: "Personalities, feelings, and actions",
+        words: [
+            { word: "Brave", correct: "Ready to face danger or pain without showing fear", distractors: ["Scared and hiding", "Mean to others", "Lazy"] },
+            { word: "Calm", correct: "Peaceful, quiet, and not excited or upset", distractors: ["Loud and angry", "Nervous and jumping", "Wild"] },
+            { word: "Clever", correct: "Quick to learn, understand, or invent ideas", distractors: ["Slow to learn", "Foolish", "Clumsy"] },
+            { word: "Cruel", correct: "Willingly causing pain or suffering to others", distractors: ["Kind and gentle", "Helpful", "Friendly"] },
+            { word: "Friendly", correct: "Kind and pleasant toward other people", distractors: ["Mean and rude", "Shy and silent", "Angry"] },
+            { word: "Helpful", correct: "Giving assistance or making things easier", distractors: ["Causing trouble", "Ignoring others", "Breaking things"] },
+            { word: "Honest", correct: "Always telling the truth and refusing to cheat", distractors: ["Lying often", "Hiding facts", "Stealing"] },
+            { word: "Kind", correct: "Showing care and concern for other people", distractors: ["Mean-spirited", "Selfish", "Rude"] },
+            { word: "Loyal", correct: "Standing by a friend, team, or leader through hard times", distractors: ["Switching sides easily", "Lying to friends", "Quitting early"] },
+            { word: "Polite", correct: "Having good manners and showing respect", distractors: ["Interrupting people", "Screaming loudly", "Ignoring rules"] }
+        ]
+    },
+    8: {
+        name: "Tone & Atmosphere",
+        desc: "Words that describe feelings and settings",
+        words: [
+            { word: "Bright", correct: "Full of light or strong color", distractors: ["Dark and dim", "Sad and gloomy", "Silent"] },
+            { word: "Dark", correct: "Having little or no light", distractors: ["Brightly lit", "Sunny", "Colorful"] },
+            { word: "Gloomy", correct: "Feeling dark, dim, and sad", distractors: ["Excited and happy", "Bright and sunny", "Loud"] },
+            { word: "Loud", correct: "Producing a lot of noise", distractors: ["Completely quiet", "Whispering", "Silent"] },
+            { word: "Peaceful", correct: "Quiet, calm, and free from trouble", distractors: ["Wild and chaotic", "Scary", "Noisy"] },
+            { word: "Quiet", correct: "Making very little or no sound", distractors: ["Screaming", "Booming", "Loud"] },
+            { word: "Scary", correct: "Causing fear or alarm", distractors: ["Fun and silly", "Comforting", "Boring"] },
+            { word: "Silent", correct: "Completely without noise or sound", distractors: ["Very loud", "Music playing", "Talking"] },
+            { word: "Wild", correct: "Uncontrolled, exciting, or untamed", distractors: ["Quiet and still", "Calm and tame", "Boring"] },
+            { word: "Warm", correct: "Giving off a comfortable amount of heat or friendliness", distractors: ["Freezing cold", "Unfriendly", "Dark"] }
+        ]
+    },
+    9: {
+        name: "Word Parts (Prefixes)",
+        desc: "Prefixes that change word meanings",
+        words: [
+            { word: "Auto-", correct: "Prefix meaning 'self' (e.g., autograph)", distractors: ["Meaning 'two'", "Meaning 'small'", "Meaning 'not'"] },
+            { word: "Bi-", correct: "Prefix meaning 'two' (e.g., bicycle)", distractors: ["Meaning 'three'", "Meaning 'self'", "Meaning 'many'"] },
+            { word: "Micro-", correct: "Prefix meaning 'small' (e.g., microscope)", distractors: ["Meaning 'large'", "Meaning 'under'", "Meaning 'again'"] },
+            { word: "Multi-", correct: "Prefix meaning 'many' (e.g., multicolor)", distractors: ["Meaning 'one'", "Meaning 'not'", "Meaning 'before'"] },
+            { word: "Non-", correct: "Prefix meaning 'not' (e.g., nonstop)", distractors: ["Meaning 'many'", "Meaning 'again'", "Meaning 'under'"] },
+            { word: "Pre-", correct: "Prefix meaning 'before' (e.g., preview)", distractors: ["Meaning 'after'", "Meaning 'again'", "Meaning 'two'"] },
+            { word: "Re-", correct: "Prefix meaning 'again' (e.g., replay)", distractors: ["Meaning 'not'", "Meaning 'before'", "Meaning 'small'"] },
+            { word: "Sub-", correct: "Prefix meaning 'under' or 'below' (e.g., submarine)", distractors: ["Meaning 'above'", "Meaning 'self'", "Meaning 'many'"] },
+            { word: "Tri-", correct: "Prefix meaning 'three' (e.g., triangle)", distractors: ["Meaning 'two'", "Meaning 'four'", "Meaning 'one'"] },
+            { word: "Un-", correct: "Prefix meaning 'not' or 'opposite of' (e.g., unhappy)", distractors: ["Meaning 'very'", "Meaning 'again'", "Meaning 'before'"] }
+        ]
+    },
+    10: {
+        name: "Cause & Effect",
+        desc: "Triggers, changes, and results",
+        words: [
+            { word: "Action", correct: "Something that a person does", distractors: ["A quiet thought", "A sleep state", "A written rule"] },
+            { word: "Cause", correct: "The reason why something happens", distractors: ["The final outcome", "A random guess", "A mistake"] },
+            { word: "Change", correct: "To make or become different", distractors: ["To stay the same forever", "To copy exactly", "To stop moving"] },
+            { word: "Choice", correct: "An act of selecting between two or more options", distractors: ["A forced rule", "A complete surprise", "An accident"] },
+            { word: "Effect", correct: "A change that is a result of an action or cause", distractors: ["The initial reason", "A start point", "A rule"] },
+            { word: "Finish", correct: "To reach the end of an activity or task", distractors: ["To begin something new", "To pause mid-way", "To give up"] },
+            { word: "Follow", correct: "To happen after something else in time or order", distractors: ["To go first", "To lead the way", "To stop completely"] },
+            { word: "Lead to", correct: "To cause a specific result to happen", distractors: ["To stop from happening", "To prevent", "To forget"] },
+            { word: "Result", correct: "The outcome or consequence of an action", distractors: ["The very beginning", "The main plan", "A question"] },
+            { word: "Start", correct: "To begin an activity or movement", distractors: ["To finish up", "To pause", "To quit"] }
+        ]
+    },
+    11: {
+        name: "Reading & Writing Verbs",
+        desc: "Action words for assignments and tests",
+        words: [
+            { word: "Compare", correct: "To look at two things to see how they are alike", distractors: ["To focus only on differences", "To write a story", "To guess an answer"] },
+            { word: "Contrast", correct: "To look at two things to see how they are different", distractors: ["To see how they are the same", "To count items", "To draw a picture"] },
+            { word: "Describe", correct: "To tell or write about what something looks, feels, or sounds like", distractors: ["To hide details", "To guess randomly", "To ignore details"] },
+            { word: "Explain", correct: "To make something clear or easy to understand by giving details", distractors: ["To confuse on purpose", "To keep secret", "To whisper"] },
+            { word: "Identify", correct: "To point out or name what something is", distractors: ["To forget a name", "To hide an object", "To guess wildly"] },
+            { word: "List", correct: "To write down items one after another", distractors: ["To write a full story", "To erase notes", "To draw a map"] },
+            { word: "Outline", correct: "To give a brief summary of the main points of an idea", distractors: ["To write a full novel", "To delete ideas", "To guess work"] },
+            { word: "Predict", correct: "To guess what will happen next based on clues", distractors: ["To report on the past", "To describe today", "To forget clues"] },
+            { word: "State", correct: "To say or express something clearly and directly", distractors: ["To whisper unclearly", "To hide your thoughts", "To ask a question"] },
+            { word: "Summarize", correct: "To briefly tell the main points of a story or text", distractors: ["To add extra long details", "To copy word for word", "To erase the end"] }
+        ]
+    },
+    12: {
+        name: "Context Clues",
+        desc: "Finding meanings in reading passages",
+        words: [
+            { word: "Clue", correct: "A fact or detail that helps solve a puzzle or find a meaning", distractors: ["A rule in a book", "A typo", "A blank page"] },
+            { word: "Guess", correct: "To form an opinion or answer without knowing for sure", distractors: ["To look up in a dictionary", "To know 100% facts", "To state a proven law"] },
+            { word: "Meaning", correct: "What a word, sign, or action represents", distractors: ["The spelling of a word", "The length of a word", "The page number"] },
+            { word: "Sentence", correct: "A group of words that expresses a complete thought", distractors: ["A single letter", "A page cover", "A single number"] },
+            { word: "Text", correct: "The written or printed words in a book, passage, or article", distractors: ["A picture drawing", "A video clip", "A spoken song"] },
+            { word: "Title", correct: "The name given to a book, story, or article", distractors: ["The last page", "An author name", "A price tag"] },
+            { word: "Topic", correct: "The main subject or idea that a text is about", distractors: ["A tiny detail", "A page margin", "A spelling error"] },
+            { word: "Unfamiliar", correct: "Not known or recognized; new to you", distractors: ["Very famous", "Well known", "Easy to remember"] },
+            { word: "Word", correct: "A single unit of language used to build sentences", distractors: ["A full chapter", "A whole book", "A paragraph"] },
+            { word: "Unknown", correct: "Something that is not known or identified yet", distractors: ["A clear fact", "A famous person", "A solved riddle"] }
+        ]
+    }
+};
+
+// State Variables
+let currentTheme = null;
+let currentQuestionIndex = 0;
+let score = 0;
+let correctAnswersCount = 0;
+let timer = null;
+let timeLeft = 10;
+let canAnswer = true;
+
+// DOM Elements
+const selectionScreen = document.getElementById('selection-screen');
+const gameScreen = document.getElementById('game-screen');
+const resultsScreen = document.getElementById('results-screen');
+const themeGrid = document.getElementById('theme-grid');
+
+// Render Theme Grid
+function initThemes() {
+    themeGrid.innerHTML = '';
+    for (let id in vocabularyData) {
+        let theme = vocabularyData[id];
+        let card = document.createElement('div');
+        card.className = 'theme-card';
+        card.onclick = () => startGame(id);
+        card.innerHTML = `
+            <h3>${theme.name}</h3>
+            <p>${theme.desc}</p>
+        `;
+        themeGrid.appendChild(card);
+    }
+}
+
+function showSelectionScreen() {
+    resultsScreen.classList.remove('active');
+    gameScreen.classList.remove('active');
+    selectionScreen.classList.add('active');
+}
+
+function startGame(themeId) {
+    currentTheme = vocabularyData[themeId];
+    currentQuestionIndex = 0;
+    score = 0;
+    correctAnswersCount = 0;
+
+    document.getElementById('theme-title').innerText = currentTheme.name;
+    
+    selectionScreen.classList.remove('active');
+    resultsScreen.classList.remove('active');
+    gameScreen.classList.add('active');
+
+    loadQuestion();
+}
+
+function loadQuestion() {
+    if (currentQuestionIndex >= currentTheme.words.length) {
+        endGame();
+        return;
+    }
+
+    canAnswer = true;
+    let qData = currentTheme.words[currentQuestionIndex];
+    
+    // UI Updates
+    document.getElementById('question-tracker').innerText = `${currentQuestionIndex + 1} / ${currentTheme.words.length}`;
+    document.getElementById('score-tracker').innerText = `Score: ${score}`;
+    document.getElementById('target-word').innerText = qData.word;
+
+    // Shuffle Options
+    let options = [qData.correct, ...qData.distractors];
+    options.sort(() => Math.random() - 0.5);
+
+    for (let i = 0; i < 4; i++) {
+        let btn = document.getElementById(`opt${i}`);
+        btn.innerText = options[i];
+        btn.parentElement.dataset.isCorrect = (options[i] === qData.correct);
+    }
+
+    startTimer();
+}
+
+function startTimer() {
+    clearInterval(timer);
+    timeLeft = 10;
+    const timerBar = document.getElementById('timer-bar');
+    timerBar.style.width = '100%';
+
+    timer = setInterval(() => {
+        timeLeft -= 0.1;
+        let percentage = (timeLeft / 10) * 100;
+        timerBar.style.width = `${percentage}%`;
+
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            handleTimeout();
+        }
+    }, 100);
+}
+
+function handleTimeout() {
+    if (!canAnswer) return;
+    canAnswer = false;
+    nextQuestion();
+}
+
+function submitAnswer(optionIndex) {
+    if (!canAnswer) return;
+    canAnswer = false;
+    clearInterval(timer);
+
+    let selectedBtn = document.getElementById(`opt${optionIndex}`).parentElement;
+    let isCorrect = selectedBtn.dataset.isCorrect === "true";
+
+    if (isCorrect) {
+        let timeBonus = Math.round(timeLeft * 100);
+        let questionPoints = 1000 + timeBonus;
+        score += questionPoints;
+        correctAnswersCount++;
+    }
+
+    setTimeout(() => {
+        nextQuestion();
+    }, 400);
+}
+
+function nextQuestion() {
+    currentQuestionIndex++;
+    loadQuestion();
+}
+
+function endGame() {
+    clearInterval(timer);
+    gameScreen.classList.remove('active');
+    resultsScreen.classList.add('active');
+
+    document.getElementById('final-score').innerText = score.toLocaleString();
+    document.getElementById('correct-count').innerText = correctAnswersCount;
+    
+    let accuracy = Math.round((correctAnswersCount / currentTheme.words.length) * 100);
+    document.getElementById('accuracy-percent').innerText = `${accuracy}%`;
+
+    let rankText = "Keep Practicing!";
+    if (accuracy >= 90) rankText = "🏆 Vocab Master!";
+    else if (accuracy >= 70) rankText = "⭐ Sharp Scholar!";
+    else if (accuracy >= 50) rankText = "👍 Good Effort!";
+
+    document.getElementById('performance-rank').innerText = rankText;
+}
+
+// Initialize on page load
+initThemes();
+</script>
+</body>
+</html>
