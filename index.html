@@ -2962,6 +2962,16 @@
 
       if (tabId === 'admin-profile') {
         populateAdminProfileForm();
+      } else if (tabId === 'cards-library') {
+        renderCardsLibrary();
+      } else if (tabId === 'reports') {
+        renderReportsTab();
+      } else if (tabId === 'games') {
+        renderGames();
+      } else if (tabId === 'display') {
+        renderDisplay();
+      } else if (tabId === 'teacher') {
+        renderTeacher();
       }
 
       closeAllOverlays();
@@ -4703,6 +4713,8 @@
     initFilterButtons();
     updateAuthUI();
     render();
+    document.addEventListener('DOMContentLoaded', render);
+    window.addEventListener('load', render);
   </script>
 
   <!-- MOBILE COMMAND DRAWER (Req 2: right-side slide-out) -->
