@@ -185,25 +185,25 @@
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
     import { getAnalytics, isSupported } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-analytics.js";
-    import { 
-      getAuth, 
-      signInWithEmailAndPassword, 
-      createUserWithEmailAndPassword, 
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
       signInWithPopup,
       GoogleAuthProvider,
-      signOut, 
+      signOut,
       onAuthStateChanged,
-      updateProfile 
+      updateProfile
     } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
-    import { 
-      getFirestore, 
-      doc, 
-      getDoc, 
+    import {
+      getFirestore,
+      doc,
+      getDoc,
       setDoc,
       collection,
       query,
       where,
-      getDocs 
+      getDocs
     } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
     // Your web app's Firebase configuration
@@ -220,7 +220,7 @@
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
-    
+
     // Safely initialize Analytics if supported
     isSupported().then(supported => {
       if (supported) {
@@ -306,8 +306,7 @@
         class="nav-btn active w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl transition-all bg-gradient-to-r from-indigo-600 via-primary to-indigo-500 text-white font-headline shadow-md shadow-indigo-200 group"
         data-tab="home" onclick="showTab('home')">
         <div class="flex items-center gap-3">
-          <span
-            class="material-symbols-outlined text-[20px] text-white transition-colors">auto_awesome</span>
+          <span class="material-symbols-outlined text-[20px] text-white transition-colors">auto_awesome</span>
           <span class="font-headline text-[13px] font-semibold">Quest Hub</span>
         </div>
         <span
@@ -318,7 +317,8 @@
         class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50/70 hover:text-indigo-900 transition-all group"
         data-tab="display" onclick="showTab('display')">
         <div class="flex items-center gap-3">
-          <span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors">grid_view</span>
+          <span
+            class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors">grid_view</span>
           <span class="font-headline text-[13px] font-bold tracking-wide">Class Display</span>
         </div>
         <span id="navVoyagersCount"
@@ -414,8 +414,10 @@
     </div>
 
     <!-- Drawer Watermark -->
-    <div class="px-4 py-2.5 text-center border-t border-indigo-50/60 bg-gradient-to-r from-indigo-50/20 via-purple-50/10 to-transparent">
-      <p class="font-hud text-[9.5px] text-slate-400 font-medium tracking-wide">Ideated by Dawam Nofal | Powered by Tailwind and Firebase</p>
+    <div
+      class="px-4 py-2.5 text-center border-t border-indigo-50/60 bg-gradient-to-r from-indigo-50/20 via-purple-50/10 to-transparent">
+      <p class="font-hud text-[9.5px] text-slate-400 font-medium tracking-wide">Ideated by Dawam Nofal | Powered by
+        Tailwind and Firebase</p>
     </div>
   </aside>
 
@@ -439,10 +441,11 @@
           </div>
           <div class="hidden sm:flex flex-col min-w-0">
             <div class="flex items-center gap-1.5">
-              <span class="font-headline text-[14px] lg:text-[15px] font-bold tracking-tight text-indigo-950 leading-none truncate">CLASS QUEST JOURNAL</span>
+              <span
+                class="font-headline text-[14px] lg:text-[15px] font-bold tracking-tight text-indigo-950 leading-none truncate">CLASS
+                QUEST JOURNAL</span>
               <span class="text-indigo-500 text-xs shrink-0">✦</span>
             </div>
-            <span class="font-hud text-[9px] text-indigo-500 font-semibold mt-0.5">ASTRAL PEDAGOGY SYSTEM</span>
           </div>
         </div>
 
@@ -456,14 +459,16 @@
       <!-- Top Interactive Controls (Sanctum Class Switcher, Meeting Cycle, Actions) -->
       <div class="flex items-center gap-1.5 sm:gap-2 lg:gap-3 shrink-0">
         <!-- Sanctum Multi-Class Dropdown -->
-        <div class="flex items-center bg-indigo-50/70 border border-indigo-100 rounded-xl px-2 sm:px-2.5 py-1.5 shadow-2xs">
+        <div
+          class="flex items-center bg-indigo-50/70 border border-indigo-100 rounded-xl px-2 sm:px-2.5 py-1.5 shadow-2xs">
           <span class="font-hud text-[10px] text-indigo-500 font-bold mr-1.5 hidden md:inline">SANCTUM:</span>
           <select id="headerClassFilter" onchange="changeClassFilter(this.value)"
             class="bg-transparent font-headline text-[11px] sm:text-[12px] font-semibold text-slate-700 focus:outline-none cursor-pointer pr-1 border-0 py-0"></select>
         </div>
 
         <!-- Meeting / Cycle Input -->
-        <div class="hidden sm:flex items-center bg-indigo-50/70 border border-indigo-100 rounded-xl px-2 sm:px-2.5 py-1.5 shadow-2xs">
+        <div
+          class="hidden sm:flex items-center bg-indigo-50/70 border border-indigo-100 rounded-xl px-2 sm:px-2.5 py-1.5 shadow-2xs">
           <span class="font-hud text-[10px] text-indigo-500 font-bold mr-1 hidden md:inline">CYCLE:</span>
           <input id="headerMeetingInput" type="number" min="1" max="100" value="1" onchange="saveCurrentMeetingNumber()"
             class="w-10 sm:w-12 bg-transparent font-headline text-[11px] sm:text-[12px] text-indigo-600 font-bold text-center focus:outline-none border-0 p-0">
@@ -480,9 +485,10 @@
             class="w-8 h-8 sm:w-9 sm:h-9 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100/80 rounded-xl flex items-center justify-center transition-all shadow-2xs shrink-0">
             <span class="material-symbols-outlined text-[17px] sm:text-[18px]">bolt</span>
           </button>
-          <button onclick="showTab('reports')" title="Activity Logs"
+          <!-- Mobile Command Drawer Trigger (Req 2) -->
+          <button onclick="toggleCommandDrawer(true)" title="Command Panel"
             class="w-8 h-8 sm:w-9 sm:h-9 text-slate-500 hover:bg-indigo-50 hover:text-indigo-600 border border-indigo-100/80 rounded-xl flex items-center justify-center transition-all shrink-0">
-            <span class="material-symbols-outlined text-[17px] sm:text-[18px]">notifications</span>
+            <span class="material-symbols-outlined text-[17px] sm:text-[18px]">keyboard_command_key</span>
           </button>
         </div>
       </div>
@@ -490,58 +496,6 @@
 
     <!-- MAIN STAGE -->
     <main class="relative pt-16 flex-1 flex flex-col pb-24 sm:pb-8">
-
-      <!-- SUBTAB / TELEMETRY DIAGNOSTIC BAR -->
-      <div
-        class="bg-white/95 backdrop-blur-md border-b border-indigo-100/70 px-4 lg:px-6 py-2 flex flex-wrap items-center justify-between gap-3">
-        <div class="flex items-center gap-1.5 p-1 bg-indigo-50/70 rounded-xl border border-indigo-100/80 shadow-2xs">
-          <button id="subtab-overview-btn" onclick="switchDisplaySubtab('grid')"
-            class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-indigo-600 via-primary to-indigo-500 text-white font-headline text-xs font-bold tracking-wide shadow-2xs flex items-center gap-1.5 transition-all">
-            <span class="text-xs">✦</span><span>CADET HUD OVERVIEW</span>
-          </button>
-          <button id="subtab-ranking-btn" onclick="switchDisplaySubtab('ranking')"
-            class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-indigo-900 hover:bg-white font-headline text-xs font-semibold transition-all flex items-center gap-1.5">
-            <span class="material-symbols-outlined text-[16px] text-slate-400">leaderboard</span><span>SANCTUM
-              RANKING</span>
-          </button>
-        </div>
-
-        <div class="flex items-center gap-3">
-          <div class="flex items-center gap-2 font-hud text-[10px] text-indigo-500 font-semibold">
-            <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-            <span>INTERFACE MODE // TACTICAL VIEW</span>
-          </div>
-          <span class="text-slate-300 hidden sm:inline">|</span>
-          <span id="telemetrySelectedStudent"
-            class="font-hud text-[10px] text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-100 font-bold hidden sm:inline">TARGET:
-            NONE</span>
-        </div>
-      </div>
-
-      <!-- SECONDARY TELEMETRY STRIP -->
-      <div
-        class="px-4 lg:px-6 py-2 bg-gradient-to-r from-indigo-50/80 via-purple-50/40 to-sky-50/60 border-b border-indigo-100/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-        <div class="flex items-center gap-3">
-          <div
-            class="flex items-center gap-2 px-2.5 py-0.5 bg-white/90 rounded-full border border-indigo-100 shadow-2xs">
-            <span class="w-2 h-2 bg-indigo-500 rounded-full animate-pulse shadow-sm shadow-indigo-300"></span>
-            <span class="font-hud text-[10px] text-indigo-700 font-bold tracking-wider">ASTRAL HARMONY //
-              RESONANT</span>
-          </div>
-          <span id="currentSanctumLabel" class="font-headline text-[11px] font-semibold text-slate-600 truncate">SANCTUM
-            8A // ASTRAL VANGUARD</span>
-        </div>
-        <div class="flex items-center gap-3">
-          <span id="vitalityPctLabel"
-            class="font-hud text-[10px] text-indigo-500 tracking-wider font-semibold uppercase flex items-center gap-1">✦
-            STELLAR RESONANCE: 92%</span>
-          <div class="h-2 w-28 bg-indigo-100/70 rounded-full overflow-hidden p-0.5 flex">
-            <div id="vitalityBarFill"
-              class="h-full bg-gradient-to-r from-indigo-500 to-sky-400 rounded-full shadow-2xs transition-all duration-500"
-              style="width: 92%;"></div>
-          </div>
-        </div>
-      </div>
 
       <!-- MAIN TAB VIEWS CONTAINER -->
       <div class="p-4 lg:p-6 flex flex-col gap-6 max-w-[1600px] mx-auto w-full flex-1">
@@ -582,6 +536,11 @@
                   class="px-5 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-900 font-headline font-bold text-xs rounded-xl shadow-sm transition-all flex items-center gap-2">
                   <span class="material-symbols-outlined text-[18px]">sports_esports</span> LAUNCH GAMES HUB
                 </button>
+                <!-- Tutorial / Start Guide Button (Req 5) -->
+                <button onclick="openTutorialModal()"
+                  class="px-5 py-2.5 bg-white/15 hover:bg-white/25 text-white border border-white/25 font-headline font-bold text-xs rounded-xl backdrop-blur-xs transition-all flex items-center gap-2">
+                  <span class="material-symbols-outlined text-[18px]">auto_stories</span> START GUIDE
+                </button>
               </div>
             </div>
           </div>
@@ -596,7 +555,8 @@
               </div>
               <div>
                 <span class="font-headline text-xs font-bold text-indigo-950 block">Sanctum Preview Mode Active</span>
-                <span class="font-body text-slate-500 text-[11px]">Explore the platform preview freely. Teachers can sign in to unlock roster controls; cadets can join with their teacher's access code.</span>
+                <span class="font-body text-slate-500 text-[11px]">Explore the platform preview freely. Teachers can
+                  sign in to unlock roster controls; cadets can join with their teacher's access code.</span>
               </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
@@ -671,6 +631,29 @@
         <!-- TAB 1: CLASS DISPLAY (CLEAN HUD GRID)       -->
         <!-- ========================================== -->
         <div id="tab-display" class="tab-content">
+          <!-- Req 7: Subtab Controls moved inside Class Display tab -->
+          <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-1.5 p-1 bg-indigo-50/70 rounded-xl border border-indigo-100/80 shadow-2xs">
+              <button id="subtab-overview-btn" onclick="switchDisplaySubtab('grid')"
+                class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-indigo-600 via-primary to-indigo-500 text-white font-headline text-xs font-bold tracking-wide shadow-2xs flex items-center gap-1.5 transition-all">
+                <span class="text-xs">✦</span><span>CADET HUD OVERVIEW</span>
+              </button>
+              <button id="subtab-ranking-btn" onclick="switchDisplaySubtab('ranking')"
+                class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-indigo-900 hover:bg-white font-headline text-xs font-semibold transition-all flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[16px] text-slate-400">leaderboard</span><span>SANCTUM RANKING</span>
+              </button>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="flex items-center gap-2 font-hud text-[10px] text-indigo-500 font-semibold">
+                <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
+                <span>INTERFACE MODE // TACTICAL VIEW</span>
+              </div>
+              <span id="telemetrySelectedStudent"
+                class="font-hud text-[10px] text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-100 font-bold hidden sm:inline">TARGET: NONE</span>
+              <span id="currentSanctumLabel" class="font-headline text-[11px] font-semibold text-slate-600 truncate hidden md:inline">SANCTUM 8A // CELESTIAL VANGUARD</span>
+            </div>
+          </div>
+
           <!-- Top HUD Statistics Banner -->
           <div
             class="bg-white/90 backdrop-blur-md rounded-2xl p-5 lg:p-6 shadow-sm border border-indigo-100/80 flex flex-col gap-5 relative overflow-hidden">
@@ -847,15 +830,18 @@
         <!-- ========================================== -->
         <div id="tab-teacher" class="tab-content">
           <!-- Viewer Restriction Notice -->
-          <div id="teacherViewerNotice" class="hidden mb-6 p-4 bg-amber-50/90 border border-amber-200/90 rounded-2xl flex items-center justify-between gap-3 text-xs shadow-2xs">
+          <div id="teacherViewerNotice"
+            class="hidden mb-6 p-4 bg-amber-50/90 border border-amber-200/90 rounded-2xl flex items-center justify-between gap-3 text-xs shadow-2xs">
             <div class="flex items-center gap-3">
               <span class="text-xl">🔒</span>
               <div>
                 <strong class="font-headline text-amber-900 font-bold block">Viewer Mode Restricted</strong>
-                <span class="text-amber-700">You are currently in Viewer Mode. Class roster editing, gold adjustments, and LP modifications are reserved for verified Teachers.</span>
+                <span class="text-amber-700">You are currently in Viewer Mode. Class roster editing, gold adjustments,
+                  and LP modifications are reserved for verified Teachers.</span>
               </div>
             </div>
-            <button onclick="openAuthModal('teacher')" class="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-700 text-white font-headline text-xs font-bold rounded-xl transition-all shadow-xs shrink-0">
+            <button onclick="openAuthModal('teacher')"
+              class="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-700 text-white font-headline text-xs font-bold rounded-xl transition-all shadow-xs shrink-0">
               Sign In as Teacher
             </button>
           </div>
@@ -949,22 +935,28 @@
         <!-- ========================================== -->
         <div id="tab-admin-profile" class="tab-content">
           <!-- Administrator Profile Header Banner -->
-          <div class="relative bg-gradient-to-r from-indigo-700 via-primary to-sky-600 rounded-3xl p-6 lg:p-8 text-white shadow-lg shadow-indigo-200/50 mb-6 overflow-hidden">
-            <div class="absolute -right-12 -top-12 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="absolute -left-12 -bottom-12 w-64 h-64 bg-sky-300/15 rounded-full blur-3xl pointer-events-none"></div>
+          <div
+            class="relative bg-gradient-to-r from-indigo-700 via-primary to-sky-600 rounded-3xl p-6 lg:p-8 text-white shadow-lg shadow-indigo-200/50 mb-6 overflow-hidden">
+            <div class="absolute -right-12 -top-12 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none">
+            </div>
+            <div class="absolute -left-12 -bottom-12 w-64 h-64 bg-sky-300/15 rounded-full blur-3xl pointer-events-none">
+            </div>
             <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
                 <div class="flex items-center gap-2 mb-2">
-                  <span class="font-hud text-[10px] tracking-widest text-sky-200 bg-white/15 px-3 py-0.5 rounded-full border border-white/20 uppercase font-bold">
+                  <span
+                    class="font-hud text-[10px] tracking-widest text-sky-200 bg-white/15 px-3 py-0.5 rounded-full border border-white/20 uppercase font-bold">
                     ✦ TEACHER CONTROL TERMINAL
                   </span>
-                  <span id="adminProfileBadgeRole" class="font-hud text-[10px] bg-emerald-400/20 text-emerald-200 border border-emerald-300/30 px-2.5 py-0.5 rounded-full font-bold">
+                  <span id="adminProfileBadgeRole"
+                    class="font-hud text-[10px] bg-emerald-400/20 text-emerald-200 border border-emerald-300/30 px-2.5 py-0.5 rounded-full font-bold">
                     ADMINISTRATOR
                   </span>
                 </div>
                 <h2 class="font-headline text-2xl lg:text-3xl font-extrabold tracking-tight">Administrator Profile</h2>
                 <p class="font-body text-indigo-100 text-xs lg:text-sm mt-1 max-w-2xl leading-relaxed">
-                  Configure your educator credentials, academy designation, pedagogue insignia, and unique cadet connection key. Editable and synchronizable with your local and cloud vault.
+                  Configure your educator credentials, academy designation, pedagogue insignia, and unique cadet
+                  connection key. Editable and synchronizable with your local and cloud vault.
                 </p>
               </div>
               <div class="flex items-center gap-2 shrink-0">
@@ -982,40 +974,58 @@
             <!-- Left Column: Persona Card & Cadet Access Card -->
             <div class="lg:col-span-4 space-y-6">
               <!-- Persona Identity Card -->
-              <div class="bg-white/95 rounded-2xl p-6 border border-indigo-100 shadow-sm flex flex-col items-center text-center relative overflow-hidden">
-                <div class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-indigo-600 via-primary to-sky-400 text-white flex items-center justify-center text-3xl font-bold shadow-md shadow-indigo-300/50 mb-3 ring-4 ring-indigo-50" id="adminAvatarDisplay">
+              <div
+                class="bg-white/95 rounded-2xl p-6 border border-indigo-100 shadow-sm flex flex-col items-center text-center relative overflow-hidden">
+                <div
+                  class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-indigo-600 via-primary to-sky-400 text-white flex items-center justify-center text-3xl font-bold shadow-md shadow-indigo-300/50 mb-3 ring-4 ring-indigo-50"
+                  id="adminAvatarDisplay">
                   ✦
                 </div>
                 <h3 id="adminPreviewName" class="font-headline text-lg font-bold text-indigo-950">Dawam Nofal</h3>
-                <span id="adminPreviewRole" class="font-hud text-[10px] text-indigo-600 font-semibold tracking-wider uppercase mt-0.5">SANCTUM MASTER // EDUCATOR</span>
+                <span id="adminPreviewRole"
+                  class="font-hud text-[10px] text-indigo-600 font-semibold tracking-wider uppercase mt-0.5">SANCTUM
+                  MASTER // EDUCATOR</span>
                 <p id="adminPreviewSchool" class="font-body text-xs text-slate-500 mt-1">Astral Vanguard Academy</p>
 
                 <!-- Persona Icon Chooser -->
                 <div class="w-full pt-4 mt-4 border-t border-indigo-50 text-left">
-                  <label class="font-hud text-[10px] text-slate-500 font-bold tracking-wider uppercase block mb-2">CHOOSE ASTRAL INSIGNIA</label>
+                  <label
+                    class="font-hud text-[10px] text-slate-500 font-bold tracking-wider uppercase block mb-2">CHOOSE
+                    ASTRAL INSIGNIA</label>
+                  <!-- Req 8: Geometric star insignias replacing emojis -->
                   <div class="grid grid-cols-5 gap-2" id="avatarPickerGrid">
-                    <button type="button" onclick="selectAdminAvatar('✦')" class="admin-avatar-btn p-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-bold text-center border border-indigo-200 transition-all text-sm">✦</button>
-                    <button type="button" onclick="selectAdminAvatar('🛡️')" class="admin-avatar-btn p-2 rounded-xl bg-slate-50 hover:bg-indigo-50 text-slate-700 font-bold text-center border border-slate-200 transition-all text-sm">🛡️</button>
-                    <button type="button" onclick="selectAdminAvatar('⚡')" class="admin-avatar-btn p-2 rounded-xl bg-slate-50 hover:bg-indigo-50 text-slate-700 font-bold text-center border border-slate-200 transition-all text-sm">⚡</button>
-                    <button type="button" onclick="selectAdminAvatar('🔮')" class="admin-avatar-btn p-2 rounded-xl bg-slate-50 hover:bg-indigo-50 text-slate-700 font-bold text-center border border-slate-200 transition-all text-sm">🔮</button>
-                    <button type="button" onclick="selectAdminAvatar('📜')" class="admin-avatar-btn p-2 rounded-xl bg-slate-50 hover:bg-indigo-50 text-slate-700 font-bold text-center border border-slate-200 transition-all text-sm">📜</button>
+                    <button type="button" onclick="selectAdminAvatar('✦')"
+                      class="admin-avatar-btn p-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-bold text-center border border-indigo-200 transition-all text-base">✦</button>
+                    <button type="button" onclick="selectAdminAvatar('✧')"
+                      class="admin-avatar-btn p-2 rounded-xl bg-slate-50 hover:bg-indigo-50 text-slate-700 font-bold text-center border border-slate-200 transition-all text-base">✧</button>
+                    <button type="button" onclick="selectAdminAvatar('✶')"
+                      class="admin-avatar-btn p-2 rounded-xl bg-slate-50 hover:bg-indigo-50 text-slate-700 font-bold text-center border border-slate-200 transition-all text-base">✶</button>
+                    <button type="button" onclick="selectAdminAvatar('❖')"
+                      class="admin-avatar-btn p-2 rounded-xl bg-slate-50 hover:bg-indigo-50 text-slate-700 font-bold text-center border border-slate-200 transition-all text-base">❖</button>
+                    <button type="button" onclick="selectAdminAvatar('◈')"
+                      class="admin-avatar-btn p-2 rounded-xl bg-slate-50 hover:bg-indigo-50 text-slate-700 font-bold text-center border border-slate-200 transition-all text-base">◈</button>
                   </div>
                 </div>
 
                 <!-- Access Code Box -->
-                <div class="w-full mt-4 p-3.5 bg-gradient-to-r from-indigo-50/80 to-purple-50/80 rounded-xl border border-indigo-100 text-left">
+                <div
+                  class="w-full mt-4 p-3.5 bg-gradient-to-r from-indigo-50/80 to-purple-50/80 rounded-xl border border-indigo-100 text-left">
                   <div class="flex items-center justify-between mb-1">
                     <span class="font-hud text-[10px] font-bold text-indigo-700">CADET ACCESS CODE</span>
-                    <button type="button" onclick="copyTeacherCode()" class="font-hud text-[9px] text-indigo-600 hover:text-indigo-800 font-bold bg-white px-2 py-0.5 rounded border border-indigo-200 shadow-2xs">COPY</button>
+                    <button type="button" onclick="copyTeacherCode()"
+                      class="font-hud text-[9px] text-indigo-600 hover:text-indigo-800 font-bold bg-white px-2 py-0.5 rounded border border-indigo-200 shadow-2xs">COPY</button>
                   </div>
-                  <div id="adminPreviewCode" class="font-mono text-base font-bold text-indigo-950 tracking-wider">CQ-DEMO8A</div>
-                  <p class="font-body text-[10px] text-slate-500 mt-1">Share this code with cadets to grant view-only access to your class.</p>
+                  <div id="adminPreviewCode" class="font-mono text-base font-bold text-indigo-950 tracking-wider">
+                    CQ-DEMO8A</div>
+                  <p class="font-body text-[10px] text-slate-500 mt-1">Share this code with cadets to grant view-only
+                    access to your class.</p>
                 </div>
               </div>
 
               <!-- Quick Status Card -->
               <div class="bg-white/95 rounded-2xl p-5 border border-indigo-100 shadow-sm space-y-3">
-                <h4 class="font-headline text-xs font-bold text-indigo-950 uppercase tracking-wider flex items-center gap-1.5">
+                <h4
+                  class="font-headline text-xs font-bold text-indigo-950 uppercase tracking-wider flex items-center gap-1.5">
                   <span class="text-indigo-500">✦</span> Sanctum Telemetry
                 </h4>
                 <div class="flex items-center justify-between text-xs py-1.5 border-b border-indigo-50">
@@ -1044,19 +1054,22 @@
             <div class="lg:col-span-8 space-y-6">
               <!-- Profile Fields -->
               <div class="bg-white/95 rounded-2xl p-6 border border-indigo-100 shadow-sm">
-                <h3 class="font-headline text-base font-bold text-indigo-950 flex items-center gap-2 mb-4 pb-3 border-b border-indigo-50">
+                <h3
+                  class="font-headline text-base font-bold text-indigo-950 flex items-center gap-2 mb-4 pb-3 border-b border-indigo-50">
                   <span class="material-symbols-outlined text-indigo-600">badge</span>
                   <span>Educator Credentials &amp; Sanctum Keys</span>
                 </h3>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div>
-                    <label class="block font-headline text-xs font-bold text-slate-700 mb-1.5">Administrator / Teacher Name</label>
+                    <label class="block font-headline text-xs font-bold text-slate-700 mb-1.5">Administrator / Teacher
+                      Name</label>
                     <input id="adminProfileName" type="text" placeholder="e.g. Dawam Nofal, M.Ed"
                       class="w-full px-3.5 py-2.5 text-xs bg-indigo-50/40 border border-indigo-200/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 font-body text-slate-800">
                   </div>
                   <div>
-                    <label class="block font-headline text-xs font-bold text-slate-700 mb-1.5">Cadet Access Key (Unique)</label>
+                    <label class="block font-headline text-xs font-bold text-slate-700 mb-1.5">Cadet Access Key
+                      (Unique)</label>
                     <div class="flex gap-2">
                       <input id="adminProfileCode" type="text" placeholder="e.g. CQ-DEMO8A"
                         class="w-full px-3.5 py-2.5 text-xs bg-indigo-50/40 border border-indigo-200/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 font-mono font-bold text-indigo-900 uppercase">
@@ -1072,42 +1085,52 @@
                       class="w-full px-3.5 py-2.5 text-xs bg-indigo-50/40 border border-indigo-200/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 font-body text-slate-800">
                   </div>
                   <div>
-                    <label class="block font-headline text-xs font-bold text-slate-700 mb-1.5">Academy / School Designation</label>
+                    <label class="block font-headline text-xs font-bold text-slate-700 mb-1.5">Academy / School
+                      Designation</label>
                     <input id="adminProfileSchool" type="text" placeholder="e.g. Astral Vanguard Academy"
                       class="w-full px-3.5 py-2.5 text-xs bg-indigo-50/40 border border-indigo-200/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 font-body text-slate-800">
                   </div>
                 </div>
 
                 <div class="mb-4">
-                  <label class="block font-headline text-xs font-bold text-slate-700 mb-1.5">Subject / Department</label>
-                  <input id="adminProfileSubject" type="text" placeholder="e.g. English Expedition &amp; Gamified Literature"
+                  <label class="block font-headline text-xs font-bold text-slate-700 mb-1.5">Subject /
+                    Department</label>
+                  <input id="adminProfileSubject" type="text"
+                    placeholder="e.g. English Expedition &amp; Gamified Literature"
                     class="w-full px-3.5 py-2.5 text-xs bg-indigo-50/40 border border-indigo-200/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 font-body text-slate-800">
                 </div>
 
                 <div>
-                  <label class="block font-headline text-xs font-bold text-slate-700 mb-1.5">Educator Philosophy &amp; Quest Mission Lore</label>
-                  <textarea id="adminProfileMotto" rows="3" placeholder="Write your class mission statement or lore message for your voyagers..."
+                  <label class="block font-headline text-xs font-bold text-slate-700 mb-1.5">Educator Philosophy &amp;
+                    Quest Mission Lore</label>
+                  <textarea id="adminProfileMotto" rows="3"
+                    placeholder="Write your class mission statement or lore message for your voyagers..."
                     class="w-full px-3.5 py-2.5 text-xs bg-indigo-50/40 border border-indigo-200/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 font-body text-slate-800"></textarea>
                 </div>
               </div>
 
               <!-- Sanctum Classroom Defaults -->
               <div class="bg-white/95 rounded-2xl p-6 border border-indigo-100 shadow-sm">
-                <h3 class="font-headline text-base font-bold text-indigo-950 flex items-center gap-2 mb-4 pb-3 border-b border-indigo-50">
+                <h3
+                  class="font-headline text-base font-bold text-indigo-950 flex items-center gap-2 mb-4 pb-3 border-b border-indigo-50">
                   <span class="material-symbols-outlined text-indigo-600">tune</span>
                   <span>Pedagogical Parameters</span>
                 </h3>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div class="p-4 bg-indigo-50/40 rounded-xl border border-indigo-100">
-                    <label class="block font-headline text-xs font-bold text-indigo-950 mb-1">Default Cadet Life Points (LP)</label>
-                    <p class="font-body text-[11px] text-slate-500 mb-2">Initial vitality granted to enrolled students upon admission.</p>
+                    <label class="block font-headline text-xs font-bold text-indigo-950 mb-1">Default Cadet Life Points
+                      (LP)</label>
+                    <p class="font-body text-[11px] text-slate-500 mb-2">Initial vitality granted to enrolled students
+                      upon admission.</p>
                     <input id="adminProfileStartingLP" type="number" value="50" min="10" max="100"
                       class="w-24 px-3 py-1.5 text-xs bg-white border border-indigo-200 rounded-lg font-bold font-hud text-indigo-600 text-center">
                   </div>
                   <div class="p-4 bg-amber-50/40 rounded-xl border border-amber-200/60">
-                    <label class="block font-headline text-xs font-bold text-amber-950 mb-1">Default Cadet Starting Gold (GP)</label>
-                    <p class="font-body text-[11px] text-slate-500 mb-2">Initial stardust currency provided for acquiring relics in the shop.</p>
+                    <label class="block font-headline text-xs font-bold text-amber-950 mb-1">Default Cadet Starting Gold
+                      (GP)</label>
+                    <p class="font-body text-[11px] text-slate-500 mb-2">Initial stardust currency provided for
+                      acquiring relics in the shop.</p>
                     <input id="adminProfileStartingGold" type="number" value="10" min="0" max="1000"
                       class="w-24 px-3 py-1.5 text-xs bg-white border border-amber-200 rounded-lg font-bold font-hud text-amber-600 text-center">
                   </div>
@@ -1390,20 +1413,22 @@
                 <li><strong>Nonparticipation (-1 LP):</strong> Reluctance to engage in dialogues or group quests.</li>
               </ul>
             </div>
-        <!-- ASTRAL APPLICATION WATERMARK FOOTER -->
-        <footer class="mt-10 mb-4 py-4 px-6 border-t border-indigo-100/70 bg-white/80 backdrop-blur-md rounded-2xl flex flex-wrap items-center justify-between gap-3 shadow-2xs">
-          <div class="flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
-            <span class="font-hud text-[10px] text-indigo-700 font-bold uppercase tracking-wider">ASTRAL PEDAGOGY PROTOCOL</span>
-          </div>
-          <div class="font-hud text-[11px] text-slate-500 font-medium tracking-wide flex items-center gap-1.5">
-            <span class="text-indigo-500">✦</span>
-            <span>Ideated by Dawam Nofal | Powered by Tailwind and Firebase</span>
-            <span class="text-indigo-500">✦</span>
-          </div>
-        </footer>
+            <!-- ASTRAL APPLICATION WATERMARK FOOTER -->
+            <footer
+              class="mt-10 mb-4 py-4 px-6 border-t border-indigo-100/70 bg-white/80 backdrop-blur-md rounded-2xl flex flex-wrap items-center justify-between gap-3 shadow-2xs">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+                <span class="font-hud text-[10px] text-indigo-700 font-bold uppercase tracking-wider">ASTRAL PEDAGOGY
+                  PROTOCOL</span>
+              </div>
+              <div class="font-hud text-[11px] text-slate-500 font-medium tracking-wide flex items-center gap-1.5">
+                <span class="text-indigo-500">✦</span>
+                <span>Ideated by Dawam Nofal | Powered by Tailwind and Firebase</span>
+                <span class="text-indigo-500">✦</span>
+              </div>
+            </footer>
 
-      </div>
+          </div>
     </main>
   </div>
 
@@ -1412,16 +1437,20 @@
   <!-- ======================================================== -->
 
   <!-- LOGOUT CONFIRMATION MODAL (Requirement 4) -->
-  <div id="logoutConfirmModal" class="astral-modal w-[420px] max-w-[92vw] p-6 text-center border-rose-200/90 shadow-2xl">
-    <div class="w-14 h-14 mx-auto rounded-2xl bg-rose-50 border border-rose-200 text-rose-500 flex items-center justify-center mb-3 shadow-xs">
+  <div id="logoutConfirmModal"
+    class="astral-modal w-[420px] max-w-[92vw] p-6 text-center border-rose-200/90 shadow-2xl">
+    <div
+      class="w-14 h-14 mx-auto rounded-2xl bg-rose-50 border border-rose-200 text-rose-500 flex items-center justify-center mb-3 shadow-xs">
       <span class="material-symbols-outlined text-[28px]">power_settings_new</span>
     </div>
-    <span class="font-hud text-[9px] px-2.5 py-0.5 rounded-full bg-rose-50 border border-rose-200 text-rose-600 font-bold uppercase tracking-wider inline-block mb-2">
+    <span
+      class="font-hud text-[9px] px-2.5 py-0.5 rounded-full bg-rose-50 border border-rose-200 text-rose-600 font-bold uppercase tracking-wider inline-block mb-2">
       SANCTUM DISCONNECT
     </span>
     <h3 class="font-headline text-lg font-bold text-indigo-950 mb-1.5">Confirm Terminal Sign Out</h3>
     <p class="font-body text-xs text-slate-500 mb-5 leading-relaxed">
-      Are you sure you wish to log out of your Sanctum? You will return to Guest Preview Mode with view-only permissions.
+      Are you sure you wish to log out of your Sanctum? You will return to Guest Preview Mode with view-only
+      permissions.
     </p>
     <div class="flex items-center gap-3">
       <button onclick="cancelSignOut()" type="button"
@@ -1437,14 +1466,18 @@
   </div>
 
   <!-- ASTRAL ANNOUNCEMENT WEB OVERLAY (Requirement 5) -->
-  <div id="astralAnnouncementOverlay" class="astral-modal w-[440px] max-w-[92vw] p-6 text-center border-indigo-200 shadow-2xl">
-    <div id="astralAnnouncementIconWrap" class="w-14 h-14 mx-auto rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center mb-3 shadow-xs">
+  <div id="astralAnnouncementOverlay"
+    class="astral-modal w-[440px] max-w-[92vw] p-6 text-center border-indigo-200 shadow-2xl">
+    <div id="astralAnnouncementIconWrap"
+      class="w-14 h-14 mx-auto rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center mb-3 shadow-xs">
       <span id="astralAnnouncementIcon" class="material-symbols-outlined text-[28px]">verified</span>
     </div>
-    <span id="astralAnnouncementBadge" class="font-hud text-[9px] px-2.5 py-0.5 rounded-full bg-indigo-50 border border-indigo-200/80 text-indigo-700 font-bold uppercase tracking-wider inline-block mb-2">
+    <span id="astralAnnouncementBadge"
+      class="font-hud text-[9px] px-2.5 py-0.5 rounded-full bg-indigo-50 border border-indigo-200/80 text-indigo-700 font-bold uppercase tracking-wider inline-block mb-2">
       SANCTUM ANNOUNCEMENT
     </span>
-    <h3 id="astralAnnouncementTitle" class="font-headline text-lg font-bold text-indigo-950 mb-1.5">Sanctum Notification</h3>
+    <h3 id="astralAnnouncementTitle" class="font-headline text-lg font-bold text-indigo-950 mb-1.5">Sanctum Notification
+    </h3>
     <div id="astralAnnouncementMessage" class="font-body text-xs text-slate-600 mb-5 leading-relaxed">
       Announcement details.
     </div>
@@ -1457,15 +1490,18 @@
 
   <!-- GUEST RESTRICTION NOTICE MODAL (Requirement 1) -->
   <div id="astralNoticeModal" class="astral-modal w-[430px] max-w-[92vw] p-6 text-center border-amber-200 shadow-2xl">
-    <div class="w-14 h-14 mx-auto rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center mb-3 shadow-xs">
+    <div
+      class="w-14 h-14 mx-auto rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center mb-3 shadow-xs">
       <span class="material-symbols-outlined text-[28px]">lock</span>
     </div>
-    <span class="font-hud text-[9px] px-2.5 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 font-bold uppercase tracking-wider inline-block mb-2">
+    <span
+      class="font-hud text-[9px] px-2.5 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 font-bold uppercase tracking-wider inline-block mb-2">
       GUEST PREVIEW MODE
     </span>
     <h3 id="astralNoticeTitle" class="font-headline text-lg font-bold text-indigo-950 mb-1.5">Action Restricted</h3>
     <p id="astralNoticeMessage" class="font-body text-xs text-slate-600 mb-5 leading-relaxed">
-      You are exploring in Preview Mode. Exporting or importing data and roster modifications are reserved for verified Teachers.
+      You are exploring in Preview Mode. Exporting or importing data and roster modifications are reserved for verified
+      Teachers.
     </p>
     <div class="flex items-center gap-2.5">
       <button onclick="closeAllOverlays()" type="button"
@@ -1485,7 +1521,8 @@
     <!-- Header -->
     <div class="flex items-center justify-between border-b border-indigo-100 pb-3 mb-4">
       <div class="flex items-center gap-2.5">
-        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 via-primary to-sky-400 text-white flex items-center justify-center font-bold shadow-xs">
+        <div
+          class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 via-primary to-sky-400 text-white flex items-center justify-center font-bold shadow-xs">
           <span class="text-xs">✦</span>
         </div>
         <div>
@@ -1493,7 +1530,8 @@
           <span class="font-hud text-[10px] text-indigo-500 font-semibold tracking-wider">ASTRAL AUTHENTICATION</span>
         </div>
       </div>
-      <button onclick="closeAllOverlays()" class="w-7 h-7 text-slate-400 hover:text-slate-700 rounded-lg flex items-center justify-center transition-colors">✕</button>
+      <button onclick="closeAllOverlays()"
+        class="w-7 h-7 text-slate-400 hover:text-slate-700 rounded-lg flex items-center justify-center transition-colors">✕</button>
     </div>
 
     <!-- Gateway Tab Switcher: Teacher vs Student Viewer -->
@@ -1513,11 +1551,14 @@
     <!-- TEACHER PORTAL SECTION -->
     <div id="authTeacherSection" class="space-y-4 text-xs">
       <!-- Sub-tabs: Sign In vs Sign Up -->
-      <div class="flex items-center justify-center gap-4 border-b border-slate-100 pb-2 text-[11px] font-headline font-bold">
-        <button id="teacherSignInSubtab" onclick="switchTeacherSubtab('signin')" class="text-indigo-600 border-b-2 border-indigo-600 pb-1">
+      <div
+        class="flex items-center justify-center gap-4 border-b border-slate-100 pb-2 text-[11px] font-headline font-bold">
+        <button id="teacherSignInSubtab" onclick="switchTeacherSubtab('signin')"
+          class="text-indigo-600 border-b-2 border-indigo-600 pb-1">
           Sign In
         </button>
-        <button id="teacherSignUpSubtab" onclick="switchTeacherSubtab('signup')" class="text-slate-400 hover:text-slate-700 pb-1">
+        <button id="teacherSignUpSubtab" onclick="switchTeacherSubtab('signup')"
+          class="text-slate-400 hover:text-slate-700 pb-1">
           Create Teacher Account
         </button>
       </div>
@@ -1572,7 +1613,8 @@
 
       <!-- Quick Test Action -->
       <div class="pt-2 border-t border-slate-100 flex flex-col gap-2">
-        <span class="font-hud text-[10px] text-slate-400 text-center uppercase tracking-wider">Instant Testing Bypass</span>
+        <span class="font-hud text-[10px] text-slate-400 text-center uppercase tracking-wider">Instant Testing
+          Bypass</span>
         <button onclick="handleQuickDemoTeacher()"
           class="w-full py-2 bg-slate-50 hover:bg-indigo-50 text-indigo-700 border border-indigo-100 font-headline font-semibold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5">
           <span class="text-amber-500">⚡</span> Launch Demo Teacher Mode (Dawam Nofal)
@@ -1584,7 +1626,8 @@
     <div id="authStudentSection" class="space-y-4 text-xs hidden">
       <div class="p-3 bg-sky-50/80 border border-sky-100 rounded-xl text-sky-900 leading-relaxed text-[11px]">
         <strong class="font-headline block mb-0.5">Spectate Class Sanctum</strong>
-        Cadets and visitors can view real-time Life Points, leaderboards, and relics by entering the Teacher's unique Access Code.
+        Cadets and visitors can view real-time Life Points, leaderboards, and relics by entering the Teacher's unique
+        Access Code.
       </div>
 
       <!-- Feedback / Alert Message Box -->
@@ -1613,7 +1656,8 @@
       <!-- Quick Demo Code Link -->
       <div class="pt-2 border-t border-slate-100 text-center">
         <span class="font-body text-[11px] text-slate-500">Need a code to test?</span>
-        <button onclick="fillDemoStudentCode()" class="ml-1 text-indigo-600 hover:text-indigo-800 font-headline font-bold text-[11px] underline">
+        <button onclick="fillDemoStudentCode()"
+          class="ml-1 text-indigo-600 hover:text-indigo-800 font-headline font-bold text-[11px] underline">
           Use Demo Code: CQ-DEMO8A
         </button>
       </div>
@@ -1785,7 +1829,7 @@
     </div>
   </div>
 
-  <!-- 6. EDIT STUDENT INFO MODAL -->
+  <!-- 6. EDIT STUDENT INFO MODAL (Req 4: Profile Photo Upload) -->
   <div id="editStudentModal" class="astral-modal w-96 p-5">
     <h3 class="font-headline text-base font-bold text-indigo-950 text-center mb-4">Edit Cadet Information</h3>
     <div class="space-y-3 mb-4 text-xs">
@@ -1798,6 +1842,21 @@
         <label class="font-headline font-semibold text-slate-700 block mb-1">Callsign / Nickname:</label>
         <input id="editNickInput" type="text"
           class="w-full px-3.5 py-2 bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none">
+      </div>
+      <!-- Req 4: Profile Photo Upload -->
+      <div>
+        <label class="font-headline font-semibold text-slate-700 block mb-1">Profile Photo (optional):</label>
+        <div class="flex items-center gap-3">
+          <img id="editAvatarPreview" src="" alt="Preview" class="w-12 h-12 rounded-xl object-cover bg-indigo-50 border border-indigo-200 hidden">
+          <div class="flex-1">
+            <input id="editAvatarInput" type="file" accept="image/*" class="hidden" onchange="handleEditAvatarUpload(event)">
+            <button type="button" onclick="document.getElementById('editAvatarInput').click()"
+              class="w-full px-3 py-2 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 border-dashed rounded-xl text-indigo-600 font-headline text-[11px] font-bold transition-all flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-[16px]">upload</span> Upload Photo
+            </button>
+            <p class="font-body text-[10px] text-slate-400 mt-1 text-center">JPG, PNG, GIF — converted to Base64</p>
+          </div>
+        </div>
       </div>
     </div>
     <div class="flex justify-between gap-3">
@@ -1907,7 +1966,11 @@
     }
 
     // Load Initial State from LocalStorage temporarily while Firebase authenticates
-    let appData = JSON.parse(localStorage.getItem('class_quest_center_v1')) || getEmptyState();
+    // Req 3 & 6: Guest Mode forces clean empty state instead of personal imported JSON
+    const _savedAuth = JSON.parse(localStorage.getItem('cq_current_auth') || '{"role":"guest"}');
+    let appData = (_savedAuth.role === 'guest')
+      ? getEmptyState()
+      : (JSON.parse(localStorage.getItem('class_quest_center_v1')) || getEmptyState());
 
     if (!Array.isArray(appData.games) || appData.games.length === 0) appData.games = DEFAULT_GAMES;
     if (!Array.isArray(appData.reports)) appData.reports = [];
@@ -1932,9 +1995,7 @@
        - Student / Viewer Access (via Teacher Unique Access Code)
        - Guest Preview Mode (Full homepage & feature preview)
        ======================================================== */
-    let currentAuth = JSON.parse(localStorage.getItem('cq_current_auth')) || {
-      role: 'guest'
-    };
+    let currentAuth = _savedAuth || { role: 'guest' };
 
     function getTeacherRegistry() {
       let reg = {};
@@ -1944,9 +2005,9 @@
       if (!reg['CQ-DEMO8A']) {
         reg['CQ-DEMO8A'] = {
           code: 'CQ-DEMO8A',
-          name: 'Dawam Nofal',
-          email: 'dawam@classquest.edu',
-          uid: 'demo-dawam-8a'
+          name: 'Guest Educator',
+          email: 'guest@classquest.edu',
+          uid: 'demo-guest-8a'
         };
       }
       return reg;
@@ -2059,7 +2120,7 @@
         if (typeof window.fbSignUpWithEmail === 'function') {
           const res = await window.fbSignUpWithEmail(email, pass);
           if (typeof window.fbUpdateProfile === 'function') {
-            await window.fbUpdateProfile(res.user, { displayName: name }).catch(() => {});
+            await window.fbUpdateProfile(res.user, { displayName: name }).catch(() => { });
           }
           onTeacherSuccess(res.user, name);
         } else {
@@ -2080,7 +2141,7 @@
     }
 
     function handleQuickDemoTeacher() {
-      loginAsLocalTeacher('Dawam Nofal', 'dawam@classquest.edu', 'CQ-DEMO8A');
+      loginAsLocalTeacher('Guest Educator', 'guest@classquest.edu', 'CQ-DEMO8A');
     }
 
     function escapeHtml(str) {
@@ -2171,7 +2232,7 @@
     async function executeSignOut() {
       cancelSignOut();
       if (typeof window.fbSignOut === 'function') {
-        await window.fbSignOut().catch(() => {});
+        await window.fbSignOut().catch(() => { });
       }
       currentAuth = { role: 'guest' };
       localStorage.setItem('cq_current_auth', JSON.stringify(currentAuth));
@@ -2218,7 +2279,7 @@
     function onTeacherSuccess(user, customName = null) {
       const cleanUid = (user.uid || '').replace(/[^a-zA-Z0-9]/g, '');
       const code = 'CQ-' + (cleanUid.substring(0, 6) || '8236A1').toUpperCase();
-      const name = customName || user.displayName || (user.email ? user.email.split('@')[0] : 'Dawam Nofal');
+      const name = customName || user.displayName || (user.email ? user.email.split('@')[0] : 'Guest Educator');
       registerTeacherLocally(code, name, user.email, user.uid);
 
       currentAuth = {
@@ -2244,11 +2305,11 @@
       });
     }
 
-    window.handleFirebaseAuthStateChanged = async function(user) {
+    window.handleFirebaseAuthStateChanged = async function (user) {
       if (user) {
         const cleanUid = (user.uid || '').replace(/[^a-zA-Z0-9]/g, '');
         const code = 'CQ-' + (cleanUid.substring(0, 6) || '8236A1').toUpperCase();
-        const name = user.displayName || (user.email ? user.email.split('@')[0] : 'Dawam Nofal');
+        const name = user.displayName || (user.email ? user.email.split('@')[0] : 'Guest Educator');
         registerTeacherLocally(code, name, user.email, user.uid);
         currentAuth = {
           role: 'teacher',
@@ -2263,6 +2324,8 @@
         if (currentAuth.role === 'teacher') {
           currentAuth = { role: 'guest' };
           localStorage.setItem('cq_current_auth', JSON.stringify(currentAuth));
+          // Req 3: Reset appData to clean state on sign-out/guest
+          appData = getEmptyState();
         }
       }
       updateAuthUI();
@@ -2303,7 +2366,7 @@
       if (localSaved) {
         try {
           appData = JSON.parse(localSaved);
-        } catch (e) {}
+        } catch (e) { }
       }
 
       if (teacherInfo || code === 'CQ-DEMO8A' || localSaved || (currentAuth.teacherCode === code)) {
@@ -2423,9 +2486,9 @@
       const goldInput = document.getElementById('adminProfileStartingGold');
 
       const isTeacher = (currentAuth && currentAuth.role === 'teacher');
-      const name = isTeacher ? (currentAuth.name || 'Dawam Nofal') : (currentAuth.name || 'Dawam Nofal');
+      const name = isTeacher ? (currentAuth.name || 'Guest Educator') : (currentAuth.name || 'Guest Educator');
       const code = isTeacher ? (currentAuth.teacherCode || 'CQ-DEMO8A') : (currentAuth.teacherCode || 'CQ-DEMO8A');
-      const email = isTeacher ? (currentAuth.email || 'teacher@classquest.edu') : (currentAuth.email || 'teacher@classquest.edu');
+      const email = isTeacher ? (currentAuth.email || 'guest@classquest.edu') : (currentAuth.email || 'guest@classquest.edu');
       const school = currentAuth.school || 'Astral Vanguard Academy';
       const subject = currentAuth.subject || 'English Expedition & Gamified Literature';
       const motto = currentAuth.motto || 'Guiding voyagers across astral quests with gamified pedagogy.';
@@ -2451,11 +2514,11 @@
       if (previewCode) previewCode.textContent = code;
       const previewRole = document.getElementById('adminPreviewRole');
       if (previewRole) previewRole.textContent = isTeacher ? 'SANCTUM MASTER // AUTHENTICATED' : 'ADMINISTRATOR // PREVIEW MODE';
-      
+
       const badgeRole = document.getElementById('adminProfileBadgeRole');
       if (badgeRole) {
         badgeRole.textContent = isTeacher ? 'ACTIVE TEACHER' : 'GUEST ADMINISTRATOR';
-        badgeRole.className = isTeacher 
+        badgeRole.className = isTeacher
           ? 'font-hud text-[10px] bg-emerald-400/20 text-emerald-200 border border-emerald-300/30 px-2.5 py-0.5 rounded-full font-bold'
           : 'font-hud text-[10px] bg-amber-400/20 text-amber-200 border border-amber-300/30 px-2.5 py-0.5 rounded-full font-bold';
       }
@@ -2479,7 +2542,7 @@
     }
 
     function saveAdministratorProfile() {
-      const name = (document.getElementById('adminProfileName')?.value || '').trim() || 'Dawam Nofal';
+      const name = (document.getElementById('adminProfileName')?.value || '').trim() || 'Guest Educator';
       const code = (document.getElementById('adminProfileCode')?.value || '').trim().toUpperCase() || 'CQ-DEMO8A';
       const email = (document.getElementById('adminProfileEmail')?.value || '').trim() || 'teacher@classquest.edu';
       const school = (document.getElementById('adminProfileSchool')?.value || '').trim() || 'Astral Vanguard Academy';
@@ -2661,7 +2724,7 @@
       if (local) {
         try {
           appData = JSON.parse(local);
-        } catch (e) {}
+        } catch (e) { }
       }
       if (window.firebaseDb && typeof window.getDoc === 'function') {
         try {
@@ -2682,12 +2745,15 @@
       localStorage.setItem('class_quest_center_v1', JSON.stringify(appData));
       if (currentAuth.role === 'teacher' && currentAuth.teacherCode) {
         localStorage.setItem('cq_classroom_' + currentAuth.teacherCode, JSON.stringify(appData));
-        if (window.firebaseDb && typeof window.setDoc === 'function') {
+        // Req 1: Security Fix — verify active Firebase auth before pushing to Firestore
+        const firebaseUid = window.firebaseAuth && window.firebaseAuth.currentUser && window.firebaseAuth.currentUser.uid;
+        if (firebaseUid && window.firebaseDb && typeof window.setDoc === 'function') {
           try {
             const docRef = window.doc(window.firebaseDb, "classrooms", currentAuth.teacherCode);
             await window.setDoc(docRef, {
-              teacherName: currentAuth.name || 'Dawam Nofal',
+              teacherName: currentAuth.name || 'Guest Educator',
               teacherCode: currentAuth.teacherCode,
+              authorizedUid: firebaseUid,
               appData: appData,
               lastUpdated: new Date().toISOString()
             }, { merge: true });
@@ -2732,18 +2798,18 @@
 
     function showTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-      
+
       // Reset all nav buttons in sidebar (Fixes Quest Hub and all other tabs)
       document.querySelectorAll('.nav-btn').forEach(b => {
         const t = b.dataset.tab;
         b.classList.remove('active', 'bg-gradient-to-r', 'from-indigo-600', 'via-primary', 'to-indigo-500', 'text-white', 'shadow-md', 'shadow-indigo-200');
         b.classList.add('text-slate-600', 'hover:bg-indigo-50/70', 'hover:text-indigo-900');
-        
+
         const icon = b.querySelector('.material-symbols-outlined');
         if (icon) {
           icon.className = 'material-symbols-outlined text-[20px] text-slate-400 group-hover:text-indigo-600 transition-colors';
         }
-        
+
         const badge = b.querySelector('.font-hud');
         if (badge && tabBadgeDefaults[t]) {
           const cfg = tabBadgeDefaults[t];
@@ -2760,12 +2826,12 @@
       if (activeBtn) {
         activeBtn.classList.remove('text-slate-600', 'hover:bg-indigo-50/70', 'hover:text-indigo-900');
         activeBtn.classList.add('active', 'bg-gradient-to-r', 'from-indigo-600', 'via-primary', 'to-indigo-500', 'text-white', 'shadow-md', 'shadow-indigo-200');
-        
+
         const icon = activeBtn.querySelector('.material-symbols-outlined');
         if (icon) {
           icon.className = 'material-symbols-outlined text-[20px] text-white transition-colors';
         }
-        
+
         const badge = activeBtn.querySelector('.font-hud');
         if (badge) {
           badge.className = 'font-hud text-[9px] px-2 py-0.5 bg-white/20 text-white border border-white/30 rounded-full font-bold transition-all';
@@ -3964,13 +4030,45 @@
       }
     }
 
+    // Req 4: Track pending avatar base64 string
+    let pendingAvatarBase64 = null;
+
+    function handleEditAvatarUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        pendingAvatarBase64 = e.target.result;
+        const preview = document.getElementById('editAvatarPreview');
+        if (preview) {
+          preview.src = pendingAvatarBase64;
+          preview.classList.remove('hidden');
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
     function openEditStudent(id) {
       if (!requireTeacherAuth('edit cadet profile')) return;
       const student = appData.students.find(s => s.id === id);
       if (!student) return;
       editingStudentId = id;
+      pendingAvatarBase64 = null;
       document.getElementById('editNameInput').value = student.name;
       document.getElementById('editNickInput').value = student.nick;
+      // Reset avatar preview
+      const preview = document.getElementById('editAvatarPreview');
+      if (preview) {
+        if (student.avatar && student.avatar.startsWith('data:')) {
+          preview.src = student.avatar;
+          preview.classList.remove('hidden');
+        } else {
+          preview.src = '';
+          preview.classList.add('hidden');
+        }
+      }
+      const fileInput = document.getElementById('editAvatarInput');
+      if (fileInput) fileInput.value = '';
       document.getElementById('editStudentModal').style.display = 'block';
     }
 
@@ -3984,6 +4082,11 @@
         if (newName) {
           student.name = newName;
           student.nick = newNick || newName;
+          // Req 4: Save base64 avatar if a new one was uploaded
+          if (pendingAvatarBase64) {
+            student.avatar = pendingAvatarBase64;
+            pendingAvatarBase64 = null;
+          }
           saveData();
           closeAllOverlays();
         }
@@ -4169,8 +4272,35 @@
       });
     }
 
+    function populateCommandDrawerSync() {
+      // Keep command drawer class filter in sync with main app state
+      const sel = document.getElementById('commandDrawerClassFilter');
+      if (sel) {
+        sel.innerHTML = '';
+        appData.classes.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c;
+          opt.textContent = `Class ${c} // Sanctum`;
+          if (c === appData.currentClass) opt.selected = true;
+          sel.appendChild(opt);
+        });
+      }
+      const meetInput = document.getElementById('commandDrawerMeetingInput');
+      if (meetInput) meetInput.value = appData.currentMeeting || 1;
+    }
+
+    function syncCommandDrawerMeeting() {
+      const val = parseInt(document.getElementById('commandDrawerMeetingInput').value) || 1;
+      appData.currentMeeting = val;
+      // Sync to header input
+      const headerInput = document.getElementById('headerMeetingInput');
+      if (headerInput) headerInput.value = val;
+      saveData();
+    }
+
     function render() {
       populateDropdowns();
+      populateCommandDrawerSync();
       renderDisplay();
       renderTeacher();
       renderReportsTab();
@@ -4180,43 +4310,230 @@
       updateSelectedStudentLabels();
     }
 
+    // Req 2: Mobile Command Drawer (right-side)
+    function toggleCommandDrawer(open) {
+      const drawer = document.getElementById('commandDrawer');
+      const overlay = document.getElementById('drawerOverlay');
+      if (!drawer) return;
+      if (open) {
+        drawer.classList.remove('translate-x-full');
+        overlay.style.display = 'block';
+      } else {
+        drawer.classList.add('translate-x-full');
+        if (!document.getElementById('mainSidebar').classList.contains('-translate-x-full') === false) {
+          overlay.style.display = 'none';
+        } else {
+          overlay.style.display = 'none';
+        }
+      }
+    }
+
+    // Override drawerOverlay click to also close command drawer
+    document.getElementById('drawerOverlay').addEventListener('click', function() {
+      toggleCommandDrawer(false);
+      toggleMobileDrawer(false);
+    });
+
+    // Req 5: Tutorial Overlay
+    const TUTORIAL_STEPS = [
+      {
+        icon: 'auto_awesome',
+        title: '✦ Welcome to Class Quest Journal',
+        body: 'This is your gamified classroom management system. Students become Cadets, grades become Life Points (LP), and participation earns Stardust Gold (GP).'
+      },
+      {
+        icon: 'favorite',
+        title: '🛡 Life Points (LP) System',
+        body: 'Every cadet starts at 50 LP. Speaking native language during English Hour costs -1 LP. AWOL costs -3 LP. LP maps directly to grades — 50 LP = A+, below 25 LP = Danger Zone.'
+      },
+      {
+        icon: 'toll',
+        title: '🪙 Stardust Gold (GP)',
+        body: 'Cadets earn Gold by participating in classroom games. Gold is spent in the Relic Shop to buy tactical cards that can protect, heal, or strategically affect other cadets.'
+      },
+      {
+        icon: 'style',
+        title: '🃏 Tactical Relic Cards',
+        body: 'Cards like Time Warp, Shield, Voodoo, and Gold Rush can be played at key moments. Visit the Cards Library to learn what each card does and how much it costs.'
+      },
+      {
+        icon: 'vpn_key',
+        title: '🔑 Teacher Sign In & Access Codes',
+        body: 'Teachers sign in via email/password or Google to unlock full roster controls. Each teacher gets a unique Access Code (e.g. CQ-XXXX) to share with students for viewer access.'
+      },
+      {
+        icon: 'grid_view',
+        title: '📊 Class Display & Rankings',
+        body: 'The Class Display tab shows the live HUD of all cadets. Switch to Sanctum Ranking to see the leaderboard podium. Use Teacher Control to award gold, play cards, and adjust LP.'
+      }
+    ];
+    let tutorialStep = 0;
+
+    function openTutorialModal() {
+      tutorialStep = 0;
+      renderTutorialStep();
+      document.getElementById('tutorialModal').style.display = 'block';
+      document.getElementById('drawerOverlay').style.display = 'block';
+    }
+
+    function renderTutorialStep() {
+      const step = TUTORIAL_STEPS[tutorialStep];
+      const iconEl = document.getElementById('tutorialStepIcon');
+      const titleEl = document.getElementById('tutorialStepTitle');
+      const bodyEl = document.getElementById('tutorialStepBody');
+      const counterEl = document.getElementById('tutorialStepCounter');
+      const prevBtn = document.getElementById('tutorialPrevBtn');
+      const nextBtn = document.getElementById('tutorialNextBtn');
+
+      if (iconEl) iconEl.textContent = step.icon;
+      if (titleEl) titleEl.textContent = step.title;
+      if (bodyEl) bodyEl.textContent = step.body;
+      if (counterEl) counterEl.textContent = `${tutorialStep + 1} / ${TUTORIAL_STEPS.length}`;
+      if (prevBtn) prevBtn.disabled = (tutorialStep === 0);
+      if (nextBtn) nextBtn.textContent = (tutorialStep === TUTORIAL_STEPS.length - 1) ? 'Finish Guide' : 'Next →';
+    }
+
+    function tutorialNext() {
+      if (tutorialStep < TUTORIAL_STEPS.length - 1) {
+        tutorialStep++;
+        renderTutorialStep();
+      } else {
+        closeAllOverlays();
+      }
+    }
+
+    function tutorialPrev() {
+      if (tutorialStep > 0) {
+        tutorialStep--;
+        renderTutorialStep();
+      }
+    }
+
     // Initialize application immediately with cache for fast layout (Firebase overrides on callback)
     initFilterButtons();
     updateAuthUI();
     render();
   </script>
 
+  <!-- MOBILE COMMAND DRAWER (Req 2: right-side slide-out) -->
+  <aside id="commandDrawer"
+    class="fixed right-0 top-0 h-full w-72 overflow-y-auto bg-white/97 backdrop-blur-xl flex flex-col border-l border-indigo-100/70 shadow-lg transition-transform duration-300 translate-x-full"
+    style="z-index: 200;">
+    <div class="h-16 px-5 flex items-center justify-between border-b border-indigo-50/80 bg-gradient-to-r from-sky-50/40 via-purple-50/30 to-indigo-50/60">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-indigo-600 text-[20px]">keyboard_command_key</span>
+        <span class="font-headline text-[14px] font-bold tracking-tight text-indigo-950">COMMAND PANEL</span>
+      </div>
+      <button onclick="toggleCommandDrawer(false)"
+        class="w-8 h-8 flex items-center justify-center rounded-xl text-slate-400 hover:bg-indigo-50 hover:text-indigo-600 transition-all"
+        type="button" title="Close">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+    </div>
+    <div class="flex-1 px-4 py-5 space-y-5 overflow-y-auto">
+      <!-- Sanctum Selector -->
+      <div>
+        <label class="font-hud text-[10px] text-indigo-500 font-bold tracking-wider uppercase block mb-2">SANCTUM CLASS</label>
+        <div class="flex items-center bg-indigo-50/70 border border-indigo-100 rounded-xl px-3 py-2 shadow-2xs">
+          <span class="font-hud text-[10px] text-indigo-500 font-bold mr-2">SANCTUM:</span>
+          <select id="commandDrawerClassFilter" onchange="changeClassFilter(this.value); populateCommandDrawerSync();"
+            class="bg-transparent font-headline text-[12px] font-semibold text-slate-700 focus:outline-none cursor-pointer flex-1 border-0 py-0"></select>
+        </div>
+      </div>
+      <!-- Meeting Cycle -->
+      <div>
+        <label class="font-hud text-[10px] text-indigo-500 font-bold tracking-wider uppercase block mb-2">MEETING CYCLE</label>
+        <div class="flex items-center bg-indigo-50/70 border border-indigo-100 rounded-xl px-3 py-2 shadow-2xs">
+          <span class="font-hud text-[10px] text-indigo-500 font-bold mr-2">CYCLE:</span>
+          <input id="commandDrawerMeetingInput" type="number" min="1" max="100" value="1"
+            onchange="syncCommandDrawerMeeting()"
+            class="flex-1 bg-transparent font-headline text-[12px] text-indigo-600 font-bold text-center focus:outline-none border-0 p-0">
+        </div>
+      </div>
+      <!-- Quick Nav Buttons -->
+      <div>
+        <label class="font-hud text-[10px] text-indigo-500 font-bold tracking-wider uppercase block mb-2">QUICK NAVIGATE</label>
+        <div class="space-y-2">
+          <button onclick="showTab('display'); toggleCommandDrawer(false);" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-headline text-xs font-semibold transition-all">
+            <span class="material-symbols-outlined text-[18px]">grid_view</span> Class Display
+          </button>
+          <button onclick="showTab('teacher'); toggleCommandDrawer(false);" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 font-headline text-xs font-semibold transition-all">
+            <span class="material-symbols-outlined text-[18px]">tune</span> Teacher Control
+          </button>
+          <button onclick="toggleQuickReportOverlay(); toggleCommandDrawer(false);" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-headline text-xs font-semibold transition-all">
+            <span class="material-symbols-outlined text-[18px]">bolt</span> Quick Report
+          </button>
+          <button onclick="openTutorialModal(); toggleCommandDrawer(false);" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 font-headline text-xs font-semibold transition-all">
+            <span class="material-symbols-outlined text-[18px]">auto_stories</span> Start Guide
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="px-4 py-2.5 text-center border-t border-indigo-50/60">
+      <p class="font-hud text-[9.5px] text-slate-400 font-medium tracking-wide">Command Panel // Class Quest Journal</p>
+    </div>
+  </aside>
+
+  <!-- TUTORIAL OVERLAY MODAL (Req 5) -->
+  <div id="tutorialModal" class="astral-modal w-[460px] max-w-[92vw] p-6 text-center border-indigo-200 shadow-2xl">
+    <div class="w-14 h-14 mx-auto rounded-2xl bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center mb-3 shadow-xs">
+      <span id="tutorialStepIcon" class="material-symbols-outlined text-[28px]">auto_awesome</span>
+    </div>
+    <span class="font-hud text-[9px] px-2.5 py-0.5 rounded-full bg-indigo-50 border border-indigo-200/80 text-indigo-700 font-bold uppercase tracking-wider inline-block mb-2">START GUIDE</span>
+    <h3 id="tutorialStepTitle" class="font-headline text-base font-bold text-indigo-950 mb-2 mt-1">Welcome</h3>
+    <p id="tutorialStepBody" class="font-body text-xs text-slate-600 leading-relaxed mb-5"></p>
+    <div class="flex items-center justify-between gap-3">
+      <button id="tutorialPrevBtn" onclick="tutorialPrev()"
+        class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-headline text-xs font-bold rounded-xl flex-1 transition-all disabled:opacity-40"
+        disabled>← Back</button>
+      <span id="tutorialStepCounter" class="font-hud text-[10px] text-indigo-500 font-bold">1 / 6</span>
+      <button id="tutorialNextBtn" onclick="tutorialNext()"
+        class="px-4 py-2 bg-gradient-to-r from-indigo-600 via-primary to-sky-500 text-white font-headline text-xs font-bold rounded-xl flex-1 transition-all">Next →</button>
+    </div>
+    <button onclick="closeAllOverlays()" class="mt-3 text-slate-400 hover:text-slate-600 font-hud text-[10px] font-bold uppercase tracking-wider transition-colors">Skip Guide</button>
+  </div>
+
   <!-- MOBILE BOTTOM NAVIGATION DOCK (Requirement 2 & 6) -->
-  <nav class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-indigo-100/90 shadow-[0_-4px_24px_rgba(99,102,241,0.12)] px-2 py-1.5 flex items-center justify-around safe-bottom">
-    <button onclick="showTab('home')" class="mobile-bottom-btn flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-indigo-600 transition-all active:scale-95 group" data-tab="home">
+  <nav
+    class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-indigo-100/90 shadow-[0_-4px_24px_rgba(99,102,241,0.12)] px-2 py-1.5 flex items-center justify-around safe-bottom">
+    <button onclick="showTab('home')"
+      class="mobile-bottom-btn flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-indigo-600 transition-all active:scale-95 group"
+      data-tab="home">
       <div class="relative flex items-center justify-center">
         <span class="material-symbols-outlined text-[22px]">auto_awesome</span>
         <span class="mobile-active-dot w-1.5 h-1.5 rounded-full bg-indigo-600 absolute -bottom-1"></span>
       </div>
       <span class="font-headline text-[10px] font-bold">Quest Hub</span>
     </button>
-    <button onclick="showTab('display')" class="mobile-bottom-btn flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-500 hover:text-indigo-600 transition-all active:scale-95 group" data-tab="display">
+    <button onclick="showTab('display')"
+      class="mobile-bottom-btn flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-500 hover:text-indigo-600 transition-all active:scale-95 group"
+      data-tab="display">
       <div class="relative flex items-center justify-center">
         <span class="material-symbols-outlined text-[22px]">grid_view</span>
         <span class="mobile-active-dot hidden w-1.5 h-1.5 rounded-full bg-indigo-600 absolute -bottom-1"></span>
       </div>
       <span class="font-headline text-[10px] font-medium">Display</span>
     </button>
-    <button onclick="showTab('teacher')" class="mobile-bottom-btn flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-500 hover:text-indigo-600 transition-all active:scale-95 group" data-tab="teacher">
+    <button onclick="showTab('teacher')"
+      class="mobile-bottom-btn flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-500 hover:text-indigo-600 transition-all active:scale-95 group"
+      data-tab="teacher">
       <div class="relative flex items-center justify-center">
         <span class="material-symbols-outlined text-[22px]">tune</span>
         <span class="mobile-active-dot hidden w-1.5 h-1.5 rounded-full bg-indigo-600 absolute -bottom-1"></span>
       </div>
       <span class="font-headline text-[10px] font-medium">Teacher</span>
     </button>
-    <button onclick="showTab('admin-profile')" class="mobile-bottom-btn flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-500 hover:text-indigo-600 transition-all active:scale-95 group" data-tab="admin-profile">
+    <button onclick="showTab('admin-profile')"
+      class="mobile-bottom-btn flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-500 hover:text-indigo-600 transition-all active:scale-95 group"
+      data-tab="admin-profile">
       <div class="relative flex items-center justify-center">
         <span class="material-symbols-outlined text-[22px]">badge</span>
         <span class="mobile-active-dot hidden w-1.5 h-1.5 rounded-full bg-indigo-600 absolute -bottom-1"></span>
       </div>
       <span class="font-headline text-[10px] font-medium">Admin</span>
     </button>
-    <button onclick="toggleMobileDrawer(true)" class="flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-500 hover:text-indigo-600 transition-all active:scale-95 group">
+    <button onclick="toggleMobileDrawer(true)"
+      class="flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-500 hover:text-indigo-600 transition-all active:scale-95 group">
       <div class="relative flex items-center justify-center">
         <span class="material-symbols-outlined text-[22px]">menu</span>
       </div>
