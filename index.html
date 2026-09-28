@@ -1251,6 +1251,124 @@
               can draw from the Sanctum Shop.</p>
           </div>
           <div id="cardsLibraryContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
+            <!-- 1. Time Warp -->
+            <div onclick="openCardPreviewModal('Time Warp')" class="relic-card cursor-pointer hover:scale-[1.02] transition-transform shadow-xs hover:shadow-md">
+              <div class="flex items-center justify-between font-hud text-[10px] mb-1">
+                <span class="px-2 py-0.5 rounded-full font-bold uppercase border bg-sky-50 text-sky-700 border-sky-200">DEFENSIVE</span>
+                <span class="text-indigo-400">✦</span>
+              </div>
+              <div class="text-center my-3 text-4xl transform hover:scale-110 transition-transform">⏳</div>
+              <div class="text-center font-headline font-bold text-base text-indigo-950">Time Warp</div>
+              <p class="text-center font-body text-xs text-slate-500 my-2 leading-relaxed flex-1 flex items-center justify-center">Cancel LP damage (up to 3 LP), but prevents receiving gold.</p>
+              <div class="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-indigo-50">
+                <span class="font-hud text-xs font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">Cost: 8 GP</span>
+                <button onclick="event.stopPropagation(); openCardPreviewModal('Time Warp')" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-headline text-[11px] font-bold rounded-lg border border-indigo-200 transition-all flex items-center gap-1">
+                  <span>🔍 Preview</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 2. LP Donor -->
+            <div onclick="openCardPreviewModal('LP Donor')" class="relic-card cursor-pointer hover:scale-[1.02] transition-transform shadow-xs hover:shadow-md">
+              <div class="flex items-center justify-between font-hud text-[10px] mb-1">
+                <span class="px-2 py-0.5 rounded-full font-bold uppercase border bg-purple-50 text-purple-700 border-purple-200">TARGETED</span>
+                <span class="text-indigo-400">✦</span>
+              </div>
+              <div class="text-center my-3 text-4xl transform hover:scale-110 transition-transform">🤝</div>
+              <div class="text-center font-headline font-bold text-base text-indigo-950">LP Donor</div>
+              <p class="text-center font-body text-xs text-slate-500 my-2 leading-relaxed flex-1 flex items-center justify-center">Donate up to 3 LP while receiving 2 gold for each LP donated.</p>
+              <div class="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-indigo-50">
+                <span class="font-hud text-xs font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">Cost: 2 GP</span>
+                <button onclick="event.stopPropagation(); openCardPreviewModal('LP Donor')" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-headline text-[11px] font-bold rounded-lg border border-indigo-200 transition-all flex items-center gap-1">
+                  <span>🔍 Preview</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 3. Voodoo -->
+            <div onclick="openCardPreviewModal('Voodoo')" class="relic-card cursor-pointer hover:scale-[1.02] transition-transform shadow-xs hover:shadow-md">
+              <div class="flex items-center justify-between font-hud text-[10px] mb-1">
+                <span class="px-2 py-0.5 rounded-full font-bold uppercase border bg-purple-50 text-purple-700 border-purple-200">TARGETED</span>
+                <span class="text-indigo-400">✦</span>
+              </div>
+              <div class="text-center my-3 text-4xl transform hover:scale-110 transition-transform">🎎</div>
+              <div class="text-center font-headline font-bold text-base text-indigo-950">Voodoo</div>
+              <p class="text-center font-body text-xs text-slate-500 my-2 leading-relaxed flex-1 flex items-center justify-center">Redirect incoming LP damage to another chosen player.</p>
+              <div class="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-indigo-50">
+                <span class="font-hud text-xs font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">Cost: 5 GP</span>
+                <button onclick="event.stopPropagation(); openCardPreviewModal('Voodoo')" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-headline text-[11px] font-bold rounded-lg border border-indigo-200 transition-all flex items-center gap-1">
+                  <span>🔍 Preview</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 4. Shield -->
+            <div onclick="openCardPreviewModal('Shield')" class="relic-card cursor-pointer hover:scale-[1.02] transition-transform shadow-xs hover:shadow-md">
+              <div class="flex items-center justify-between font-hud text-[10px] mb-1">
+                <span class="px-2 py-0.5 rounded-full font-bold uppercase border bg-sky-50 text-sky-700 border-sky-200">DEFENSIVE</span>
+                <span class="text-indigo-400">✦</span>
+              </div>
+              <div class="text-center my-3 text-4xl transform hover:scale-110 transition-transform">🛡️</div>
+              <div class="text-center font-headline font-bold text-base text-indigo-950">Shield</div>
+              <p class="text-center font-body text-xs text-slate-500 my-2 leading-relaxed flex-1 flex items-center justify-center">Prevent 1 point of incoming LP damage.</p>
+              <div class="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-indigo-50">
+                <span class="font-hud text-xs font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">Cost: 3 GP</span>
+                <button onclick="event.stopPropagation(); openCardPreviewModal('Shield')" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-headline text-[11px] font-bold rounded-lg border border-indigo-200 transition-all flex items-center gap-1">
+                  <span>🔍 Preview</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 5. Health Potion -->
+            <div onclick="openCardPreviewModal('Health Potion')" class="relic-card cursor-pointer hover:scale-[1.02] transition-transform shadow-xs hover:shadow-md">
+              <div class="flex items-center justify-between font-hud text-[10px] mb-1">
+                <span class="px-2 py-0.5 rounded-full font-bold uppercase border bg-emerald-50 text-emerald-700 border-emerald-200">INSTANT</span>
+                <span class="text-indigo-400">✦</span>
+              </div>
+              <div class="text-center my-3 text-4xl transform hover:scale-110 transition-transform">🧪</div>
+              <div class="text-center font-headline font-bold text-base text-indigo-950">Health Potion</div>
+              <p class="text-center font-body text-xs text-slate-500 my-2 leading-relaxed flex-1 flex items-center justify-center">Recover +2 LP instantly.</p>
+              <div class="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-indigo-50">
+                <span class="font-hud text-xs font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">Cost: 6 GP</span>
+                <button onclick="event.stopPropagation(); openCardPreviewModal('Health Potion')" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-headline text-[11px] font-bold rounded-lg border border-indigo-200 transition-all flex items-center gap-1">
+                  <span>🔍 Preview</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 6. Gold Rush -->
+            <div onclick="openCardPreviewModal('Gold Rush')" class="relic-card cursor-pointer hover:scale-[1.02] transition-transform shadow-xs hover:shadow-md">
+              <div class="flex items-center justify-between font-hud text-[10px] mb-1">
+                <span class="px-2 py-0.5 rounded-full font-bold uppercase border bg-amber-50 text-amber-700 border-amber-200">BUFF</span>
+                <span class="text-indigo-400">✦</span>
+              </div>
+              <div class="text-center my-3 text-4xl transform hover:scale-110 transition-transform">💰</div>
+              <div class="text-center font-headline font-bold text-base text-indigo-950">Gold Rush</div>
+              <p class="text-center font-body text-xs text-slate-500 my-2 leading-relaxed flex-1 flex items-center justify-center">Double the amount of gold received after a single winning game.</p>
+              <div class="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-indigo-50">
+                <span class="font-hud text-xs font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">Cost: 3 GP</span>
+                <button onclick="event.stopPropagation(); openCardPreviewModal('Gold Rush')" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-headline text-[11px] font-bold rounded-lg border border-indigo-200 transition-all flex items-center gap-1">
+                  <span>🔍 Preview</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 7. Master Thief -->
+            <div onclick="openCardPreviewModal('Master Thief')" class="relic-card cursor-pointer hover:scale-[1.02] transition-transform shadow-xs hover:shadow-md">
+              <div class="flex items-center justify-between font-hud text-[10px] mb-1">
+                <span class="px-2 py-0.5 rounded-full font-bold uppercase border bg-emerald-50 text-emerald-700 border-emerald-200">INSTANT</span>
+                <span class="text-indigo-400">✦</span>
+              </div>
+              <div class="text-center my-3 text-4xl transform hover:scale-110 transition-transform">🕵️‍♀️</div>
+              <div class="text-center font-headline font-bold text-base text-indigo-950">Master Thief</div>
+              <p class="text-center font-body text-xs text-slate-500 my-2 leading-relaxed flex-1 flex items-center justify-center">Deduct 1 Gold from all classmates and gain half total stolen.</p>
+              <div class="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-indigo-50">
+                <span class="font-hud text-xs font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">Cost: 4 GP</span>
+                <button onclick="event.stopPropagation(); openCardPreviewModal('Master Thief')" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-headline text-[11px] font-bold rounded-lg border border-indigo-200 transition-all flex items-center gap-1">
+                  <span>🔍 Preview</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -3833,6 +3951,7 @@
     function renderCardsLibrary() {
       const container = document.getElementById('cardsLibraryContainer');
       if (!container) return;
+
       container.innerHTML = '';
 
       Object.keys(CARD_LIBRARY).forEach(cardName => {
@@ -3853,13 +3972,13 @@
             <span class="text-indigo-400">✦</span>
           </div>
           <div class="text-center my-3 text-4xl transform hover:scale-110 transition-transform">${c.icon}</div>
-          <div class="text-center font-headline font-bold text-base text-indigo-950">${cardName}</div>
-          <p class="text-center font-body text-xs text-slate-500 my-2 leading-relaxed flex-1 flex items-center justify-center">${c.desc}</p>
+          <div class="text-center font-headline font-bold text-base text-indigo-950">${escapeHtml(cardName)}</div>
+          <p class="text-center font-body text-xs text-slate-500 my-2 leading-relaxed flex-1 flex items-center justify-center">${escapeHtml(c.desc)}</p>
           <div class="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-indigo-50">
             <span class="font-hud text-xs font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">
               Cost: ${c.price} GP
             </span>
-            <button onclick="event.stopPropagation(); openCardPreviewModal('${cardName}')" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-headline text-[11px] font-bold rounded-lg border border-indigo-200 transition-all flex items-center gap-1">
+            <button onclick="event.stopPropagation(); openCardPreviewModal('${escapeHtml(cardName)}')" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-headline text-[11px] font-bold rounded-lg border border-indigo-200 transition-all flex items-center gap-1">
               <span>🔍 Preview</span>
             </button>
           </div>
