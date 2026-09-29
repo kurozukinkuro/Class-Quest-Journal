@@ -458,13 +458,6 @@
 
       <!-- Top Interactive Controls (Sanctum Class Switcher, Meeting Cycle, Actions) -->
       <div class="flex items-center gap-1.5 sm:gap-2 lg:gap-3 shrink-0">
-        <!-- Sanctum Multi-Class Dropdown -->
-        <div
-          class="flex items-center bg-indigo-50/70 border border-indigo-100 rounded-xl px-2 sm:px-2.5 py-1.5 shadow-2xs">
-          <span class="font-hud text-[10px] text-indigo-500 font-bold mr-1.5 hidden md:inline">SANCTUM:</span>
-          <select id="headerClassFilter" onchange="changeClassFilter(this.value)"
-            class="bg-transparent font-headline text-[11px] sm:text-[12px] font-semibold text-slate-700 focus:outline-none cursor-pointer pr-1 border-0 py-0"></select>
-        </div>
 
         <!-- Meeting / Cycle Input -->
         <div
@@ -5057,12 +5050,12 @@
     <div class="flex-1 px-4 py-5 space-y-5 overflow-y-auto">
       <!-- Sanctum Selector -->
       <div>
-        <label class="font-hud text-[10px] text-indigo-500 font-bold tracking-wider uppercase block mb-2">SANCTUM
-          CLASS</label>
-        <div class="flex items-center bg-indigo-50/70 border border-indigo-100 rounded-xl px-3 py-2 shadow-2xs">
+        <label class="font-hud text-[10px] text-indigo-500 font-bold tracking-wider uppercase block mb-2">CURRENT
+          SANCTUM</label>
+        <div class="flex items-center bg-indigo-50/70 border border-indigo-100 rounded-xl px-3 py-2 shadow-2xs min-w-0">
           <span class="font-hud text-[10px] text-indigo-500 font-bold mr-2">SANCTUM:</span>
           <select id="commandDrawerClassFilter" onchange="changeClassFilter(this.value); populateCommandDrawerSync();"
-            class="bg-transparent font-headline text-[12px] font-semibold text-slate-700 focus:outline-none cursor-pointer flex-1 border-0 py-0"></select>
+            class="bg-transparent font-headline text-[12px] font-semibold text-slate-700 focus:outline-none cursor-pointer border-0 py-0 w-full min-w-0 truncate pr-6"></select>
         </div>
       </div>
       <!-- Meeting Cycle -->
