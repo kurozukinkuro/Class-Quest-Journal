@@ -4010,12 +4010,31 @@
         return;
       }
 
-      let csv = "Meeting #,Timestamp,Student Name,Class,Type,Action / Reason,Adjustment\n";
-      classLogs.forEach(r => {
-        csv += `"${r.meeting || 'Meeting #1'}","${r.timestamp}","${r.studentName}","${r.className}","${(r.type || 'lp').toUpperCase()}","${r.action}","${r.change}"\n`;
-      });
+      // Helper function to sanitize text fields and handle quotes/commas safely
+      const formatCell = (val) => {
+        if (val === null || val === undefined) return '""';
+        const cleanStr = String(val).replace(/"/g, '""'); // Escape inner quotes
+        return `"${cleanStr}"`;
+      };
 
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      // Exact target headers
+      const headers = ["Meeting", "Student Name", "Class", "Type", "Action", "Adjustment"];
+
+      // Build rows using safe cell escaping
+      const rows = classLogs.map(r => [
+        formatCell(r.meeting || 'Meeting #1'),
+        formatCell(r.studentName || ''),
+        formatCell(r.className || ''),
+        formatCell((r.type || 'lp').toUpperCase()),
+        formatCell(r.action || ''),
+        formatCell(r.change || '')
+      ].join(","));
+
+      // Prepends \uFEFF (UTF-8 BOM) so Excel immediately opens it as a tabular spreadsheet
+      const csvContent = "\uFEFF" + [headers.join(","), ...rows].join("\n");
+
+      // Create downloadable file link
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
