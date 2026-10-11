@@ -1,4 +1,4 @@
-﻿    const CARD_LIBRARY = {
+    const CARD_LIBRARY = {
       'Time Warp': { icon: '⏳', price: 8, type: 'defensive', desc: 'Cancel LP damage (up to 3 LP), but prevents receiving gold.' },
       'LP Donor': { icon: '🤝', price: 2, type: 'targeted', desc: 'Donate up to 3 LP while receiving 2 gold for each LP donated.' },
       'Voodoo': { icon: '🎎', price: 5, type: 'targeted', desc: 'Redirect incoming LP damage to another chosen player.' },
@@ -183,7 +183,7 @@
       try {
         if (typeof window.fbSignInWithEmail === 'function') {
           const res = await window.fbSignInWithEmail(email, pass);
-          onTeacherSuccess(res.user);
+          await onTeacherSuccess(res.user);
         } else {
           loginAsLocalTeacher(email.split('@')[0] || 'Dawam Nofal', email);
         }
@@ -215,7 +215,7 @@
           if (typeof window.fbUpdateProfile === 'function') {
             await window.fbUpdateProfile(res.user, { displayName: name }).catch(() => { });
           }
-          onTeacherSuccess(res.user, name);
+          await onTeacherSuccess(res.user, name);
         } else {
           loginAsLocalTeacher(name, email);
         }
@@ -228,6 +228,26 @@
           msg = 'Password should be at least 6 characters.';
         } else if (err.code === 'auth/operation-not-allowed') {
           msg = 'Email/Password sign-in is not enabled in Firebase Console. Click "Launch Demo Teacher Mode" below to test right away.';
+        }
+        showAuthNotice('teacherAuthMessage', msg);
+      }
+    }
+
+    async function handleTeacherSignInWithGoogle() {
+      try {
+        if (typeof window.fbSignInWithGoogle === 'function') {
+          const res = await window.fbSignInWithGoogle();
+          await onTeacherSuccess(res.user);
+        } else {
+          showAuthNotice('teacherAuthMessage', 'Firebase Google authentication is unavailable.');
+        }
+      } catch (err) {
+        console.error('Firebase Google Sign In error:', err);
+        let msg = err.message || 'Google sign-in failed.';
+        if (err.code === 'auth/popup-closed-by-user') {
+          msg = 'Google sign-in popup was closed before completing.';
+        } else if (err.code === 'auth/operation-not-allowed') {
+          msg = 'Google sign-in is not enabled in Firebase Console.';
         }
         showAuthNotice('teacherAuthMessage', msg);
       }
@@ -324,11 +344,20 @@
 
     async function executeSignOut() {
       cancelSignOut();
+      if (_cloudUnsubscribe) {
+        try { _cloudUnsubscribe(); } catch (e) {}
+        _cloudUnsubscribe = null;
+      }
+      if (_viewerUnsubscribe) {
+        try { _viewerUnsubscribe(); } catch (e) {}
+        _viewerUnsubscribe = null;
+      }
       if (typeof window.fbSignOut === 'function') {
         await window.fbSignOut().catch(() => { });
       }
       currentAuth = { role: 'guest' };
       localStorage.setItem('cq_current_auth', JSON.stringify(currentAuth));
+      appData = getEmptyState();
       updateAuthUI();
       showTab('home');
       render();
@@ -369,29 +398,43 @@
       });
     }
 
-    function onTeacherSuccess(user, customName = null) {
+    async function onTeacherSuccess(user, customName = null) {
+      _setCloudSyncStatus('syncing', 'Authenticating & loading…');
       const cleanUid = (user.uid || '').replace(/[^a-zA-Z0-9]/g, '');
-      const code = 'CQ-' + (cleanUid.substring(0, 6) || '8236A1').toUpperCase();
-      const name = customName || user.displayName || (user.email ? user.email.split('@')[0] : 'Guest Educator');
-      registerTeacherLocally(code, name, user.email, user.uid);
+      const fallbackCode = 'CQ-' + (cleanUid.substring(0, 6) || '8236A1').toUpperCase();
+      const name = customName || user.displayName || (user.email ? user.email.split('@')[0] : 'Teacher');
 
       currentAuth = {
         role: 'teacher',
         name: name,
         email: user.email,
-        teacherCode: code,
+        teacherCode: fallbackCode,
         uid: user.uid
       };
       localStorage.setItem('cq_current_auth', JSON.stringify(currentAuth));
 
-      saveData();
+      // 1. Load cloud data for this teacher account (NEVER overwrite beforehand)
+      const loadedFromCloud = await loadUserDataFromCloud(user.uid);
+
+      // 2. If brand-new account with no prior cloud data, initialize and save
+      if (!loadedFromCloud) {
+        await saveDataImmediately();
+      }
+
+      // 3. Connect real-time cross-device sync
+      setupCloudRealtimeSync(user.uid);
+
       closeAllOverlays();
       updateAuthUI();
+      populateAdminProfileForm();
       render();
+
       showAstralAnnouncement({
         title: 'Sanctum Authenticated',
         badge: 'CLOUD SYNC ONLINE',
-        message: `Welcome, Teacher <strong>${escapeHtml(name)}</strong>! Sanctum authenticated. Your Student Access Code is: <strong>${code}</strong>.`,
+        message: loadedFromCloud
+          ? `Welcome back, Teacher <strong>${escapeHtml(currentAuth.name)}</strong>! Cloud records loaded successfully. Your Student Access Code is: <strong>${currentAuth.teacherCode}</strong>.`
+          : `Welcome, Teacher <strong>${escapeHtml(currentAuth.name)}</strong>! Cloud terminal initialized. Your Student Access Code is: <strong>${currentAuth.teacherCode}</strong>.`,
         icon: 'verified',
         type: 'success',
         actionText: 'Enter Sanctum'
@@ -400,29 +443,24 @@
 
     window.handleFirebaseAuthStateChanged = async function (user) {
       if (user) {
-        const cleanUid = (user.uid || '').replace(/[^a-zA-Z0-9]/g, '');
-        const code = 'CQ-' + (cleanUid.substring(0, 6) || '8236A1').toUpperCase();
-        const name = user.displayName || (user.email ? user.email.split('@')[0] : 'Guest Educator');
-        registerTeacherLocally(code, name, user.email, user.uid);
-        currentAuth = {
-          role: 'teacher',
-          name: name,
-          email: user.email,
-          teacherCode: code,
-          uid: user.uid
-        };
-        localStorage.setItem('cq_current_auth', JSON.stringify(currentAuth));
-        await loadTeacherClassroom(code);
+        await onTeacherSuccess(user);
       } else {
+        if (_cloudUnsubscribe) {
+          try { _cloudUnsubscribe(); } catch (e) {}
+          _cloudUnsubscribe = null;
+        }
+        if (_viewerUnsubscribe) {
+          try { _viewerUnsubscribe(); } catch (e) {}
+          _viewerUnsubscribe = null;
+        }
         if (currentAuth.role === 'teacher') {
           currentAuth = { role: 'guest' };
           localStorage.setItem('cq_current_auth', JSON.stringify(currentAuth));
-          // Req 3: Reset appData to clean state on sign-out/guest
           appData = getEmptyState();
         }
+        updateAuthUI();
+        render();
       }
-      updateAuthUI();
-      render();
     };
 
     async function handleStudentJoin() {
@@ -661,7 +699,7 @@
 
       localStorage.setItem('cq_current_auth', JSON.stringify(currentAuth));
       registerTeacherLocally(code, name, email, currentAuth.uid, { school, subject, motto, avatar });
-      saveData();
+      saveDataImmediately();
       updateAuthUI();
       populateAdminProfileForm();
 
@@ -812,34 +850,15 @@
       }
     }
 
-    async function loadTeacherClassroom(code) {
-      const local = localStorage.getItem('cq_classroom_' + code);
-      if (local) {
-        try {
-          appData = JSON.parse(local);
-        } catch (e) { }
-      }
-      if (window.firebaseDb && typeof window.getDoc === 'function') {
-        try {
-          const docRef = window.doc(window.firebaseDb, "classrooms", code);
-          const docSnap = await window.getDoc(docRef);
-          if (docSnap.exists() && docSnap.data().appData) {
-            appData = docSnap.data().appData;
-            localStorage.setItem('cq_classroom_' + code, JSON.stringify(appData));
-            localStorage.setItem('class_quest_center_v1', JSON.stringify(appData));
-          }
-        } catch (e) {
-          console.warn("Cloud load notice:", e);
-        }
-      }
-    }
-
+    let _cloudUnsubscribe = null;
+    let _viewerUnsubscribe = null;
+    let _lastLocalSaveMs = 0;
     let _saveDebounceTimer = null;
 
     function _setCloudSyncStatus(status, msg) {
       // status: 'syncing' | 'synced' | 'error' | 'standby' | 'local'
       const el = document.getElementById('adminStatCloudSync');
-      if (!el) return;
+      const headerPill = document.getElementById('headerCloudSyncPill');
       const map = {
         syncing: { text: '⟳ Syncing…', cls: 'font-hud font-bold text-sky-500 animate-pulse' },
         synced: { text: '✓ Cloud Synced', cls: 'font-hud font-bold text-emerald-600' },
@@ -848,63 +867,271 @@
         standby: { text: 'Standby', cls: 'font-hud font-bold text-slate-400' }
       };
       const cfg = map[status] || map['standby'];
-      el.textContent = msg || cfg.text;
-      el.className = cfg.cls;
+      if (el) {
+        el.textContent = msg || cfg.text;
+        el.className = cfg.cls;
+      }
+
+      if (headerPill) {
+        if (status === 'syncing') {
+          headerPill.className = 'hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-sky-200 bg-sky-50 text-sky-600 font-hud text-[10px] cursor-pointer transition-all shadow-2xs';
+          headerPill.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-sky-500 animate-ping"></span><span class="font-bold">Syncing…</span>';
+        } else if (status === 'synced') {
+          headerPill.className = 'hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 font-hud text-[10px] cursor-pointer transition-all shadow-2xs';
+          headerPill.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span class="font-bold">Cloud Synced</span>';
+        } else if (status === 'error') {
+          headerPill.className = 'hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-rose-200 bg-rose-50 text-rose-700 font-hud text-[10px] cursor-pointer transition-all shadow-2xs';
+          headerPill.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span><span class="font-bold">' + (msg || 'Sync Error') + '</span>';
+        } else if (status === 'local') {
+          headerPill.className = 'hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-amber-200 bg-amber-50 text-amber-700 font-hud text-[10px] cursor-pointer transition-all shadow-2xs';
+          headerPill.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span><span class="font-bold">Local Only</span>';
+        } else {
+          headerPill.className = 'hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-indigo-100 bg-indigo-50/70 text-slate-500 font-hud text-[10px] cursor-pointer hover:bg-indigo-100 transition-all';
+          headerPill.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span><span class="font-bold">Cloud Standby</span>';
+        }
+      }
     }
 
-    async function saveData() {
-      // Always persist to localStorage immediately
-      localStorage.setItem('class_quest_center_v1', JSON.stringify(appData));
+    function applyLoadedCloudData(data, uid) {
+      if (data && data.appData) {
+        appData = data.appData;
+        if (!Array.isArray(appData.games) || appData.games.length === 0) appData.games = DEFAULT_GAMES;
+        if (!Array.isArray(appData.reports)) appData.reports = [];
+        if (!Array.isArray(appData.classes) || appData.classes.length === 0) appData.classes = ['8A', '9A'];
+        if (!appData.currentMeeting) appData.currentMeeting = 1;
+        if (!appData.currentClass) appData.currentClass = appData.classes[0] || '8A';
+        localStorage.setItem('class_quest_center_v1', JSON.stringify(appData));
+      }
 
-      if (currentAuth.role === 'teacher' && currentAuth.teacherCode) {
-        localStorage.setItem('cq_classroom_' + currentAuth.teacherCode, JSON.stringify(appData));
+      const teacherCode = data.teacherCode || currentAuth.teacherCode || ('CQ-' + (uid ? uid.substring(0, 6).toUpperCase() : '8236A1'));
+      currentAuth.teacherCode = teacherCode;
+      if (data.name || data.teacherName) currentAuth.name = data.name || data.teacherName;
+      if (data.email || data.teacherEmail) currentAuth.email = data.email || data.teacherEmail;
+      if (data.school) currentAuth.school = data.school;
+      if (data.subject) currentAuth.subject = data.subject;
+      if (data.motto) currentAuth.motto = data.motto;
+      if (data.avatar) currentAuth.avatar = data.avatar;
+      if (data.startingLP) currentAuth.startingLP = data.startingLP;
+      if (data.startingGold) currentAuth.startingGold = data.startingGold;
+      currentAuth.role = 'teacher';
+      if (uid) currentAuth.uid = uid;
 
-        // Security: only push to Firestore if an active Firebase session exists
-        const firebaseUid = window.firebaseAuth &&
-          window.firebaseAuth.currentUser &&
-          window.firebaseAuth.currentUser.uid;
+      localStorage.setItem('cq_classroom_' + teacherCode, JSON.stringify(appData));
+      localStorage.setItem('cq_current_auth', JSON.stringify(currentAuth));
+      registerTeacherLocally(teacherCode, currentAuth.name, currentAuth.email, uid, currentAuth);
+    }
 
-        if (firebaseUid && window.firebaseDb && typeof window.setDoc === 'function') {
-          // Debounce: avoid hammering Firestore on rapid successive calls
-          if (_saveDebounceTimer) clearTimeout(_saveDebounceTimer);
-          _setCloudSyncStatus('syncing');
-          _saveDebounceTimer = setTimeout(async () => {
-            try {
-              const docRef = window.doc(window.firebaseDb, 'classrooms', currentAuth.teacherCode);
-              await window.setDoc(docRef, {
-                teacherName: currentAuth.name || 'Guest Educator',
-                teacherCode: currentAuth.teacherCode,
-                teacherEmail: currentAuth.email || '',
-                authorizedUid: firebaseUid,
-                appData: appData,
-                lastUpdated: new Date().toISOString()
-              }, { merge: true });
-              _setCloudSyncStatus('synced');
-              // Fade back to standby after 4 s
-              setTimeout(() => _setCloudSyncStatus('standby'), 4000);
-            } catch (e) {
-              console.warn('Cloud save notice:', e);
-              _setCloudSyncStatus('error', '⚠ ' + (e.code || 'Sync Error'));
-            }
-          }, 800); // debounce 800 ms
-        } else {
-          _setCloudSyncStatus('local');
+    async function loadUserDataFromCloud(uid) {
+      if (!uid || !window.firebaseDb || typeof window.getDoc !== 'function') {
+        return false;
+      }
+      _setCloudSyncStatus('syncing', 'Pulling from cloud…');
+
+      try {
+        // 1. Primary lookup by authenticated user account: users/{uid}
+        const userDocRef = window.doc(window.firebaseDb, 'users', uid);
+        const userSnap = await window.getDoc(userDocRef);
+
+        if (userSnap.exists()) {
+          const data = userSnap.data();
+          if (data && data.appData) {
+            applyLoadedCloudData(data, uid);
+            _setCloudSyncStatus('synced');
+            return true;
+          }
         }
-      } else {
-        _setCloudSyncStatus('standby');
+
+        // 2. Secondary lookup: Check classrooms by standard UID fallback code
+        const cleanUid = (uid || '').replace(/[^a-zA-Z0-9]/g, '');
+        const fallbackCode = 'CQ-' + (cleanUid.substring(0, 6) || '8236A1').toUpperCase();
+        const classDocRef = window.doc(window.firebaseDb, 'classrooms', fallbackCode);
+        const classSnap = await window.getDoc(classDocRef);
+        if (classSnap.exists() && classSnap.data().appData) {
+          const cData = classSnap.data();
+          applyLoadedCloudData(cData, uid);
+          // Link to users/{uid} for instant multi-device loading in future
+          const userPayload = {
+            uid: uid,
+            teacherCode: cData.teacherCode || fallbackCode,
+            name: cData.teacherName || cData.name || currentAuth.name,
+            email: cData.teacherEmail || cData.email || currentAuth.email,
+            appData: appData,
+            lastUpdated: new Date().toISOString(),
+            updatedAtMs: Date.now()
+          };
+          await window.setDoc(userDocRef, userPayload, { merge: true }).catch(() => {});
+          _setCloudSyncStatus('synced');
+          return true;
+        }
+
+        // 3. Tertiary lookup: Query classrooms where authorizedUid == uid
+        if (typeof window.query === 'function' && typeof window.collection === 'function' && typeof window.where === 'function' && typeof window.getDocs === 'function') {
+          try {
+            const q = window.query(window.collection(window.firebaseDb, 'classrooms'), window.where('authorizedUid', '==', uid));
+            const qSnap = await window.getDocs(q);
+            if (!qSnap.empty) {
+              const docSnapItem = qSnap.docs[0];
+              const cData = docSnapItem.data();
+              if (cData && cData.appData) {
+                applyLoadedCloudData(cData, uid);
+                _setCloudSyncStatus('synced');
+                return true;
+              }
+            }
+          } catch (qErr) {
+            console.warn('Classroom query by authorizedUid notice:', qErr);
+          }
+        }
+      } catch (err) {
+        console.warn('Failed to load user data from cloud:', err);
+        _setCloudSyncStatus('error', '⚠ ' + (err.code || 'Load Error'));
+      }
+      return false;
+    }
+
+    function setupCloudRealtimeSync(uid) {
+      if (_cloudUnsubscribe) {
+        try { _cloudUnsubscribe(); } catch (e) {}
+        _cloudUnsubscribe = null;
+      }
+      if (!uid || !window.firebaseDb || typeof window.onSnapshot !== 'function') return;
+
+      try {
+        const userDocRef = window.doc(window.firebaseDb, 'users', uid);
+        _cloudUnsubscribe = window.onSnapshot(userDocRef, (snap) => {
+          if (!snap.exists()) return;
+          const data = snap.data();
+          if (!data || !data.appData) return;
+
+          // Only accept updates originating from other devices / newer than our last local write
+          const remoteTime = data.updatedAtMs || (data.lastUpdated ? new Date(data.lastUpdated).getTime() : 0);
+          if (remoteTime > _lastLocalSaveMs + 1000) {
+            console.log('[Cloud Realtime] Remote update received from another device:', new Date(remoteTime).toLocaleTimeString());
+            applyLoadedCloudData(data, uid);
+            render();
+            populateAdminProfileForm();
+            _setCloudSyncStatus('synced', '✓ Synced with Cloud');
+            setTimeout(() => _setCloudSyncStatus('standby'), 4000);
+          }
+        }, (err) => {
+          console.warn('Real-time snapshot listener error:', err);
+        });
+      } catch (err) {
+        console.warn('Could not initialize real-time snapshot listener:', err);
+      }
+    }
+
+    function setupViewerRealtimeSync(code) {
+      if (_viewerUnsubscribe) {
+        try { _viewerUnsubscribe(); } catch (e) {}
+        _viewerUnsubscribe = null;
+      }
+      if (!code || !window.firebaseDb || typeof window.onSnapshot !== 'function') return;
+
+      try {
+        const docRef = window.doc(window.firebaseDb, 'classrooms', code);
+        _viewerUnsubscribe = window.onSnapshot(docRef, (snap) => {
+          if (!snap.exists()) return;
+          const data = snap.data();
+          if (data && data.appData) {
+            appData = data.appData;
+            localStorage.setItem('class_quest_center_v1', JSON.stringify(appData));
+            localStorage.setItem('cq_classroom_' + code, JSON.stringify(appData));
+            render();
+          }
+        }, (err) => {
+          console.warn('Viewer real-time sync notice:', err);
+        });
+      } catch (err) {
+        console.warn('Viewer snapshot listener error:', err);
+      }
+    }
+
+    async function performCloudSave(uid) {
+      const nowMs = Date.now();
+      _lastLocalSaveMs = nowMs;
+      const isoTime = new Date(nowMs).toISOString();
+      const code = currentAuth.teacherCode || ('CQ-' + uid.substring(0, 6).toUpperCase());
+
+      const payload = {
+        uid: uid,
+        teacherCode: code,
+        teacherName: currentAuth.name || 'Teacher',
+        teacherEmail: currentAuth.email || '',
+        authorizedUid: uid,
+        school: currentAuth.school || '',
+        subject: currentAuth.subject || '',
+        motto: currentAuth.motto || '',
+        avatar: currentAuth.avatar || '✦',
+        startingLP: currentAuth.startingLP || 50,
+        startingGold: currentAuth.startingGold || 10,
+        appData: appData,
+        lastUpdated: isoTime,
+        updatedAtMs: nowMs
+      };
+
+      try {
+        // Write 1: Account-bound user document (users/{uid})
+        const userDocRef = window.doc(window.firebaseDb, 'users', uid);
+        const userWrite = window.setDoc(userDocRef, payload, { merge: true });
+
+        // Write 2: Public classroom document for student viewers (classrooms/{code})
+        const classDocRef = window.doc(window.firebaseDb, 'classrooms', code);
+        const classWrite = window.setDoc(classDocRef, payload, { merge: true });
+
+        await Promise.all([userWrite, classWrite]);
+
+        _setCloudSyncStatus('synced', '✓ Cloud Synced');
+        setTimeout(() => {
+          _setCloudSyncStatus('standby');
+        }, 4000);
+      } catch (err) {
+        console.error('Failed to save to Firestore cloud:', err);
+        _setCloudSyncStatus('error', '⚠ ' + (err.code || 'Sync Failed'));
+      }
+    }
+
+    async function saveData(immediate = false) {
+      // 1. Immediately cache in localStorage for instant responsiveness
+      localStorage.setItem('class_quest_center_v1', JSON.stringify(appData));
+      if (currentAuth.teacherCode) {
+        localStorage.setItem('cq_classroom_' + currentAuth.teacherCode, JSON.stringify(appData));
       }
 
       render();
+
+      // 2. Only push to cloud in Teacher role
+      if (currentAuth.role !== 'teacher') {
+        _setCloudSyncStatus('standby');
+        return;
+      }
+
+      const firebaseUid = (window.firebaseAuth && window.firebaseAuth.currentUser && window.firebaseAuth.currentUser.uid) || currentAuth.uid;
+
+      if (!firebaseUid || !window.firebaseDb || typeof window.setDoc !== 'function') {
+        _setCloudSyncStatus('local');
+        return;
+      }
+
+      _setCloudSyncStatus('syncing', '⟳ Saving to Cloud…');
+
+      if (immediate) {
+        if (_saveDebounceTimer) clearTimeout(_saveDebounceTimer);
+        await performCloudSave(firebaseUid);
+      } else {
+        if (_saveDebounceTimer) clearTimeout(_saveDebounceTimer);
+        _saveDebounceTimer = setTimeout(async () => {
+          await performCloudSave(firebaseUid);
+        }, 500); // 500ms debounce
+      }
     }
 
-    /**
-     * loadClassroomFromCloud()
-     * Explicitly pull the latest classroom data from Firebase Firestore for the
-     * active teacher session and merge it into appData + localStorage.
-     * Call this to sync seamlessly across devices (e.g. desktop → laptop).
-     */
+    async function saveDataImmediately() {
+      await saveData(true);
+    }
+
     async function loadClassroomFromCloud() {
-      if (!currentAuth || currentAuth.role !== 'teacher' || !currentAuth.teacherCode) {
+      if (!currentAuth || currentAuth.role !== 'teacher') {
         showAstralAnnouncement({
           title: 'Authentication Required',
           badge: 'CLOUD SYNC BLOCKED',
@@ -921,59 +1148,25 @@
         btn.disabled = true;
         btn.innerHTML = '<span class="material-symbols-outlined text-[16px] animate-spin">refresh</span><span>Syncing…</span>';
       }
-      _setCloudSyncStatus('syncing');
+      _setCloudSyncStatus('syncing', 'Syncing from cloud…');
 
-      const code = currentAuth.teacherCode;
+      const uid = currentAuth.uid || (window.firebaseAuth && window.firebaseAuth.currentUser && window.firebaseAuth.currentUser.uid);
       let cloudLoaded = false;
 
-      // 1. Try Firestore first
-      if (window.firebaseDb && typeof window.getDoc === 'function') {
-        try {
-          const docRef = window.doc(window.firebaseDb, 'classrooms', code);
-          const docSnap = await window.getDoc(docRef);
-          if (docSnap.exists() && docSnap.data().appData) {
-            const cloudData = docSnap.data().appData;
-            // Guard: only accept if authorizedUid matches current user or is absent
-            const firebaseUid = window.firebaseAuth &&
-              window.firebaseAuth.currentUser &&
-              window.firebaseAuth.currentUser.uid;
-            const docUid = docSnap.data().authorizedUid;
-            if (!docUid || !firebaseUid || docUid === firebaseUid) {
-              appData = cloudData;
-              if (!Array.isArray(appData.games) || appData.games.length === 0) appData.games = DEFAULT_GAMES;
-              if (!Array.isArray(appData.reports)) appData.reports = [];
-              if (!appData.currentMeeting) appData.currentMeeting = 1;
-              localStorage.setItem('class_quest_center_v1', JSON.stringify(appData));
-              localStorage.setItem('cq_classroom_' + code, JSON.stringify(appData));
-              cloudLoaded = true;
-              _setCloudSyncStatus('synced');
-              setTimeout(() => _setCloudSyncStatus('standby'), 4000);
-            } else {
-              _setCloudSyncStatus('error', '⚠ UID Mismatch');
-            }
-          } else {
-            _setCloudSyncStatus('local', 'No Cloud Data');
-          }
-        } catch (e) {
-          console.warn('Cloud load error:', e);
-          _setCloudSyncStatus('error', '⚠ ' + (e.code || 'Load Error'));
-        }
-      } else {
-        _setCloudSyncStatus('local', 'Offline — Local');
+      if (uid) {
+        cloudLoaded = await loadUserDataFromCloud(uid);
       }
 
-      // 2. Fallback to localStorage if cloud wasn't available
-      if (!cloudLoaded) {
-        const local = localStorage.getItem('cq_classroom_' + code);
+      if (!cloudLoaded && currentAuth.teacherCode) {
+        const local = localStorage.getItem('cq_classroom_' + currentAuth.teacherCode);
         if (local) {
-          try { appData = JSON.parse(local); } catch (e) { }
+          try { appData = JSON.parse(local); } catch (e) {}
         }
       }
 
-      // Restore button
       if (btn) {
         btn.disabled = false;
-        btn.innerHTML = '<span class="material-symbols-outlined text-[16px]">cloud_download</span><span>Sync from Cloud</span>';
+        btn.innerHTML = '<span class="material-symbols-outlined text-[16px]">cloud_download</span><span>Sync / Pull from Cloud</span>';
       }
 
       render();
@@ -983,14 +1176,44 @@
         title: cloudLoaded ? '✦ Cloud Sync Complete!' : '⚠ Offline Fallback',
         badge: cloudLoaded ? 'DATA SYNCHRONIZED' : 'LOCAL DATA LOADED',
         message: cloudLoaded
-          ? `Class data for <strong>${escapeHtml(code)}</strong> has been pulled from Firebase Firestore and applied. Your roster, LP, and gold are now up-to-date.`
-          : `Firebase was unreachable. Loaded the latest locally cached data for <strong>${escapeHtml(code)}</strong> instead.`,
+          ? `Class data for <strong>${escapeHtml(currentAuth.teacherCode || '')}</strong> has been pulled from Firebase Firestore and applied. Your roster, LP, and gold are now up-to-date.`
+          : `Firebase was unreachable or no cloud record found. Loaded local cache for <strong>${escapeHtml(currentAuth.teacherCode || '')}</strong> instead.`,
         icon: cloudLoaded ? 'cloud_done' : 'cloud_off',
         type: cloudLoaded ? 'success' : 'warning',
         actionText: 'Continue',
         duration: 5000
       });
     }
+
+    // Auto-flush pending saves on mobile app switch or tab close
+    window.addEventListener('beforeunload', () => {
+      if (currentAuth.role === 'teacher' && _saveDebounceTimer) {
+        clearTimeout(_saveDebounceTimer);
+        const uid = currentAuth.uid || (window.firebaseAuth && window.firebaseAuth.currentUser && window.firebaseAuth.currentUser.uid);
+        if (uid) performCloudSave(uid);
+      }
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') {
+        if (currentAuth.role === 'teacher' && _saveDebounceTimer) {
+          clearTimeout(_saveDebounceTimer);
+          const uid = currentAuth.uid || (window.firebaseAuth && window.firebaseAuth.currentUser && window.firebaseAuth.currentUser.uid);
+          if (uid) performCloudSave(uid);
+        }
+      } else if (document.visibilityState === 'visible') {
+        // When returning to tab on phone or desktop, refresh cloud data
+        if (currentAuth.role === 'teacher' && currentAuth.uid) {
+          loadUserDataFromCloud(currentAuth.uid).then(() => render());
+        }
+      }
+    });
+
+    window.addEventListener('online', () => {
+      if (currentAuth.role === 'teacher') {
+        saveDataImmediately();
+      }
+    });
 
     function toggleMobileDrawer(open) {
       const sidebar = document.getElementById('mainSidebar');
@@ -1913,12 +2136,12 @@
             if (!Array.isArray(appData.games)) appData.games = DEFAULT_GAMES;
             if (!Array.isArray(appData.reports)) appData.reports = [];
             selectedStudentId = null;
-            saveData();
+            saveDataImmediately();
             showAstralAnnouncement({
-              title: 'Sanctum Restored!',
-              badge: 'RESTORE SUCCESS',
-              message: 'Roster data and classroom state successfully restored from JSON backup.',
-              icon: 'verified',
+              title: 'Sanctum Restored & Synced!',
+              badge: 'RESTORE & CLOUD SYNC',
+              message: 'Roster data and classroom state successfully restored from JSON backup and saved to the cloud.',
+              icon: 'cloud_done',
               type: 'success'
             });
           }

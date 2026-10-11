@@ -19,7 +19,8 @@ import {
   collection,
   query,
   where,
-  getDocs
+  getDocs,
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
 // Your web app's Firebase configuration
@@ -55,6 +56,11 @@ window.firebaseDb = db;
 window.doc = doc;
 window.getDoc = getDoc;
 window.setDoc = setDoc;
+window.onSnapshot = onSnapshot;
+window.collection = collection;
+window.query = query;
+window.where = where;
+window.getDocs = getDocs;
 
 window.fbSignInWithEmail = (email, pass) => signInWithEmailAndPassword(auth, email, pass);
 window.fbSignUpWithEmail = (email, pass) => createUserWithEmailAndPassword(auth, email, pass);
